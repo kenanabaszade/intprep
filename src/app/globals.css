@@ -2604,3 +2604,30 @@ ul {
     color: var(--muted);
   }
 }
+.teaching-sources {
+  margin-bottom: 28px;
+  scroll-margin-top: 90px;
+}
+.teaching-source {
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+}
+.teaching-source a {
+  font-size: 13px;
+  color: var(--accent);
+  line-height: 1.8;
+}
+.teaching-source p {
+  font-size: 12px !important;
+  line-height: 1.8 !important;
+  margin: 10px 0 !important;
+}
+.teaching-source details {
+  font-size: 11px;
+}
+.chapter-meta > a {
+  color: var(--accent);
+}
+.chapter-meta > a:hover {
+  text-decoration: underline;
+}

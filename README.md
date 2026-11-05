@@ -45,12 +45,14 @@ Tests default to `http://127.0.0.1:4173`, with Chromium at `/usr/bin/chromium`. 
 ## Content and scope
 
 - 17 imported phases, 61 original sections and 977 subtopics, with every source line preserved and checksummed.
-- 10 long-form bilingual teaching chapters: optionals, value/COW semantics, closures, protocols, ARC, concurrency, MVVM, URLSession, SwiftUI state and authentication. These contain connected explanations, worked execution traces, broken/corrected code, implementation exercises and explained interview follow-ups.
-- The remaining 51 entries are explicitly labeled study notes. Their original syllabus inventory is preserved; they are not presented as complete deep lessons.
+- 13 long-form bilingual teaching chapters: Swift basics and optionals, value/COW semantics, closures, protocols, ARC, concurrency, UIKit, Auto Layout, MVVM, URLSession, SwiftUI foundations, SwiftUI state and authentication. Explanations precede examples; Swift Basics links all 18 original syllabus items to their teaching sections. These contain connected explanations, worked execution traces, broken/corrected code, implementation exercises and explained interview follow-ups.
+- The remaining 48 entries are explicitly labeled study notes. Their original syllabus inventory is preserved; they are not presented as complete deep lessons.
 - The full original inventory is retained separately. A focused case lesson does not imply an exhaustive deep textbook chapter for every individual subtopic.
 - ARC, copy-on-write, actor reentrancy/stale-result, complexity and architecture visual labs are illustrative models, not measured Swift runtime behavior.
 - Swift code is editable but not executed. Framework examples require an Apple SDK. Predictions are explicitly labeled.
 - Interview scores are transparent weighted self-assessments, not expert automatic grades. Reading never implies mastery.
+
+Chapter source cards distinguish reviewed Swift book, Swift Evolution and historical objc.io passages from Apple documentation and forum links whose live contents were not retrieved. Public source revisions and scope are recorded in `src/content/teaching-sources.json`.
 
 See [architecture](docs/architecture.md), [coverage matrix](docs/coverage.md) and [research provenance](docs/research.md).
 

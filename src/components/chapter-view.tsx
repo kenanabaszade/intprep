@@ -17,6 +17,7 @@ import { statuses } from "@/lib/i18n";
 import { useAcademy } from "./provider";
 import { PageHeading, Card, CodeBlock } from "./ui";
 import { Quiz } from "./quiz";
+import { TeachingSources } from "./teaching-sources";
 import { LessonTutor } from "./lesson-tutor";
 export function ChapterView({ id }: { id: string }) {
   const { state, setState, t, ready } = useAcademy();
@@ -71,6 +72,10 @@ export function ChapterView({ id }: { id: string }) {
     }));
   }
   const contents = [
+    {
+      id: "teaching-sources",
+      title: b("Sources and reading", "Mənbələr və oxu"),
+    },
     ...chapter.sections.map((s) => ({ id: s.id, title: s.title })),
     {
       id: "worked-examples",
@@ -116,6 +121,20 @@ export function ChapterView({ id }: { id: string }) {
         }
       />
       <div className="chapter-meta">
+        <a href="#worked-examples">
+          {t(
+            b(
+              "Understand first → examples afterward",
+              "Əvvəl anla → sonra nümunələr",
+            ),
+          )}
+        </a>
+        {chapter.sources?.length && (
+          <a href="#teaching-sources">
+            {chapter.sources.length}{" "}
+            {t(b("teaching references", "tədris istinadı"))}
+          </a>
+        )}
         <span>
           {chapterWordCount(id, state.locale).toLocaleString(
             state.locale === "az" ? "az-AZ" : "en-GB",
@@ -492,6 +511,7 @@ export function ChapterView({ id }: { id: string }) {
             <LessonTutor chapter={chapter} />
           </div>
           <Card className="lesson-section">
+            <TeachingSources chapter={chapter} />
             <h2>
               {t(
                 b(
@@ -529,6 +549,14 @@ export function ChapterView({ id }: { id: string }) {
                 {[...topic.items, ...topic.checkpoints].map((item) => (
                   <li key={item.id}>
                     {item.text}
+                    {chapter.syllabusCoverage?.[item.id] && (
+                      <a
+                        className="text-link"
+                        href={"#" + chapter.syllabusCoverage[item.id]}
+                      >
+                        {t(b(" · Read the explanation", " · İzahı oxu"))}
+                      </a>
+                    )}
                     <br />
                     <code>{item.id}</code>
                   </li>

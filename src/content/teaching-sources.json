@@ -1,0 +1,380 @@
+[
+  {
+    "id": "swift-basics",
+    "title": "The Swift Programming Language · The Basics",
+    "role": "official-language",
+    "status": "reviewed-source",
+    "url": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/TheBasics.md",
+    "revision": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "accessedAt": "2026-11-05T11:43:33.556234+00:00",
+    "publishedYear": null,
+    "supports": {
+      "en": "Constants, variables, type annotations/inference, optionals and type aliases.",
+      "az": "Sabit, dəyişən, tip annotasiyası/inference, Optional və typealias."
+    },
+    "qualification": {
+      "en": "Relevant source passages reviewed. Explanations are an authored synthesis, not reproduced textbook text.",
+      "az": "Uyğun mənbə hissələri oxunub. İzah müəllifli sintezdir, dərslik mətninin surəti deyil."
+    }
+  },
+  {
+    "id": "swift-operators",
+    "title": "The Swift Programming Language · Basic Operators",
+    "role": "official-language",
+    "status": "reviewed-source",
+    "url": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/BasicOperators.md",
+    "revision": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "accessedAt": "2026-11-05T11:43:33.556262+00:00",
+    "publishedYear": null,
+    "supports": {
+      "en": "Arithmetic, comparison, logical short-circuiting, ranges, ternary and nil-coalescing semantics.",
+      "az": "Arifmetika, müqayisə, məntiqi short-circuit, range, ternary və nil-coalescing semantikası."
+    },
+    "qualification": {
+      "en": "Language concepts; the lesson examples are not compiler-executed here.",
+      "az": "Dil anlayışları; dərs nümunələri burada compiler ilə icra edilməyib."
+    }
+  },
+  {
+    "id": "never-se0102",
+    "title": "SE-0102 · Remove @noreturn and introduce Never",
+    "role": "official-design",
+    "status": "reviewed-source",
+    "url": "https://github.com/swiftlang/swift-evolution/blob/d937ef62ca76fcdae587cbd00d73839faab78e26/proposals/0102-noreturn-bottom-type.md",
+    "revision": "d937ef62ca76fcdae587cbd00d73839faab78e26",
+    "accessedAt": "2026-11-05T11:43:33.556276+00:00",
+    "publishedYear": null,
+    "supports": {
+      "en": "Why nonreturning behavior belongs in the type system and differs from Void.",
+      "az": "Normal qayıtmamağın tip sistemində olması və Void-dan fərqi."
+    },
+    "qualification": {
+      "en": "Historical language-design rationale. It is not a recommendation to crash on expected user errors.",
+      "az": "Tarixi dil-dizayn səbəbi. Gözlənilən user xətasında crash tövsiyəsi deyil."
+    }
+  },
+  {
+    "id": "async-se0296",
+    "title": "SE-0296 · Async/await",
+    "role": "official-design",
+    "status": "reviewed-source",
+    "url": "https://github.com/swiftlang/swift-evolution/blob/d937ef62ca76fcdae587cbd00d73839faab78e26/proposals/0296-async-await.md",
+    "revision": "d937ef62ca76fcdae587cbd00d73839faab78e26",
+    "accessedAt": "2026-11-05T11:43:33.556308+00:00",
+    "publishedYear": null,
+    "supports": {
+      "en": "Problems with nested completions, control flow, errors and explicit suspension points.",
+      "az": "İç-içə completion, control flow, xəta və açıq suspension problemləri."
+    },
+    "qualification": {
+      "en": "Proposal text was reviewed. Discussion links in it are not treated as separately reviewed forum posts.",
+      "az": "Təklif mətni oxunub. İçindəki discussion link ayrıca oxunmuş forum postu sayılmır."
+    }
+  },
+  {
+    "id": "tasks-se0304",
+    "title": "SE-0304 · Structured concurrency",
+    "role": "official-design",
+    "status": "reviewed-source",
+    "url": "https://github.com/swiftlang/swift-evolution/blob/d937ef62ca76fcdae587cbd00d73839faab78e26/proposals/0304-structured-concurrency.md",
+    "revision": "d937ef62ca76fcdae587cbd00d73839faab78e26",
+    "accessedAt": "2026-11-05T11:43:33.556323+00:00",
+    "publishedYear": null,
+    "supports": {
+      "en": "Bounded child-task lifetimes, task groups and cooperative cancellation.",
+      "az": "Məhdud child-task lifetime, task group və cooperative cancellation."
+    },
+    "qualification": {
+      "en": "The proposal has historical API spellings; use current APIs and state compiler assumptions in examples.",
+      "az": "Təklifdə tarixi API yazılışı var; nümunədə cari API və compiler fərziyyəsini nəzərə al."
+    }
+  },
+  {
+    "id": "actors-se0306",
+    "title": "SE-0306 · Actors",
+    "role": "official-design",
+    "status": "reviewed-source",
+    "url": "https://github.com/swiftlang/swift-evolution/blob/d937ef62ca76fcdae587cbd00d73839faab78e26/proposals/0306-actors.md",
+    "revision": "d937ef62ca76fcdae587cbd00d73839faab78e26",
+    "accessedAt": "2026-11-05T11:43:33.556330+00:00",
+    "publishedYear": null,
+    "supports": {
+      "en": "Isolation, interleaving at suspension and the trade-off behind reentrancy.",
+      "az": "İzolyasiya, suspension-da interleaving və reentrancy seçiminin səbəbi."
+    },
+    "qualification": {
+      "en": "The reviewed source is the design proposal, not a live forum-thread audit or runtime benchmark.",
+      "az": "Oxunan mənbə dizayn təklifidir, canlı forum audit-i və runtime benchmark deyil."
+    }
+  },
+  {
+    "id": "observation-se0395",
+    "title": "SE-0395 · Observation",
+    "role": "official-design",
+    "status": "reviewed-source",
+    "url": "https://github.com/swiftlang/swift-evolution/blob/d937ef62ca76fcdae587cbd00d73839faab78e26/proposals/0395-observability.md",
+    "revision": "d937ef62ca76fcdae587cbd00d73839faab78e26",
+    "accessedAt": "2026-11-05T11:43:33.556337+00:00",
+    "publishedYear": null,
+    "supports": {
+      "en": "Motivation for access tracking and limitations of prior observation mechanisms.",
+      "az": "Access tracking səbəbi və əvvəlki observation mexanizminin məhdudiyyəti."
+    },
+    "qualification": {
+      "en": "Language-level Observation rationale does not establish every SwiftUI rendering implementation detail.",
+      "az": "Dil səviyyəli Observation səbəbi SwiftUI rendering-in bütün implementasiya detalını sübut etmir."
+    }
+  },
+  {
+    "id": "objc-controller",
+    "title": "objc.io · Lighter View Controllers (2013)",
+    "role": "historical-community",
+    "status": "reviewed-source",
+    "url": "https://github.com/objcio/articles/blob/ce8898e4254835237a13b30611060faa88700d19/2013-06-07-lighter-view-controllers.md",
+    "revision": "ce8898e4254835237a13b30611060faa88700d19",
+    "accessedAt": "2026-11-05T11:43:33.556349+00:00",
+    "publishedYear": 2013,
+    "supports": {
+      "en": "Separating data-source and model responsibilities to improve change isolation and testing.",
+      "az": "Data-source/model məsuliyyətini ayırmaqla dəyişmə izolyasiyası və test."
+    },
+    "qualification": {
+      "en": "Historical third-party engineering article, not current Apple API documentation. Old syntax is not copied as modern guidance.",
+      "az": "Tarixi üçüncü tərəf yazısıdır, cari Apple API sənədi deyil. Köhnə sintaksis müasir tövsiyə kimi kopyalanmır."
+    }
+  },
+  {
+    "id": "objc-layout",
+    "title": "objc.io · Advanced Auto Layout Toolbox (2013)",
+    "role": "historical-community",
+    "status": "reviewed-source",
+    "url": "https://github.com/objcio/articles/blob/ce8898e4254835237a13b30611060faa88700d19/2013-08-07-advanced-auto-layout-toolbox.md",
+    "revision": "ce8898e4254835237a13b30611060faa88700d19",
+    "accessedAt": "2026-11-05T11:43:33.556422+00:00",
+    "publishedYear": 2013,
+    "supports": {
+      "en": "Conceptual separation of constraint updates, layout/display and intrinsic-size priorities.",
+      "az": "Constraint update, layout/display və intrinsic-size priority-nin konseptual fərqi."
+    },
+    "qualification": {
+      "en": "Historical discussion. Current layout-guide APIs are linked separately; the article is not proof of every current platform detail.",
+      "az": "Tarixi müzakirədir. Cari layout-guide API ayrıca verilir; məqalə bütün cari platform detalının sübutu deyil."
+    }
+  },
+  {
+    "id": "apple-controller",
+    "title": "Apple · UIViewController",
+    "url": "https://developer.apple.com/documentation/uikit/uiviewcontroller",
+    "role": "official-framework",
+    "status": "reference-link",
+    "revision": null,
+    "accessedAt": null,
+    "publishedYear": null,
+    "supports": {
+      "en": "Controller, appearance and view-loading API reference.",
+      "az": "Controller, appearance və view-loading API istinadı."
+    },
+    "qualification": {
+      "en": "Reference link for further reading. Direct page contents could not be retrieved in this authoring session. A linked discussion is not presented as reviewed evidence.",
+      "az": "Əlavə oxu üçün istinad keçidi. Səhifə məzmunu bu sessiyada gətirilə bilmədi. Bağlı müzakirə oxunmuş sübut kimi təqdim olunmur."
+    }
+  },
+  {
+    "id": "apple-layout",
+    "title": "Apple · Auto Layout Guide",
+    "url": "https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/AutolayoutPG/index.html",
+    "role": "official-framework",
+    "status": "reference-link",
+    "revision": null,
+    "accessedAt": null,
+    "publishedYear": null,
+    "supports": {
+      "en": "Constraints, intrinsic sizes, priorities and debugging reference.",
+      "az": "Constraint, intrinsic ölçü, priority və debugging istinadı."
+    },
+    "qualification": {
+      "en": "Reference link for further reading. Direct page contents could not be retrieved in this authoring session. A linked discussion is not presented as reviewed evidence.",
+      "az": "Əlavə oxu üçün istinad keçidi. Səhifə məzmunu bu sessiyada gətirilə bilmədi. Bağlı müzakirə oxunmuş sübut kimi təqdim olunmur."
+    }
+  },
+  {
+    "id": "apple-swiftui",
+    "title": "Apple · SwiftUI",
+    "url": "https://developer.apple.com/documentation/swiftui",
+    "role": "official-framework",
+    "status": "reference-link",
+    "revision": null,
+    "accessedAt": null,
+    "publishedYear": null,
+    "supports": {
+      "en": "Framework concepts, composition and platform availability.",
+      "az": "Framework anlayışı, composition və platform availability."
+    },
+    "qualification": {
+      "en": "Reference link for further reading. Direct page contents could not be retrieved in this authoring session. A linked discussion is not presented as reviewed evidence.",
+      "az": "Əlavə oxu üçün istinad keçidi. Səhifə məzmunu bu sessiyada gətirilə bilmədi. Bağlı müzakirə oxunmuş sübut kimi təqdim olunmur."
+    }
+  },
+  {
+    "id": "apple-state",
+    "title": "Apple · Managing model data in your app",
+    "url": "https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app",
+    "role": "official-framework",
+    "status": "reference-link",
+    "revision": null,
+    "accessedAt": null,
+    "publishedYear": null,
+    "supports": {
+      "en": "SwiftUI ownership and model-data documentation.",
+      "az": "SwiftUI ownership və model-data sənədi."
+    },
+    "qualification": {
+      "en": "Reference link for further reading. Direct page contents could not be retrieved in this authoring session. A linked discussion is not presented as reviewed evidence.",
+      "az": "Əlavə oxu üçün istinad keçidi. Səhifə məzmunu bu sessiyada gətirilə bilmədi. Bağlı müzakirə oxunmuş sübut kimi təqdim olunmur."
+    }
+  },
+  {
+    "id": "forums-actors",
+    "title": "Swift Forums · SE-0306 actor review",
+    "url": "https://forums.swift.org/t/se-0306-actors/45734",
+    "role": "community-discussion",
+    "status": "reference-link",
+    "revision": null,
+    "accessedAt": null,
+    "publishedYear": null,
+    "supports": {
+      "en": "Public discussion linked by the official actors proposal.",
+      "az": "Rəsmi actors təklifində bağlı public müzakirə."
+    },
+    "qualification": {
+      "en": "Reference link for further reading. Direct page contents could not be retrieved in this authoring session. A linked discussion is not presented as reviewed evidence.",
+      "az": "Əlavə oxu üçün istinad keçidi. Səhifə məzmunu bu sessiyada gətirilə bilmədi. Bağlı müzakirə oxunmuş sübut kimi təqdim olunmur."
+    }
+  },
+  {
+    "id": "forums-observation",
+    "title": "Swift Forums · SE-0395 observation review",
+    "url": "https://forums.swift.org/t/se-0395-observability/64342/",
+    "role": "community-discussion",
+    "status": "reference-link",
+    "revision": null,
+    "accessedAt": null,
+    "publishedYear": null,
+    "supports": {
+      "en": "Public discussion linked by the official Observation proposal.",
+      "az": "Rəsmi Observation təklifində bağlı public müzakirə."
+    },
+    "qualification": {
+      "en": "Reference link for further reading. Direct page contents could not be retrieved in this authoring session. A linked discussion is not presented as reviewed evidence.",
+      "az": "Əlavə oxu üçün istinad keçidi. Səhifə məzmunu bu sessiyada gətirilə bilmədi. Bağlı müzakirə oxunmuş sübut kimi təqdim olunmur."
+    }
+  },
+  {
+    "id": "swift-values",
+    "title": "The Swift Programming Language · ClassesAndStructures",
+    "role": "official-language",
+    "status": "reviewed-source",
+    "url": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/ClassesAndStructures.md",
+    "revision": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "accessedAt": "2026-11-05T09:28:32.007043+00:00",
+    "publishedYear": null,
+    "supports": {
+      "en": "Value/reference semantics and the distinction between assignment and shared identity.",
+      "az": "Dəyər/istinad semantikası və mənimsətmə/shared identity fərqi."
+    },
+    "qualification": {
+      "en": "Focused passages reviewed during the earlier chapter-authoring pass. This does not claim compiler execution or a new live documentation check.",
+      "az": "Fəsil hazırlanarkən əvvəlki keçiddə uyğun hissələr oxunub. Compiler icrası və yeni canlı sənəd yoxlaması iddiası deyil."
+    }
+  },
+  {
+    "id": "swift-closures",
+    "title": "The Swift Programming Language · Closures",
+    "role": "official-language",
+    "status": "reviewed-source",
+    "url": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/Closures.md",
+    "revision": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "accessedAt": "2026-11-05T09:28:32.007086+00:00",
+    "publishedYear": null,
+    "supports": {
+      "en": "Capture behavior, escaping closures and captured context.",
+      "az": "Capture davranışı, escaping closure və tutulan kontekst."
+    },
+    "qualification": {
+      "en": "Focused passages reviewed during the earlier chapter-authoring pass. This does not claim compiler execution or a new live documentation check.",
+      "az": "Fəsil hazırlanarkən əvvəlki keçiddə uyğun hissələr oxunub. Compiler icrası və yeni canlı sənəd yoxlaması iddiası deyil."
+    }
+  },
+  {
+    "id": "swift-protocols",
+    "title": "The Swift Programming Language · Protocols",
+    "role": "official-language",
+    "status": "reviewed-source",
+    "url": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/Protocols.md",
+    "revision": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "accessedAt": "2026-11-05T09:28:32.007185+00:00",
+    "publishedYear": null,
+    "supports": {
+      "en": "Protocol requirements, extensions and conformance behavior.",
+      "az": "Protocol requirement, extension və conformance davranışı."
+    },
+    "qualification": {
+      "en": "Focused passages reviewed during the earlier chapter-authoring pass. This does not claim compiler execution or a new live documentation check.",
+      "az": "Fəsil hazırlanarkən əvvəlki keçiddə uyğun hissələr oxunub. Compiler icrası və yeni canlı sənəd yoxlaması iddiası deyil."
+    }
+  },
+  {
+    "id": "swift-arc",
+    "title": "The Swift Programming Language · AutomaticReferenceCounting",
+    "role": "official-language",
+    "status": "reviewed-source",
+    "url": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/AutomaticReferenceCounting.md",
+    "revision": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "accessedAt": "2026-11-05T09:28:32.007125+00:00",
+    "publishedYear": null,
+    "supports": {
+      "en": "Strong ownership, weak/unowned references and reference cycles.",
+      "az": "Strong ownership, weak/unowned istinad və istinad dövrü."
+    },
+    "qualification": {
+      "en": "Focused passages reviewed during the earlier chapter-authoring pass. This does not claim compiler execution or a new live documentation check.",
+      "az": "Fəsil hazırlanarkən əvvəlki keçiddə uyğun hissələr oxunub. Compiler icrası və yeni canlı sənəd yoxlaması iddiası deyil."
+    }
+  },
+  {
+    "id": "apple-urlsession",
+    "title": "Apple · URLSession",
+    "url": "https://developer.apple.com/documentation/foundation/urlsession",
+    "role": "official-framework",
+    "status": "reference-link",
+    "revision": null,
+    "accessedAt": null,
+    "publishedYear": null,
+    "supports": {
+      "en": "Transport API and response handling reference.",
+      "az": "Transport API və cavab handling istinadı."
+    },
+    "qualification": {
+      "en": "Reference link for further reading. Direct page contents could not be retrieved in this authoring session. A linked discussion is not presented as reviewed evidence.",
+      "az": "Əlavə oxu üçün istinad keçidi. Səhifə məzmunu bu sessiyada gətirilə bilmədi. Bağlı müzakirə oxunmuş sübut kimi təqdim olunmur."
+    }
+  },
+  {
+    "id": "apple-keychain",
+    "title": "Apple · Keychain Services",
+    "url": "https://developer.apple.com/documentation/security/keychain-services",
+    "role": "official-framework",
+    "status": "reference-link",
+    "revision": null,
+    "accessedAt": null,
+    "publishedYear": null,
+    "supports": {
+      "en": "Secure-storage API reference.",
+      "az": "Secure-storage API istinadı."
+    },
+    "qualification": {
+      "en": "Reference link for further reading. Direct page contents could not be retrieved in this authoring session. A linked discussion is not presented as reviewed evidence.",
+      "az": "Əlavə oxu üçün istinad keçidi. Səhifə məzmunu bu sessiyada gətirilə bilmədi. Bağlı müzakirə oxunmuş sübut kimi təqdim olunmur."
+    }
+  }
+]

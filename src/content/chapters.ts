@@ -1,4 +1,7 @@
 import { swiftChapters } from "./chapters-swift";
+import { platformChapters } from "./chapters-platform";
+import { addTheoryFirstExpansion } from "./teaching-expansions";
+import { attachTeachingSources } from "./chapter-sources";
 import { moreChapters } from "./chapters-more";
 export type {
   Chapter,
@@ -6,7 +9,9 @@ export type {
   WorkedExample,
   TeachingSection,
 } from "./chapter-types";
-export const chapters = [...swiftChapters, ...moreChapters];
+export const chapters = [...swiftChapters, ...moreChapters, ...platformChapters]
+  .map(addTheoryFirstExpansion)
+  .map(attachTeachingSources);
 export const chapterById = Object.fromEntries(
   chapters.map((c) => [c.topicId, c]),
 );

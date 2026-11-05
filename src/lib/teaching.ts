@@ -28,6 +28,14 @@ export function teachingContext(chapter: Chapter, locale: Locale) {
   return {
     topicId: chapter.topicId,
     language: locale,
+    sources: (chapter.sources || []).map((s) => ({
+      title: s.title,
+      url: s.url,
+      role: s.role,
+      status: s.status,
+      supports: s.supports[locale],
+      qualification: s.qualification[locale],
+    })),
     sections: chapter.sections.map((s) => ({
       title: s.title[locale],
       paragraphs: s.paragraphs.map((p) => p[locale]),

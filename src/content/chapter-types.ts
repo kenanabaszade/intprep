@@ -34,6 +34,8 @@ export type DebugCase = {
   test: Localized;
 };
 export type Chapter = {
+  sources?: TeachingSource[];
+  syllabusCoverage?: Record<string, string>;
   topicId: string;
   objectives: Localized[];
   sections: TeachingSection[];
@@ -48,4 +50,22 @@ export type Chapter = {
     checks: Localized[];
   };
   prerequisiteNote: Localized;
+};
+
+export type TeachingSource = {
+  id: string;
+  title: string;
+  url: string;
+  role:
+    | "official-language"
+    | "official-design"
+    | "official-framework"
+    | "historical-community"
+    | "community-discussion";
+  status: "reviewed-source" | "reference-link";
+  revision: string | null;
+  accessedAt: string | null;
+  publishedYear: number | null;
+  supports: Localized;
+  qualification: Localized;
 };

@@ -326,8 +326,8 @@ test("curriculum distinguishes full teaching from notes and filters chapters", a
 }) => {
   await page.goto(path("/curriculum/"));
   await page.getByRole("checkbox", { name: "Long-form chapters only" }).check();
-  await expect(page.locator(".topic-row")).toHaveCount(10);
-  await expect(page.locator(".topic-actions .chip.green")).toHaveCount(10);
+  await expect(page.locator(".topic-row")).toHaveCount(13);
+  await expect(page.locator(".topic-actions .chip.green")).toHaveCount(13);
   await page.goto(path("/learn/topic-03/"));
   await expect(
     page.getByText("This entry is a brief study note.", { exact: false }),
@@ -443,4 +443,78 @@ test("prediction assessment includes its own exact reference code", async ({
   await expect(
     page.getByRole("status").filter({ hasText: "That reasoning holds" }),
   ).toBeVisible();
+});
+test("Swift Basics explains concepts before code and links source items to their teaching", async ({
+  page,
+}) => {
+  await page.goto(path("/learn/topic-01/"));
+  await expect(
+    page.getByRole("heading", {
+      name: "Before syntax: what does a program actually do?",
+    }),
+  ).toBeVisible();
+  const order = await page.evaluate(() => {
+    const theory = document.getElementById("types-before-inference");
+    const examples = document.getElementById("worked-examples");
+    return (
+      !!theory &&
+      !!examples &&
+      !!(
+        theory.compareDocumentPosition(examples) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+      )
+    );
+  });
+  expect(order).toBe(true);
+  await expect(page.locator("#constants-and-change")).toContainText(
+    "The useful question is not",
+  );
+  await expect(page.locator("#aliases-and-returning")).toContainText("Void");
+  await page.getByRole("link", { name: "3 teaching references" }).click();
+  await expect(page.locator("#teaching-sources")).toContainText("SE-0102");
+  await expect(page.locator("#teaching-sources .chip.green")).toHaveCount(3);
+  await page
+    .getByText("Original syllabus items and checkpoints", { exact: true })
+    .click();
+  await expect(page.locator(".inventory-list a")).toHaveCount(18);
+  await page
+    .getByRole("button", { name: "Switch language", exact: true })
+    .click();
+  await expect(page.locator("#types-before-inference")).toContainText(
+    "Inference təkrarı azaldır",
+  );
+});
+test("UIKit and SwiftUI lessons start with explanations and mark source limits", async ({
+  page,
+}) => {
+  await page.goto(path("/learn/topic-13/"));
+  await expect(
+    page.getByRole("heading", {
+      name: "What is UIKit, and what problem does a UI framework solve?",
+    }),
+  ).toBeVisible();
+  await expect(page.locator("#uikit-controller-lifecycle")).toContainText(
+    "Loaded",
+  );
+  await expect(page.locator("#teaching-sources")).toContainText(
+    "Reading link · not retrieved",
+  );
+  await expect(page.locator("#teaching-sources")).toContainText(
+    "Lighter View Controllers (2013)",
+  );
+  await page.goto(path("/learn/topic-33/"));
+  await expect(
+    page.getByRole("heading", {
+      name: "The problem: keeping the interface consistent with changing data",
+    }),
+  ).toBeVisible();
+  await expect(page.locator("#swiftui-view-body")).toContainText(
+    "A body is a computed property",
+  );
+  await expect(page.locator("#teaching-sources")).toContainText("SE-0395");
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
 });
