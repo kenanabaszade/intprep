@@ -1,0 +1,1199 @@
+Phase 1 — Swift Fundamentals
+1. Swift Basics
+* let vs var
+* Type inference and explicit type annotations
+* Type safety
+* Constants and variables
+* Scope and lifetime of variables
+* Basic operators
+* Comparison and logical operators
+* Range operators
+* Nil-coalescing operator ??
+* Ternary conditional operator
+* Optionals and Optional<Wrapped>
+* Optional binding (if let, guard let)
+* Optional chaining
+* Force unwrapping and its risks
+* Implicitly unwrapped optionals
+* guard and early returns
+* Never and functions that do not return
+* typealias
+Interview checkpoint
+* Can I explain why Swift uses Optionals?
+* Can I explain how Optional is represented as an enum?
+* Can I choose between if let, guard let, ??, and optional chaining?
+* Can I explain when force unwrapping is acceptable?
+* Can I explain type inference vs type safety?
+2. Swift Data Types and Collections
+* Int, Int8, Int16, Int32, Int64
+* UInt and unsigned integers
+* Double vs Float
+* Bool
+* String and Character
+* Unicode and grapheme clusters
+* String indexing
+* String interpolation
+* Tuples and named tuple elements
+* Arrays
+* Sets
+* Dictionaries
+* Collection iteration
+* Collection mutation
+* ArraySlice
+* Sequence vs Collection
+* Value semantics
+* Reference semantics
+* Copy-on-write (COW)
+* Shallow copy vs deep copy
+* Collection complexity and Big O basics
+Interview checkpoint
+* Can I explain why Swift arrays use copy-on-write?
+* Can I explain why String cannot be indexed directly by integer?
+* Can I choose between Array, Set, and Dictionary?
+* Can I explain value vs reference semantics with examples?
+3. Control Flow and Pattern Matching
+* if / else
+* guard
+* switch
+* for-in
+* while
+* repeat-while
+* break
+* continue
+* fallthrough
+* where
+* Range matching
+* Tuple matching
+* Enum case matching
+* if case
+* guard case
+* for case
+* switch exhaustiveness
+* @unknown default
+* Pattern matching with associated values
+Interview checkpoint
+* Can I choose guard vs if?
+* Can I use switch with associated values?
+* Can I explain exhaustive switching?
+* Can I model branching application behavior without deeply nested conditions?
+4. Functions and Closures
+* Function declaration
+* Parameters and argument labels
+* Return values
+* Multiple return values using tuples
+* Default parameters
+* Variadic parameters
+* inout
+* Function overloading
+* Function types
+* Nested functions
+* Closures
+* Closure syntax
+* Trailing closures
+* Multiple trailing closures
+* Shorthand argument names
+* Implicit returns
+* Escaping vs non-escaping closures
+* @escaping
+* @autoclosure
+* Capture lists
+* Strong, weak, and unowned capture
+* Capturing value types vs reference types
+* Closure lifetime
+* Higher-order functions
+* map
+* filter
+* reduce
+* compactMap
+* flatMap
+* forEach
+* contains
+* first(where:)
+* sorted(by:)
+* lazy sequences
+Interview checkpoint
+* Can I explain escaping vs non-escaping closures?
+* Can I explain what closures capture and when?
+* Can I identify a retain cycle involving a closure?
+* Can I implement map/filter/reduce without looking at documentation?
+* Can I explain when a regular loop is preferable to higher-order functions?
+5. Enums
+* Basic enums
+* Raw values
+* Associated values
+* Enum methods
+* Computed properties
+* CaseIterable
+* Identifiable
+* Recursive enums
+* indirect
+* Enum initialization
+* Enums with protocols
+* State modeling with enums
+* Result and loading-state enums
+* Exhaustive state transitions
+Interview checkpoint
+* Can I explain associated values vs raw values?
+* Can I model loading, success, empty, and failure states?
+* Can I use enums to prevent invalid combinations of UI state?
+Phase 2 — Object-Oriented & Protocol-Oriented Swift
+6. Structs, Classes, and Properties
+* Struct vs class
+* Stored properties
+* Computed properties
+* Read-only computed properties
+* Lazy properties
+* Property observers
+* willSet and didSet
+* Instance methods
+* mutating methods
+* Static properties and methods
+* static vs class
+* Initializers
+* Failable initializers
+* Convenience initializers
+* Required initializers
+* Deinitializers
+* Inheritance
+* Method overriding
+* final
+* Access control: private, fileprivate, internal, package, public, open
+* Extensions
+* Nested types
+* Composition vs inheritance
+Interview checkpoint
+* Why are structs generally preferred for value models?
+* When is a class necessary?
+* What is the difference between static and class?
+* Why is composition often preferable to inheritance?
+7. Protocols and Abstraction
+* Protocol declarations
+* Property requirements
+* Method requirements
+* Initializer requirements
+* Protocol inheritance
+* Protocol composition
+* Protocol extensions
+* Default implementations
+* Associated types
+* Generic protocol constraints
+* Existential types using any
+* Opaque types using some
+* Type erasure
+* Protocol-oriented programming
+* Witness tables
+* Static vs dynamic protocol dispatch
+* Protocol extension dispatch pitfalls
+* Protocols for dependency injection
+* Interface segregation
+* Mockable abstractions
+* When not to create a protocol
+Interview checkpoint
+* Can I explain some vs any?
+* Can I explain associated types vs generics?
+* Can I explain why protocol-extension methods can behave unexpectedly?
+* Can I explain when introducing a protocol adds unnecessary complexity?
+8. Memory Management and ARC
+* Stack vs heap conceptual model
+* Value vs reference storage
+* Automatic Reference Counting
+* Strong references
+* Weak references
+* Unowned references
+* Reference ownership
+* Object lifetime
+* Retain cycles
+* Closure capture cycles
+* Delegate retain cycles
+* Timer retain cycles
+* Notification observer lifetimes
+* Combine subscription retention
+* deinit
+* Weak references becoming nil
+* Memory graph debugger
+* Instruments Leaks
+* Instruments Allocations
+* Distinguishing memory leaks from retained caches
+* Task lifetime and object retention
+Interview checkpoint
+* Can I draw a retain cycle?
+* Can I explain why weak must be optional?
+* Can I explain when unowned is dangerous?
+* Can I diagnose why a ViewModel never deinitializes?
+* Can I explain why [weak self] is not automatically necessary in every closure?
+Phase 3 — Advanced Swift
+9. Generics and Type Systems
+* Generic functions
+* Generic structs and classes
+* Generic constraints
+* where clauses
+* Associated types
+* Conditional conformance
+* Generic specialization
+* Type erasure
+* Opaque return types
+* Existential containers
+* Primary associated types
+* Variance basics
+* Compile-time vs runtime polymorphism
+Interview checkpoint
+* Can I design a generic API response wrapper?
+* Can I explain generic constraints?
+* Can I decide between a generic type, some Protocol, and any Protocol?
+10. Error Handling
+* Error
+* throws
+* throw
+* try
+* try?
+* try!
+* do-catch
+* Error propagation
+* Result
+* defer
+* Typed throws
+* Domain errors
+* Network errors vs business errors
+* Recoverable vs unrecoverable errors
+* Mapping infrastructure errors into user-facing errors
+* Error presentation and localization
+Interview checkpoint
+* Can I design a meaningful error hierarchy?
+* Can I distinguish cancellation from a genuine failure?
+* Can I decide whether an error should be handled or propagated?
+11. Dispatch and Runtime Behavior
+* Static dispatch
+* Dynamic dispatch
+* Virtual method tables
+* Protocol witness tables
+* Direct calls
+* Class method overriding
+* final
+* dynamic
+* @objc
+* Objective-C runtime interoperability
+* Method dispatch performance trade-offs
+* Protocol extension dispatch behavior
+* Existential dispatch
+* Dynamic replacement basics
+Interview checkpoint
+* Can I explain how Swift chooses which implementation to call?
+* Can I explain final and its implications?
+* Can I demonstrate the protocol-extension dispatch pitfall?
+12. Swift Concurrency
+High priority
+* async / await
+* Suspension points
+* Task
+* Task.detached
+* Structured vs unstructured concurrency
+* Parent-child task relationships
+* async let
+* Task groups
+* Throwing task groups
+* Cancellation
+* Cooperative cancellation
+* Task.checkCancellation()
+* Task priority
+* Actors
+* Actor isolation
+* Global actors
+* @MainActor
+* nonisolated
+* Actor reentrancy
+* Sendable
+* @Sendable closures
+* @unchecked Sendable
+* Data races
+* Logical race conditions
+* AsyncSequence
+* AsyncStream
+* Continuations
+* Checked continuations
+* Bridging callback APIs to async/await
+* Swift 6 strict concurrency
+* Isolation boundaries
+* Task lifetime management
+* UI updates on the main actor
+* Avoiding stale asynchronous results
+* Synchronization of shared mutable state
+Interview checkpoint
+* What is the difference between concurrency and parallelism?
+* What is the difference between Task and Task.detached?
+* What happens when an actor method reaches await?
+* Can an actor still have logical race conditions?
+* What does Sendable guarantee?
+* How do I cancel obsolete network requests?
+* How do I safely share mutable state across concurrent tasks?
+Phase 4 — UIKit
+13. UIKit Fundamentals
+* UIApplication
+* UIWindow
+* UIScene
+* UIView
+* UIViewController
+* Controller lifecycle
+* loadView
+* viewDidLoad
+* viewWillAppear
+* viewDidAppear
+* viewWillDisappear
+* viewDidDisappear
+* viewDidLayoutSubviews
+* View hierarchy
+* Responder chain
+* Hit testing
+* Event handling
+* Target-action
+* Delegation
+* Gesture recognizers
+* UIScrollView
+* Keyboard handling
+* Safe area insets
+* Trait collections
+* Dark Mode
+* Dynamic Type
+* Accessibility
+Interview checkpoint
+* Can I explain the complete UIViewController lifecycle?
+* Can I explain responder chain vs hit testing?
+* Can I debug a view that does not receive touches?
+* Can I implement a keyboard-aware scrollable form?
+14. Auto Layout
+* Constraints
+* Layout anchors
+* Intrinsic content size
+* Content hugging
+* Compression resistance
+* Constraint priorities
+* Ambiguous layouts
+* Unsatisfiable constraints
+* layoutSubviews
+* layoutIfNeeded
+* setNeedsLayout
+* Frame vs bounds
+* Layout margins
+* Safe areas
+* Stack views
+* Scroll view content layout guides
+* Self-sizing cells
+* Constraint debugging
+* Adaptive layouts
+Interview checkpoint
+* Can I explain hugging vs compression resistance?
+* Can I resolve conflicting constraints?
+* Can I explain why a UIScrollView's content does not scroll?
+* Can I create layouts that adapt to different device sizes?
+15. UIKit Navigation
+* UINavigationController
+* Push and pop
+* Modal presentation
+* Dismissal
+* UITabBarController
+* Navigation ownership
+* Coordinator pattern
+* Deep linking
+* Universal links
+* Navigation restoration
+* Passing data between screens
+* Child view controllers
+* Custom transitions
+16. UITableView and UICollectionView
+* Data source and delegate
+* Cell registration
+* Reusable cells
+* Cell lifecycle
+* Self-sizing cells
+* Dynamic heights
+* Prefetching
+* Batch updates
+* Diffable data sources
+* Snapshot application
+* Compositional layout
+* Supplementary views
+* Section headers
+* Pagination
+* Image loading and cancellation during reuse
+* Performance with large datasets
+Interview checkpoint
+* How does cell reuse work?
+* Why can reused cells display incorrect images?
+* What problem does diffable data source solve?
+* How do I optimize a list with thousands of items?
+Phase 5 — Architecture & Design Patterns
+17. MVC and MVVM
+* MVC responsibilities
+* Massive View Controller
+* MVVM responsibilities
+* View vs ViewModel vs Model
+* Binding mechanisms
+* Input/output ViewModels
+* State-driven ViewModels
+* Separation of concerns
+* Testability
+* ViewModel lifecycle
+* Navigation responsibility
+* Business logic placement
+* MVVM limitations
+* Avoiding Massive ViewModels
+18. Design Patterns
+* Singleton
+* Delegate
+* Observer
+* Factory
+* Abstract Factory
+* Builder
+* Adapter
+* Facade
+* Strategy
+* Decorator
+* Coordinator
+* Repository
+* Dependency Injection
+* Dependency Container
+* Composition Root
+* State
+* Command
+* Template Method
+* Dependency inversion
+19. SOLID Principles
+* Single Responsibility Principle
+* Open/Closed Principle
+* Liskov Substitution Principle
+* Interface Segregation Principle
+* Dependency Inversion Principle
+* Real-world violations
+* Refactoring toward SOLID
+* Avoiding unnecessary abstractions
+Interview checkpoint
+* Can I design a ViewModel without putting all logic into it?
+* Can I explain DI vs Dependency Inversion?
+* Can I identify violations of SOLID in real Swift code?
+* Can I justify using a design pattern rather than simply naming it?
+Phase 6 — Clean Architecture & Modular Design
+Highest architecture priority
+20. Clean Architecture Fundamentals
+* Clean Architecture principles
+* Dependency Rule
+* Presentation layer
+* Domain layer
+* Data layer
+* Domain entities
+* DTOs
+* Domain models vs UI models
+* Mappers
+* Use cases / Interactors
+* Repository protocols
+* Repository implementations
+* Separation of business and infrastructure logic
+* Error mapping across layers
+* Layer boundaries
+* Framework independence
+* Testability
+* Clean Architecture trade-offs
+21. Dependency Injection
+* Constructor injection
+* Property injection
+* Method injection
+* Dependency inversion
+* Composition Root
+* Dependency containers
+* Dependency scopes
+* Singleton vs transient dependencies
+* Protocol-based DI
+* Concrete-type DI
+* Swinject concepts
+* Manual dependency injection
+* Test dependency injection
+* Avoiding Service Locator anti-patterns
+* Dependency cycles
+* Managing object lifetimes
+22. Modular Architecture
+* Monolithic vs modular apps
+* Feature modules
+* Core modules
+* Shared UI modules
+* Domain modules
+* Data modules
+* Swift Package Manager
+* Module interfaces
+* Access control
+* Dependency graphs
+* Circular dependencies
+* Build-time impact
+* Reusable components
+* Design system modules
+* API stability
+* Module ownership
+* Feature isolation
+* Incremental migration from monolith to modules
+23. Advanced Application Architecture
+* MVVM vs MVI
+* VIPER
+* Clean Swift / VIP
+* Coordinator architecture
+* Unidirectional data flow
+* State machines
+* Immutable UI state
+* Actions and events
+* Reducer concepts
+* Side effects
+* State ownership
+* Navigation ownership
+* Feature composition
+* Backend-driven UI
+* Feature toggles
+* Architectural trade-offs
+* Overengineering
+* Evolutionary architecture
+Interview checkpoint
+* Can I design a feature using Presentation, Domain, and Data layers?
+* Can I explain why the Domain layer should not depend on UIKit or URLSession?
+* Can I distinguish a UseCase from a Repository?
+* Can I design a modular banking app?
+* Can I explain when Clean Architecture is unnecessary?
+* Can I justify architectural decisions in terms of complexity, testing, and maintainability?
+Phase 7 — Networking & API Design
+24. HTTP Fundamentals
+* HTTP methods
+* Headers
+* Request body
+* Response body
+* Status codes
+* 401 vs 403
+* Authentication vs authorization
+* Idempotency
+* REST principles
+* JSON
+* Content types
+* HTTP caching
+* ETag
+* Cache-Control
+* Rate limiting
+* API versioning
+* HTTPS
+* TLS basics
+25. URLSession
+* URLRequest
+* URLSession
+* Session configuration
+* Data tasks
+* Download tasks
+* Upload tasks
+* Async/await networking
+* Cancellation
+* Timeouts
+* Request priority
+* URLCache
+* Background sessions
+* Upload progress
+* Multipart form-data
+* Streaming large files
+* Network connectivity changes
+* Redirect handling
+* URLSession delegates
+26. Codable
+* Encodable
+* Decodable
+* Codable
+* JSONDecoder
+* JSONEncoder
+* CodingKeys
+* Custom decoding
+* Nested containers
+* Optional API fields
+* Date decoding
+* Enum decoding
+* Polymorphic JSON
+* API schema evolution
+* Handling inconsistent backend data
+27. Network Layer Architecture
+* API client
+* Endpoint abstraction
+* Request builder
+* Network service
+* Repository
+* DTO mapping
+* Dependency injection
+* Network error mapping
+* Retry policy
+* Exponential backoff
+* Jitter
+* Pagination
+* Caching
+* Offline-first design
+* Request deduplication
+* Request cancellation
+* Preventing stale responses
+* Mock network clients
+* Network logging
+* Observability
+Interview checkpoint
+* Can I build a generic API client?
+* Can I design pagination?
+* Can I implement safe retry logic?
+* Can I explain why blindly retrying a POST request can be dangerous?
+* Can I prevent old network results from overwriting newer results?
+Phase 8 — Persistence & Offline Data
+28. UserDefaults
+* Suitable use cases
+* Limitations
+* Preferences
+* Codable storage
+* AppStorage
+* Data consistency
+* Why sensitive data should not be stored here
+29. Keychain
+* Keychain Services
+* Secure storage
+* Tokens
+* Credentials
+* Accessibility levels
+* Access control
+* Biometric protection
+* Keychain item updates
+* Keychain error handling
+* Keychain vs UserDefaults
+30. FileManager
+* Documents directory
+* Caches directory
+* Temporary directory
+* File creation
+* Reading and writing
+* Atomic writes
+* File coordination basics
+* File protection
+* Disk-space management
+* Cache eviction
+* Large file handling
+31. Core Data and SwiftData
+* Core Data stack
+* Managed object contexts
+* Entities
+* Attributes
+* Relationships
+* Fetch requests
+* Predicates
+* CRUD
+* Faulting
+* Background contexts
+* Concurrency
+* Migrations
+* Lightweight migration
+* Data consistency
+* SwiftData @Model
+* ModelContext
+* @Query
+* SwiftData vs Core Data
+* Repository abstraction over persistence
+32. Offline-First Architecture
+* Cache-first vs network-first
+* Local source of truth
+* Synchronization
+* Conflict resolution
+* Stale data policies
+* Optimistic updates
+* Offline mutations
+* Retry queues
+* Data invalidation
+* Migration strategies
+Interview checkpoint
+* Can I choose the right storage solution?
+* Can I explain local source of truth?
+* Can I design a transaction-history cache?
+* Can I explain how to handle a failed synchronization?
+Phase 9 — SwiftUI
+33. SwiftUI Fundamentals
+* Declarative UI
+* View protocol
+* body
+* View composition
+* View modifiers
+* Layout containers
+* Lists
+* ScrollView
+* Lazy stacks
+* ForEach
+* Conditional views
+* Reusable components
+* Custom modifiers
+* Environment values
+* Preference keys
+* Accessibility
+* Dynamic Type
+34. SwiftUI State Management
+* @State
+* @Binding
+* @ObservedObject
+* @StateObject
+* @EnvironmentObject
+* @Environment
+* @Observable
+* @Bindable
+* ObservableObject
+* @Published
+* State ownership
+* Source of truth
+* View identity
+* View lifetime
+* State initialization
+* Data flow
+* Observation tracking
+* State invalidation
+* Avoiding duplicated state
+35. SwiftUI Architecture
+* MVVM
+* Repository
+* Dependency injection
+* Unidirectional data flow
+* Immutable UI state
+* Async loading states
+* Error states
+* ViewModel isolation
+* @MainActor
+* .task
+* .task(id:)
+* onAppear
+* onDisappear
+* Task cancellation
+* UIKit interoperability
+* UIViewRepresentable
+* UIViewControllerRepresentable
+* UIHostingController
+* Incremental UIKit-to-SwiftUI migration
+36. SwiftUI Navigation & Layout
+* NavigationStack
+* NavigationPath
+* Typed navigation destinations
+* Sheets
+* Full-screen covers
+* Deep links
+* GeometryReader
+* Safe areas
+* Adaptive layouts
+* LazyVStack
+* LazyHStack
+* Custom layouts
+* Layout priorities
+* ScrollViewReader
+* Navigation state restoration
+37. SwiftUI Performance
+* View identity
+* View diffing
+* Body evaluation
+* Dependency tracking
+* View invalidation
+* Equatable views
+* AnyView trade-offs
+* Lazy containers
+* List performance
+* Image rendering
+* Avoiding expensive work in body
+* Avoiding unnecessary state updates
+* Instruments for SwiftUI
+* Memory and task lifetime
+Interview checkpoint
+* Can I explain @StateObject vs @ObservedObject?
+* Can I explain Observation vs ObservableObject?
+* Can I explain why a view's body is reevaluated?
+* Can I prevent unnecessary UI updates?
+* Can I migrate a UIKit/XIB feature to SwiftUI safely?
+* Can I explain .task vs an unstructured Task?
+Phase 10 — Security & Authentication
+38. Authentication
+* Authentication vs authorization
+* Access tokens
+* Refresh tokens
+* Token expiration
+* OAuth 2.0 concepts
+* OpenID Connect basics
+* PKCE
+* Secure token storage
+* Session management
+* Logout and token invalidation
+* Concurrent token refresh
+* Single-flight refresh
+* 401 handling
+* Authentication state modeling
+39. iOS Application Security
+* App Transport Security
+* TLS
+* Certificate pinning and rotation trade-offs
+* Keychain
+* LocalAuthentication
+* Face ID / Touch ID
+* Secure Enclave basics
+* Sensitive data handling
+* Secure logging
+* Data protection
+* App permissions
+* Secure deep links
+* Universal link validation
+* Input validation
+* Threat modeling basics
+* OWASP MASVS awareness
+* Jailbreak detection limitations
+Interview checkpoint
+* How do I handle 10 simultaneous 401 responses?
+* How do I prevent duplicate token refresh?
+* Where should credentials be stored?
+* What happens when certificate pinning breaks after server certificate rotation?
+* How do I prevent sensitive information from appearing in logs?
+Phase 11 — Testing & Debugging
+40. Testing
+* Unit testing
+* Integration testing
+* UI testing
+* XCTest
+* Swift Testing framework
+* Async tests
+* Expectations
+* Mock
+* Stub
+* Fake
+* Spy
+* Dependency injection for testing
+* Repository tests
+* ViewModel tests
+* UseCase tests
+* Snapshot tests
+* Test coverage
+* Test isolation
+* Deterministic tests
+* Flaky tests
+* Testing cancellation
+* Testing error states
+* Testing concurrent operations
+* Testing state transitions
+* Contract testing basics
+41. Debugging
+* Breakpoints
+* Conditional breakpoints
+* Symbolic breakpoints
+* LLDB
+* View hierarchy debugger
+* Memory graph debugger
+* Instruments
+* Time Profiler
+* Allocations
+* Leaks
+* Main Thread Checker
+* Thread Sanitizer
+* Address Sanitizer
+* Crash logs
+* dSYM
+* Symbolication
+* Crashlytics
+* Sentry
+* Structured logging
+* Root-cause analysis
+* Reproducing intermittent bugs
+Interview checkpoint
+* Can I test a ViewModel without a real API?
+* Can I test task cancellation?
+* Can I reproduce a race condition?
+* Can I debug a memory leak?
+* Can I investigate a production crash using symbolicated logs?
+Phase 12 — Performance & Reliability
+42. Performance Engineering
+* Main-thread blocking
+* Frame drops
+* UI responsiveness
+* CPU profiling
+* Memory profiling
+* Image downsampling
+* Image caching
+* Large list optimization
+* Lazy loading
+* Background processing
+* Network performance
+* Battery consumption
+* Launch-time optimization
+* Cold start vs warm start
+* Memory pressure
+* Retain cycle detection
+* SwiftUI rendering performance
+* UIKit layout performance
+43. Production Reliability
+* Crash reporting
+* Error monitoring
+* Sentry
+* Crashlytics
+* Logging levels
+* Structured logs
+* Correlation IDs
+* Feature flags
+* Remote configuration
+* Progressive rollout
+* Kill switches
+* Rollback strategies
+* Graceful degradation
+* API backward compatibility
+* Observability
+* Monitoring critical user journeys
+* Incident investigation
+Interview checkpoint
+* How would I investigate a slow transaction-history screen?
+* How would I reduce memory usage in an image-heavy application?
+* How would I safely release a new banking feature?
+* How would I diagnose an intermittent production crash?
+Phase 13 — App Lifecycle, Platform & Distribution
+44. Application Lifecycle
+* App launch
+* Process lifecycle
+* Main run loop basics
+* AppDelegate
+* SceneDelegate
+* SwiftUI App lifecycle
+* Foreground and background states
+* Suspension
+* Termination
+* Background tasks
+* Background URLSession
+* Push notifications
+* Silent notifications and limitations
+* Deep links
+* Universal links
+* State restoration
+* Memory warnings
+* Background execution constraints
+45. Signing and Distribution
+* Certificates
+* Provisioning profiles
+* Entitlements
+* Bundle identifiers
+* App IDs
+* Development signing
+* Distribution signing
+* App Store Connect
+* TestFlight
+* Release channels
+* App Store review
+* Versioning
+* Build numbers
+* Release notes
+* Phased releases
+* Rollback limitations
+* CI/CD signing
+46. Localization, Accessibility & Media
+* Localization
+* Internationalization
+* String catalogs
+* Pluralization
+* Right-to-left layouts
+* Dynamic Type
+* VoiceOver
+* Accessibility labels
+* Accessibility traits
+* Contrast
+* Reduce Motion
+* Camera
+* Photo library
+* PHPicker / PhotosPicker
+* Permissions
+* Privacy manifests
+* File import and export
+Phase 14 — Engineering Practices & CI/CD
+47. Git and Collaboration
+* Branching
+* Merge
+* Rebase
+* Cherry-pick
+* Reset vs revert
+* Conflict resolution
+* Pull requests / merge requests
+* Code review
+* Commit hygiene
+* Release branches
+* Hotfix workflow
+48. CI/CD and Build Systems
+* Xcode build configurations
+* Schemes
+* Build settings
+* Environment configuration
+* Swift Package Manager
+* Dependency resolution
+* Build caching basics
+* CI pipelines
+* Automated tests
+* Static analysis
+* SwiftLint
+* SwiftFormat
+* Code signing automation
+* Fastlane concepts
+* TestFlight deployment
+* Artifact generation
+* Release automation
+49. Maintainability & Team Engineering
+* Refactoring
+* Technical debt
+* Code ownership
+* API design
+* Documentation
+* Architecture Decision Records
+* Backward compatibility
+* Deprecation strategies
+* Feature migration
+* Code review communication
+* Estimation
+* Risk assessment
+* Working with QA
+* Working with Product Owners
+* Backend collaboration
+* Breaking down large tasks
+* Independent feature ownership
+Interview checkpoint
+* Can I review a pull request for architectural issues?
+* Can I explain how to migrate a legacy feature incrementally?
+* Can I identify technical debt worth addressing?
+* Can I describe how a feature moves from requirements to production?
+Phase 15 — iOS System Design
+Critical for architecture-focused interviews
+50. System Design Fundamentals
+* Requirements gathering
+* Functional vs non-functional requirements
+* Defining boundaries
+* Data flow diagrams
+* Module dependency diagrams
+* State diagrams
+* API contracts
+* Data consistency
+* Caching strategies
+* Failure handling
+* Concurrency design
+* Performance constraints
+* Security requirements
+* Testing strategy
+* Scalability of codebase
+* Trade-off analysis
+51. Practical Feature Designs
+* Transaction history with pagination
+* Money transfer flow
+* Account selection and detail flow
+* Authentication and token refresh
+* Large file upload
+* Offline-first data screen
+* Search with debouncing and cancellation
+* Reusable design system
+* UIKit-to-SwiftUI migration
+* Multi-module application
+* Feature flag integration
+* Background download manager
+* Image loading and caching pipeline
+* Deep-link routing
+52. Architectural Decision-Making
+* Choosing MVVM vs MVI
+* Choosing structs vs classes
+* Choosing protocols vs concrete dependencies
+* Choosing UseCases vs direct Repository calls
+* Choosing caching strategies
+* Choosing async/await vs reactive streams
+* Choosing Core Data vs SwiftData
+* Choosing module boundaries
+* Balancing maintainability and delivery speed
+* Avoiding premature abstraction
+* Explaining technical trade-offs
+Interview checkpoint
+* Can I design a complete banking feature on a whiteboard?
+* Can I explain where each responsibility belongs?
+* Can I identify failure scenarios?
+* Can I explain why my chosen architecture is appropriate?
+* Can I identify how my design might evolve as requirements change?
+Phase 16 — Practical Middle-Level Projects
+Build or refactor at least three production-style features.
+Project A — Banking Transaction History
+Requirements:
+* Clean Architecture
+* MVVM
+* Repository
+* Dependency Injection
+* Async/await
+* Pagination
+* Search and filters
+* Loading, empty, success, and error states
+* Request cancellation
+* Cache
+* Unit tests
+* Performance profiling
+Project B — Secure Authentication
+Requirements:
+* Login flow
+* Keychain storage
+* Token expiration
+* Refresh-token handling
+* Concurrent 401 synchronization
+* Logout
+* Authentication state
+* Secure error handling
+* Mockable API client
+* Unit and integration tests
+Project C — Legacy UIKit to SwiftUI Migration
+Requirements:
+* Existing UIKit/XIB screen
+* New SwiftUI implementation
+* Shared domain logic
+* Dependency injection
+* Navigation compatibility
+* Design-system components
+* Feature flag for gradual rollout
+* Backward compatibility
+* Regression tests
+* Architecture documentation
+Completion checkpoint
+For each project, be able to explain the original problem, chosen architecture, implementation, alternatives, trade-offs, testing, and what you would improve.
+Phase 17 — Middle iOS Interview Mastery
+Swift
+* Explain value/reference semantics
+* Explain ARC and ownership
+* Explain protocols and generics
+* Explain closure captures
+* Explain dispatch
+* Explain Swift concurrency
+* Diagnose actor reentrancy bugs
+* Explain Sendable and isolation
+UIKit and SwiftUI
+* Explain UIViewController lifecycle
+* Debug Auto Layout
+* Explain cell reuse
+* Explain SwiftUI state ownership
+* Explain view identity and updates
+* Handle navigation and lifecycle
+* Integrate UIKit with SwiftUI
+* Diagnose UI performance problems
+Architecture
+* Design MVVM
+* Design Clean Architecture layers
+* Design Repository
+* Design Dependency Injection
+* Design Coordinator
+* Apply SOLID
+* Explain modularization
+* Model UI states
+* Defend architectural decisions
+Networking and Security
+* Build API client
+* Handle errors
+* Implement retry
+* Implement pagination
+* Implement caching
+* Handle token refresh
+* Prevent stale responses
+* Implement secure file uploads
+Testing and Production
+* Unit test ViewModels and UseCases
+* Test asynchronous code
+* Debug memory leaks
+* Diagnose crashes
+* Profile performance
+* Review code
+* Refactor legacy code
+* Prepare a production release
+* Explain feature rollout and monitoring
+Behavioral and Ownership Questions
+* Describe a feature you owned end-to-end.
+* Describe a difficult technical decision.
+* Describe a bug you investigated independently.
+* Describe a disagreement during code review.
+* Describe a time you improved existing architecture.
+* Describe how you handled changing requirements.
+* Explain a technical trade-off you made under time pressure.

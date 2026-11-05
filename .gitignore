@@ -1,0 +1,10 @@
+node_modules/
+.next/
+out/
+.env*
+*.tsbuildinfo
+playwright-report/
+test-results/
+private/
+.academy-private/
+public/monaco/
