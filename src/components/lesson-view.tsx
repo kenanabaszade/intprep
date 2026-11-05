@@ -18,12 +18,21 @@ import { Quiz } from "./quiz";
 import { bi as b, type Level, type Localized } from "@/lib/types";
 import { statuses } from "@/lib/i18n";
 import { statusFor } from "@/lib/learning";
+import { chapterById } from "@/content/chapters";
+import { ChapterView } from "./chapter-view";
+export function LessonView({ id }: { id: string }) {
+  return chapterById[id] ? (
+    <ChapterView key={id} id={id} />
+  ) : (
+    <StudyNotesView key={id} id={id} />
+  );
+}
 const levelNames = {
   junior: b("Junior · build the foundation", "Junior · təməl qur"),
   middle: b("Middle · production reasoning", "Middle · praktiki düşüncə"),
   senior: b("Senior · engineering judgment", "Senior · mühəndislik qərarı"),
 };
-export function LessonView({ id }: { id: string }) {
+function StudyNotesView({ id }: { id: string }) {
   const { state, setState, t, ready } = useAcademy();
   const [level, setLevel] = useState<Level>("junior");
   const [sideBySide, setSideBySide] = useState(false);
@@ -85,8 +94,8 @@ export function LessonView({ id }: { id: string }) {
           lesson
             ? t(
                 b(
-                  "Learn the mechanism. Test the assumption. Explain the trade-off.",
-                  "Mexanizmi öyrən. Fərziyyəni yoxla. Seçimini əsaslandır.",
+                  "Study notes: this section has not yet been expanded into a long-form teaching chapter.",
+                  "Öyrənmə qeydləri: bu bölmə hələ ətraflı tədris fəslinə çevrilməyib.",
                 ),
               )
             : t(
@@ -102,6 +111,17 @@ export function LessonView({ id }: { id: string }) {
           </span>
         }
       />
+      <div className="notice">
+        {t(
+          b(
+            "This entry is a brief study note. For full worked teaching, open value semantics, ARC, concurrency, closures, protocols, MVVM, networking, SwiftUI state, authentication, or optionals from the curriculum.",
+            "Bu giriş qısa öyrənmə qeydidir. Tam işlənmiş tədris üçün curriculum-dan dəyər semantikası, ARC, concurrency, closure, protocol, MVVM, networking, SwiftUI state, auth və ya Optional aç.",
+          ),
+        )}
+        <Link className="text-link" href="/curriculum">
+          {t(b("Browse teaching chapters →", "Tədris fəsillərinə bax →"))}
+        </Link>
+      </div>
       <div className="lesson-layout">
         <div className="lesson-main">
           {lesson ? (

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAcademy } from "./provider";
 import { PageHeading, Card, Empty, CodeBlock } from "./ui";
 import { topicById } from "@/lib/curriculum";
+import { chapterById } from "@/content/chapters";
 import { lessons } from "@/content/lessons";
 import { bi as b, type Level } from "@/lib/types";
 import { requestFeedback } from "@/lib/providers";
@@ -130,7 +131,7 @@ export function Interview() {
   const title = t(lesson.title || topicById[lesson.id].title);
   const historicalQ = historical[index % Math.max(1, historical.length)];
   const sys = systemQuestions[index % systemQuestions.length];
-  const q =
+  let q =
     mode === "chapter"
       ? historicalQ?.question || ""
       : mode === "defense"
@@ -161,7 +162,7 @@ export function Interview() {
                       ),
                     )
                   : t(lesson.exercise);
-  const model =
+  let model =
     mode === "chapter"
       ? historicalQ?.answer || ""
       : mode === "defense"
@@ -182,8 +183,18 @@ export function Interview() {
                     ? lesson.judgment
                     : lesson.solution,
               );
-  const followup =
+  let followup =
     mode === "chapter" ? historicalQ?.followup || "" : t(lesson.exercise);
+  const relevantQuestions =
+    chapterById[lesson.id]?.interviews.filter((q) => q.level === level) || [];
+  const teachingQuestion =
+    relevantQuestions[index % Math.max(1, relevantQuestions.length)];
+  if (teachingQuestion && ["junior", "middle", "senior"].includes(mode)) {
+    q = t(teachingQuestion.question);
+    model = t(teachingQuestion.answer);
+    followup =
+      t(teachingQuestion.followup) + "\n" + t(teachingQuestion.followupAnswer);
+  }
   const blocked =
     (mode === "chapter" && !historical.length) ||
     (mode === "defense" &&

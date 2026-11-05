@@ -5,6 +5,7 @@ import { Search, ExternalLink, ArrowRight } from "lucide-react";
 import { useAcademy } from "./provider";
 import { PageHeading, Card, CodeBlock } from "./ui";
 import sourceVerification from "@/content/source-verification.json";
+import { chapters } from "@/content/chapters";
 import { lessons } from "@/content/lessons";
 import { topicById } from "@/lib/curriculum";
 import { extractReportQuestions } from "@/lib/private-report";
@@ -18,33 +19,58 @@ export function Questions() {
     () => extractReportQuestions(state.report || ""),
     [state.report],
   );
-  const authored = lessons.flatMap((l) => [
-    {
-      id: l.id + "-concept",
-      topicId: l.id,
-      type: "concept",
-      question: l.question,
-      answer: l.mechanism,
-      followup: l.followup,
-      source: l.source,
-      sourceLabel: l.sourceLabel,
-      trap: l.trap,
-    },
-    {
-      id: l.id + "-exercise",
-      topicId: l.id,
-      type: "exercise",
-      question: l.exercise,
-      answer: l.solution,
-      followup: l.followup,
-      source: l.source,
-      sourceLabel: l.sourceLabel,
-      trap: l.trap,
-    },
-  ]);
+  const authored = [
+    ...lessons.flatMap((l) => [
+      {
+        id: l.id + "-concept",
+        topicId: l.id,
+        type: "concept",
+        question: l.question,
+        answer: l.mechanism,
+        followup: l.followup,
+        source: l.source,
+        sourceLabel: l.sourceLabel,
+        trap: l.trap,
+        level: null,
+        why: null,
+        followupAnswer: null,
+      },
+      {
+        id: l.id + "-exercise",
+        topicId: l.id,
+        type: "exercise",
+        question: l.exercise,
+        answer: l.solution,
+        followup: l.followup,
+        source: l.source,
+        sourceLabel: l.sourceLabel,
+        trap: l.trap,
+        level: null,
+        why: null,
+        followupAnswer: null,
+      },
+    ]),
+    ...chapters.flatMap((c) =>
+      c.interviews.map((q) => ({
+        id: c.topicId + "-deep-" + q.id,
+        topicId: c.topicId,
+        type: "interview",
+        question: q.question,
+        answer: q.answer,
+        followup: q.followup,
+        source: lessons.find((l) => l.id === c.topicId)!.source,
+        sourceLabel: lessons.find((l) => l.id === c.topicId)!.sourceLabel,
+        trap: q.wrong,
+        level: q.level,
+        why: q.why,
+        followupAnswer: q.followupAnswer,
+      })),
+    ),
+  ];
   const filtered = authored.filter(
     (q) =>
       (kind === "all" || kind === "practice") &&
+      (!q.level || q.level === level) &&
       [
         t(q.question),
         topicById[q.topicId].title.en,
@@ -131,13 +157,19 @@ export function Questions() {
                 {t(
                   q.type === "concept"
                     ? b("Concept check", "Anlayış yoxlaması")
-                    : b("Practical exercise", "Praktiki tapşırıq"),
+                    : q.type === "interview"
+                      ? b(
+                          "Explained interview question",
+                          "İzahlı müsahibə sualı",
+                        )
+                      : b("Practical exercise", "Praktiki tapşırıq"),
                 )}
               </span>
-              <span className="chip">{level}</span>
+              <span className="chip">{q.level || level}</span>
             </div>
             <span className="small faint">{t(topicById[q.topicId].title)}</span>
             <h3>{t(q.question)}</h3>
+            {q.why && <p className="small">{t(q.why)}</p>}
             {q.type === "concept" && (
               <>
                 <CodeBlock
@@ -157,11 +189,13 @@ export function Questions() {
                 {t(b("Model answer & follow-up", "Nümunə cavab və əlavə sual"))}
               </summary>
               <p>
-                {level === "junior"
-                  ? t(lessons.find((l) => l.id === q.topicId)!.intro)
-                  : level === "senior"
-                    ? t(lessons.find((l) => l.id === q.topicId)!.judgment)
-                    : t(q.answer)}
+                {q.type === "interview"
+                  ? t(q.answer)
+                  : level === "junior"
+                    ? t(lessons.find((l) => l.id === q.topicId)!.intro)
+                    : level === "senior"
+                      ? t(lessons.find((l) => l.id === q.topicId)!.judgment)
+                      : t(q.answer)}
               </p>
               <p>
                 <strong>
@@ -173,6 +207,7 @@ export function Questions() {
                 <strong>{t(b("Follow-up: ", "Əlavə sual: "))}</strong>
                 {t(q.followup)}
               </p>
+              {q.followupAnswer && <p>{t(q.followupAnswer)}</p>}
             </details>
             <a
               href={q.source}

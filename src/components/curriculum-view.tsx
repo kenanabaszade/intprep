@@ -3,7 +3,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { Search, ChevronRight, Download } from "lucide-react";
 import { phases, topics, totalItems } from "@/lib/curriculum";
-import { lessonById, lessons } from "@/content/lessons";
+import { chapters, chapterById } from "@/content/chapters";
+import { lessonById } from "@/content/lessons";
 import { useAcademy } from "./provider";
 import { PageHeading, Card } from "./ui";
 import { statuses } from "@/lib/i18n";
@@ -60,9 +61,9 @@ export function CurriculumView() {
         </Card>
         <Card className="stat-card">
           <div className="stat-label">
-            {t(b("Bilingual deep lessons", "İkidilli dərin dərslər"))}
+            {t(b("Long-form teaching chapters", "Ətraflı tədris fəsilləri"))}
           </div>
-          <strong>{lessons.length}</strong>
+          <strong>{chapters.length}</strong>
         </Card>
       </div>
       <div className="toolbar">
@@ -86,21 +87,21 @@ export function CurriculumView() {
             checked={onlyAuthored}
             onChange={(e) => setOnlyAuthored(e.target.checked)}
           />
-          {t(b("Authored lessons only", "Yalnız hazırlanmış dərslər"))}
+          {t(b("Long-form chapters only", "Yalnız ətraflı fəsillər"))}
         </label>
       </div>
       <p className="notice">
         {t(
           b(
-            "Coverage is transparent: all source items are imported. An “Inventory” section preserves the original requirements but is not presented as a completed deep lesson. Source labels remain verbatim in English.",
-            "Əhatə açıq göstərilir: bütün mənbə elementləri gətirilib. “Siyahı” bölməsi orijinal tələbləri saxlayır, amma tamamlanmış dərin dərs sayılmır. Mənbə adları orijinal ingiliscə saxlanılır.",
+            "Full chapters include worked traces, debugging, implementation practice and explained interview answers. Brief entries are labeled Study notes. The original syllabus remains an exact English source quotation; importing it does not mean every subtopic has a complete chapter.",
+            "Tam fəsil işlənmiş iz, debugging, implementasiya praktikası və izahlı müsahibə cavabı verir. Qısa giriş Öyrənmə qeydi adlanır. Orijinal syllabus ingiliscə dəqiq mənbə sitatıdır; import hər alt mövzunun tam fəsli olduğu demək deyil.",
           ),
         )}
       </p>
       {phases.map((phase) => {
         const filtered = phase.topics.filter(
           (topic) =>
-            (!onlyAuthored || lessonById[topic.id]) &&
+            (!onlyAuthored || chapterById[topic.id]) &&
             (!query ||
               [
                 topic.title.en,
@@ -158,12 +159,12 @@ export function CurriculumView() {
                     )}
                   </span>
                   <span
-                    className={`chip ${lessonById[topic.id] ? "green" : ""}`}
+                    className={`chip ${chapterById[topic.id] ? "green" : ""}`}
                   >
                     {t(
-                      lessonById[topic.id]
-                        ? b("Lesson", "Dərs")
-                        : b("Inventory", "Siyahı"),
+                      chapterById[topic.id]
+                        ? b("Full chapter", "Tam fəsil")
+                        : b("Study notes", "Öyrənmə qeydləri"),
                     )}
                   </span>
                   <ChevronRight size={15} />
@@ -175,7 +176,7 @@ export function CurriculumView() {
       })}
       {!topics.some(
         (topic) =>
-          (!onlyAuthored || lessonById[topic.id]) &&
+          (!onlyAuthored || chapterById[topic.id]) &&
           [topic.title.en, topic.title.az, ...topic.items.map((x) => x.text)]
             .join(" ")
             .toLocaleLowerCase()

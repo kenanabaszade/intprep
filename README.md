@@ -45,7 +45,8 @@ Tests default to `http://127.0.0.1:4173`, with Chromium at `/usr/bin/chromium`. 
 ## Content and scope
 
 - 17 imported phases, 61 original sections and 977 subtopics, with every source line preserved and checksummed.
-- 61 authored bilingual focused case lessons with three learning depths, Swift examples, exercises, misconceptions, quizzes and documentation links.
+- 10 long-form bilingual teaching chapters: optionals, value/COW semantics, closures, protocols, ARC, concurrency, MVVM, URLSession, SwiftUI state and authentication. These contain connected explanations, worked execution traces, broken/corrected code, implementation exercises and explained interview follow-ups.
+- The remaining 51 entries are explicitly labeled study notes. Their original syllabus inventory is preserved; they are not presented as complete deep lessons.
 - The full original inventory is retained separately. A focused case lesson does not imply an exhaustive deep textbook chapter for every individual subtopic.
 - ARC, copy-on-write, actor reentrancy/stale-result, complexity and architecture visual labs are illustrative models, not measured Swift runtime behavior.
 - Swift code is editable but not executed. Framework examples require an Apple SDK. Predictions are explicitly labeled.
@@ -72,5 +73,7 @@ Import the report or snapshot through **Settings & privacy**. It stays in browse
 ## Storage and optional providers
 
 Progress, notes, interview sessions and private imports persist in IndexedDB for this browser and website origin. They are not automatically synchronized to another device or domain. Export backups through Settings; use a full private backup only in a trusted location. Imports validate schema version and reject corrupt or future data without overwriting the current state.
+
+The lesson question panel retrieves authored answers or clearly labeled relevant passages locally, and declines unrelated questions. Conversations are stored with private notes. Optional provider tutoring can answer open-ended questions using the public chapter and visible conversation after per-request consent; imported reports, repository metadata and other notes are excluded. Provider responses are rendered as sanitized Markdown, with raw HTML disabled.
 
 External AI is disabled by default. Optional Ollama/OpenAI-compatible endpoints require CORS support and explicit consent on each feedback request. The request contains only the displayed public practice question and written answer. Private report/project-defense modes cannot call the provider. No credentials are stored; use a trusted local/authenticated proxy if necessary. Browser voice input requests separate consent and may use the browser vendor’s speech service; it does not assess pronunciation.

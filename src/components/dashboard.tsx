@@ -17,7 +17,8 @@ import { motion, useReducedMotion } from "motion/react";
 import { useAcademy } from "./provider";
 import { PageHeading, Card, ProgressBar } from "./ui";
 import { phases, topics, topicById, totalItems } from "@/lib/curriculum";
-import { lessons, lessonById } from "@/content/lessons";
+import { chapters } from "@/content/chapters";
+import { lessonById } from "@/content/lessons";
 import { statusFor } from "@/lib/learning";
 import { bi as b } from "@/lib/types";
 export function Dashboard() {
@@ -326,7 +327,7 @@ export function Dashboard() {
               "CONCURRENCY",
             ],
             [
-              "topic-20",
+              "topic-17",
               "03",
               b(
                 "Every layer should earn its place.",
@@ -420,8 +421,8 @@ export function Dashboard() {
             "orijinal syllabus elementi qorunub",
           ),
         )}{" "}
-        · {lessons.length}{" "}
-        {t(b("authored bilingual lessons", "müəllifli ikidilli dərs"))}
+        · {chapters.length}{" "}
+        {t(b("long-form bilingual chapters", "ətraflı ikidilli fəsil"))}
       </p>
     </>
   );

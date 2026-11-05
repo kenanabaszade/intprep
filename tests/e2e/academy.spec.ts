@@ -11,8 +11,15 @@ test("lesson → quiz → bilingual switch → durable progress", async ({
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "Value semantics",
   );
-  await page.getByRole("tab", { name: "Middle", exact: true }).click();
-  await expect(page.getByText("What happens under the hood?")).toBeVisible();
+  await page.getByRole("button", { name: "Middle", exact: true }).click();
+  await expect(
+    page.getByRole("heading", {
+      name: "Under the hood: COW separates logical value from storage",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.locator('[data-teaching-level="junior"]').first(),
+  ).toBeVisible();
   await page
     .getByRole("button", {
       name: "Both struct values contain a reference to the same Account",
@@ -253,4 +260,187 @@ test("optional provider needs per-request consent and excludes imported private 
   expect(payload).not.toBeNull();
   expect(JSON.stringify(payload)).not.toContain("snapshot");
   expect(JSON.stringify(payload)).not.toContain("privateNotes");
+});
+test("full chapter teaches a mechanism and persists an authored tutor conversation without an API", async ({
+  page,
+}) => {
+  const external: string[] = [];
+  page.on("request", (r) => {
+    if (!r.url().startsWith("http://127.0.0.1") && !r.url().startsWith("data:"))
+      external.push(r.url());
+  });
+  await page.goto(path("/learn/topic-02/"));
+  await expect(
+    page.getByRole("heading", {
+      name: "Start from zero: copying a fact versus sharing an object",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: "Senior judgment: measure the cost, protect the contract",
+    }),
+  ).toBeAttached();
+  await expect(page.locator(".worked-example")).toHaveCount(2);
+  await expect(page.locator(".deep-interview-question")).toHaveCount(3);
+  await page.getByRole("button", { name: "Middle", exact: true }).click();
+  await expect(
+    page.locator("[data-teaching-level=junior]").first(),
+  ).toBeVisible();
+  await page
+    .getByText("Show the correction and why it works", { exact: true })
+    .click();
+  await expect(
+    page.getByText("Create receipt at 100; change the live balance to 0;", {
+      exact: false,
+    }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", {
+      name: "Does Array copy-on-write deep-copy class elements?",
+      exact: true,
+    })
+    .click();
+  await expect(page.locator(".tutor-message.assistant")).toContainText(
+    "Copying array storage copies element values",
+  );
+  await expect(page.locator(".tutor-message.assistant")).toContainText(
+    "actor isolation",
+  );
+  await page.reload();
+  await expect(page.locator(".tutor-message.assistant")).toContainText(
+    "Copying array storage copies element values",
+  );
+  await page
+    .getByRole("textbox", { name: "What would you like explained?" })
+    .fill("medieval pottery kiln glaze temperatures");
+  await page
+    .getByRole("button", { name: "Find an authored explanation" })
+    .click();
+  await expect(page.locator(".tutor-message.assistant").last()).toContainText(
+    "do not have an authored answer",
+  );
+  expect(external).toEqual([]);
+});
+test("curriculum distinguishes full teaching from notes and filters chapters", async ({
+  page,
+}) => {
+  await page.goto(path("/curriculum/"));
+  await page.getByRole("checkbox", { name: "Long-form chapters only" }).check();
+  await expect(page.locator(".topic-row")).toHaveCount(10);
+  await expect(page.locator(".topic-actions .chip.green")).toHaveCount(10);
+  await page.goto(path("/learn/topic-03/"));
+  await expect(
+    page.getByText("This entry is a brief study note.", { exact: false }),
+  ).toBeVisible();
+  await page.goto(path("/questions/"));
+  await page
+    .getByRole("textbox", { name: "Search questions" })
+    .fill("Array copy-on-write deep-copy");
+  await expect(
+    page.getByRole("heading", {
+      name: "Does Array copy-on-write deep-copy class elements?",
+    }),
+  ).toBeVisible();
+  await page.getByText("Model answer & follow-up", { exact: true }).click();
+  await expect(
+    page.getByText("No. Copying array storage copies element values;", {
+      exact: false,
+    }),
+  ).toBeVisible();
+});
+test("open-ended tutor requires consent, formats code and excludes private imports", async ({
+  page,
+}) => {
+  let requests = 0;
+  let sent = "";
+  await page.route("https://provider.example.test/tutor", async (route) => {
+    requests++;
+    sent = route.request().postData() || "";
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        choices: [
+          {
+            message: {
+              content:
+                "## A different example\n\nA constant reference is different from an immutable object.\n\n```swift\nlet value = 42\nprint(value)\n```\n\n<script>window.__tutorLeak = true</script>",
+            },
+          },
+        ],
+      }),
+    });
+  });
+  await page.goto(path("/settings/"));
+  await page
+    .locator("input[type=file]")
+    .nth(1)
+    .setInputFiles({
+      name: "private.md",
+      mimeType: "text/markdown",
+      buffer: Buffer.from(
+        "PRIVATE_REPORT_SENTINEL — never transmit this document",
+      ),
+    });
+  await expect(page.getByRole("status")).toContainText(
+    "Historical report imported locally",
+  );
+  await page
+    .getByRole("combobox", { name: "Optional provider", exact: true })
+    .selectOption("openai-compatible");
+  await page
+    .getByRole("textbox", { name: "Full endpoint URL (no secrets)" })
+    .fill("https://provider.example.test/tutor");
+  await page.getByRole("textbox", { name: "Model name" }).fill("test-tutor");
+  await page.getByRole("button", { name: "Save optional provider" }).click();
+  await page.goto(path("/learn/topic-02/"));
+  await page
+    .getByRole("textbox", { name: "What would you like explained?" })
+    .fill("Can you teach this with a different concrete Swift example?");
+  expect(requests).toBe(0);
+  page.once("dialog", (d) => d.dismiss());
+  await page.getByRole("button", { name: "Ask configured AI" }).click();
+  expect(requests).toBe(0);
+  page.once("dialog", (d) => d.accept());
+  await page.getByRole("button", { name: "Ask configured AI" }).click();
+  await expect(
+    page.locator(".tutor-message.assistant h2", {
+      hasText: "A different example",
+    }),
+  ).toBeVisible();
+  await expect(page.locator(".tutor-message.assistant pre")).toContainText(
+    "let value = 42",
+  );
+  expect(requests).toBe(1);
+  expect(sent).toContain("Public authored lesson context");
+  expect(sent).toContain("Copying the buffer");
+  expect(sent).not.toContain("PRIVATE_REPORT_SENTINEL");
+  expect(await page.evaluate(() => "__tutorLeak" in window)).toBe(false);
+});
+test("prediction assessment includes its own exact reference code", async ({
+  page,
+}) => {
+  await page.goto(path("/learn/topic-02/"));
+  await page
+    .getByRole("button", {
+      name: "Both struct values contain a reference to the same Account",
+      exact: false,
+    })
+    .click();
+  await page
+    .getByRole("button", { name: "Check understanding", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Try a different question" }).click();
+  await expect(page.locator("#quiz details[open] code")).toContainText(
+    "print(a.count, c.count)",
+  );
+  await page
+    .getByRole("textbox", { name: "Predicted console output" })
+    .fill("20\n2 3");
+  await page
+    .getByRole("button", { name: "Check understanding", exact: true })
+    .click();
+  await expect(
+    page.getByRole("status").filter({ hasText: "That reasoning holds" }),
+  ).toBeVisible();
 });

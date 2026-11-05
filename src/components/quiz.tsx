@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { CheckCircle2, ArrowRight, RotateCcw } from "lucide-react";
+import { CodeBlock } from "./ui";
 import { useAcademy } from "./provider";
 import { addAttempt } from "@/lib/learning";
 import { bi as b, type Lesson } from "@/lib/types";
@@ -95,13 +96,24 @@ export function Quiz({
         </span>
       </div>
       <h3>{question}</h3>
+      <details open={stage === "prediction"}>
+        <summary>
+          {t(
+            b(
+              "Swift reference for this assessment",
+              "Bu qiymətləndirmə üçün Swift nümunəsi",
+            ),
+          )}
+        </summary>
+        <CodeBlock code={lesson.code} />
+      </details>
       {stage === "prediction" ? (
         <>
           <p className="small muted">
             {t(
               b(
-                "Return to the code above if needed. Whitespace at line edges is ignored.",
-                "Lazımdırsa yuxarıdakı koda qayıt. Sətir kənarlarındakı boşluqlar nəzərə alınmır.",
+                "Use this assessment’s Swift reference, which may differ from the chapter’s other worked examples. Whitespace at line edges is ignored.",
+                "Bu qiymətləndirmənin Swift nümunəsini istifadə et; fəslin başqa nümunələrindən fərqlənə bilər. Sətir kənarındakı boşluqlar nəzərə alınmır.",
               ),
             )}
           </p>
