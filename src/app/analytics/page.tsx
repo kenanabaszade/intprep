@@ -1,2 +1,4 @@
-import {Analytics} from '@/components/practice';
-export default function Page(){return <Analytics/>}
+import { Analytics } from "@/components/practice";
+export default function Page() {
+  return <Analytics />;
+}

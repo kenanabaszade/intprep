@@ -1,2 +1,4 @@
-import {PrivateExplorer} from '@/components/private-explorer';
-export default function Page(){return <PrivateExplorer view="flows"/>}
+import { PrivateExplorer } from "@/components/private-explorer";
+export default function Page() {
+  return <PrivateExplorer view="flows" />;
+}

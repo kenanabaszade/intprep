@@ -1,36 +1,765 @@
-'use client';
-import {useState,useMemo} from 'react';
-import {ArrowRight,Mic,Timer,Save,Lightbulb,Square} from 'lucide-react';
-import Link from 'next/link';
-import {useAcademy} from './provider';
-import {PageHeading,Card,Empty} from './ui';
-import {lessons} from '@/content/lessons';
-import {bi as b,type Level} from '@/lib/types';
-import {requestFeedback} from '@/lib/providers';
-import {rubric,rubricScore} from '@/lib/learning';
-import {extractReportQuestions} from '@/lib/private-report';
-const modes=[['junior',b('Junior','Junior'),b('Foundations & vocabulary','Təməl və terminlər')],['middle',b('Middle','Middle'),b('Production & trade-offs','Praktika və seçimlər')],['senior',b('Senior','Senior'),b('Reliability & evolution','Etibarlılıq və inkişaf')],['chapter',b('Chapter Lead','Chapter Lead'),b('Private report questions','Məxfi icmal sualları')],['defense',b('Project defense','Layihə müdafiəsi'),b('Verified contribution evidence','Yoxlanmış töhfə sübutu')],['rapid',b('Rapid fire','Sürətli suallar'),b('Short explanations','Qısa izahlar')],['coding',b('Coding interview','Kod müsahibəsi'),b('Debug & reason in Swift','Swift-də sazla və düşün')],['system',b('System design','Sistem dizaynı'),b('Boundaries & failure modes','Sərhədlər və xəta halları')]] as const;
-const systemQuestions=[
- {q:b('Design transaction history with cursor pagination and offline reading. What owns identity, merging and freshness?','Cursor pagination və oflayn oxuma ilə əməliyyat tarixçəsi qur. Identity, merging və aktuallığın sahibi kimdir?'),a:b('Use stable transaction IDs, a repository contract for local/network source policy, cursor state scoped to the active filter, cancellation and generation checks, and explicit fresh/stale/failed states. Test overlapping pages and query replacement. A simpler direct service design is valid if offline policy is not needed.','Sabit transaction ID, lokal/şəbəkə siyasəti üçün repository müqaviləsi, aktiv filtrə bağlı cursor state-i, cancellation və generation yoxlaması, fresh/stale/failed halları qur. Üst-üstə düşən səhifə və sorğu dəyişməsini test et. Oflayn qayda yoxdursa birbaşa servis daha sadə ola bilər.')},
- {q:b('Design a transfer that times out after submission. How do you prevent duplicate transfers after restart?','Göndərişdən sonra timeout olan köçürmə dizayn et. Restart-dan sonra təkrarı necə önləyirsən?'),a:b('Use backend-supported idempotency, persist a non-secret operation ID and pending/unknown outcome, reconcile after restart, and never treat cancellation as rollback. Server authorization and atomic accounting remain authoritative.','Backend idempotency dəstəyi, saxlanan qeyri-məxfi operation ID və pending/unknown nəticə istifadə et. Restart-da uzlaşdır; cancellation-u rollback sayma. Server avtorizasiya və atomik hesablaşmada səlahiyyətlidir.')},
- {q:b('Design single-flight token refresh under ten simultaneous 401s and logout during refresh.','On paralel 401 və refresh zamanı logout üçün single-flight token refresh dizayn et.'),a:b('Serialize session state, join one in-flight task per generation, invalidate the generation on logout, bound retries, preserve cancellation of logical requests and do not cancel shared refresh solely because one waiter stops. Never log credentials.','Session state-i serial saxla, generation başına bir in-flight task-a qoşul, logout-da generation-u etibarsız et, retry-ni məhdudlaşdır, məntiqi sorğunun cancellation-unu saxla. Bir gözləyən dayandığı üçün paylaşılan refresh-i ləğv etmə. Credential log etmə.')}
+"use client";
+import { useState, useMemo } from "react";
+import { ArrowRight, Mic, Timer, Save, Lightbulb, Square } from "lucide-react";
+import Link from "next/link";
+import { useAcademy } from "./provider";
+import { PageHeading, Card, Empty, CodeBlock } from "./ui";
+import { topicById } from "@/lib/curriculum";
+import { lessons } from "@/content/lessons";
+import { bi as b, type Level } from "@/lib/types";
+import { requestFeedback } from "@/lib/providers";
+import { rubric, rubricScore } from "@/lib/learning";
+import { extractReportQuestions } from "@/lib/private-report";
+const modes = [
+  [
+    "junior",
+    b("Junior", "Junior"),
+    b("Foundations & vocabulary", "Təməl və terminlər"),
+  ],
+  [
+    "middle",
+    b("Middle", "Middle"),
+    b("Production & trade-offs", "Praktika və seçimlər"),
+  ],
+  [
+    "senior",
+    b("Senior", "Senior"),
+    b("Reliability & evolution", "Etibarlılıq və inkişaf"),
+  ],
+  [
+    "chapter",
+    b("Chapter Lead", "Chapter Lead"),
+    b("Private report questions", "Məxfi icmal sualları"),
+  ],
+  [
+    "defense",
+    b("Project defense", "Layihə müdafiəsi"),
+    b("Verified contribution evidence", "Yoxlanmış töhfə sübutu"),
+  ],
+  [
+    "rapid",
+    b("Rapid fire", "Sürətli suallar"),
+    b("Short explanations", "Qısa izahlar"),
+  ],
+  [
+    "coding",
+    b("Coding interview", "Kod müsahibəsi"),
+    b("Debug & reason in Swift", "Swift-də sazla və düşün"),
+  ],
+  [
+    "system",
+    b("System design", "Sistem dizaynı"),
+    b("Boundaries & failure modes", "Sərhədlər və xəta halları"),
+  ],
+] as const;
+const systemQuestions = [
+  {
+    q: b(
+      "Design transaction history with cursor pagination and offline reading. What owns identity, merging and freshness?",
+      "Cursor pagination və oflayn oxuma ilə əməliyyat tarixçəsi qur. Identity, merging və aktuallığın sahibi kimdir?",
+    ),
+    a: b(
+      "Use stable transaction IDs, a repository contract for local/network source policy, cursor state scoped to the active filter, cancellation and generation checks, and explicit fresh/stale/failed states. Test overlapping pages and query replacement. A simpler direct service design is valid if offline policy is not needed.",
+      "Sabit transaction ID, lokal/şəbəkə siyasəti üçün repository müqaviləsi, aktiv filtrə bağlı cursor state-i, cancellation və generation yoxlaması, fresh/stale/failed halları qur. Üst-üstə düşən səhifə və sorğu dəyişməsini test et. Oflayn qayda yoxdursa birbaşa servis daha sadə ola bilər.",
+    ),
+  },
+  {
+    q: b(
+      "Design a transfer that times out after submission. How do you prevent duplicate transfers after restart?",
+      "Göndərişdən sonra timeout olan köçürmə dizayn et. Restart-dan sonra təkrarı necə önləyirsən?",
+    ),
+    a: b(
+      "Use backend-supported idempotency, persist a non-secret operation ID and pending/unknown outcome, reconcile after restart, and never treat cancellation as rollback. Server authorization and atomic accounting remain authoritative.",
+      "Backend idempotency dəstəyi, saxlanan qeyri-məxfi operation ID və pending/unknown nəticə istifadə et. Restart-da uzlaşdır; cancellation-u rollback sayma. Server avtorizasiya və atomik hesablaşmada səlahiyyətlidir.",
+    ),
+  },
+  {
+    q: b(
+      "Design single-flight token refresh under ten simultaneous 401s and logout during refresh.",
+      "On paralel 401 və refresh zamanı logout üçün single-flight token refresh dizayn et.",
+    ),
+    a: b(
+      "Serialize session state, join one in-flight task per generation, invalidate the generation on logout, bound retries, preserve cancellation of logical requests and do not cancel shared refresh solely because one waiter stops. Never log credentials.",
+      "Session state-i serial saxla, generation başına bir in-flight task-a qoşul, logout-da generation-u etibarsız et, retry-ni məhdudlaşdır, məntiqi sorğunun cancellation-unu saxla. Bir gözləyən dayandığı üçün paylaşılan refresh-i ləğv etmə. Credential log etmə.",
+    ),
+  },
 ];
-export function Interview(){
- const {state,setState,t}=useAcademy();const [mode,setMode]=useState('middle');const [answer,setAnswer]=useState('');const [evaluating,setEvaluating]=useState(false);const [hint,setHint]=useState(false);const [scores,setScores]=useState<number[]>([0,0,0,0,0]);const [sessionId,setSessionId]=useState<string|null>(null);const [error,setError]=useState('');const [dictating,setDictating]=useState(false);const [providerFeedback,setProviderFeedback]=useState('');const [providerBusy,setProviderBusy]=useState(false);
- const [now]=useState(()=>Date.now());const [started,setStarted]=useState(now);const [timer,setTimer]=useState(false);const [remaining,setRemaining]=useState(60);
- const historical=useMemo(()=>extractReportQuestions(state.report||''),[state.report]);
- const current=state.sessions.find(s=>s.id===sessionId);const index=current?.turns.length||0;const lesson=lessons[index%lessons.length];const level:Level=mode==='junior'?'junior':mode==='senior'?'senior':'middle';
- const historicalQ=historical[index%Math.max(1,historical.length)];const sys=systemQuestions[index%systemQuestions.length];
- const q=mode==='chapter'?historicalQ?.question||'':mode==='defense'?t(b('Choose one verified commit. Explain the original problem, your exact change, the alternatives, test evidence, and what remains unmeasured.','Yoxlanmış bir commit seç. İlkin problemi, dəqiq dəyişikliyini, alternativləri, test sübutunu və ölçülməyən nəticəni izah et.')):mode==='system'?t(sys.q):mode==='coding'?t(lesson.exercise):mode==='rapid'?t(lesson.question):t(lesson.followup);
- const model=mode==='chapter'?historicalQ?.answer||'':mode==='defense'?t(b('Use the exact author identity and commit diff as evidence. Separate your own changes from merged team work. Describe qualitative impact if no measurement exists; never invent numbers.','Dəqiq author kimliyi və commit diff-ini sübut kimi istifadə et. Şəxsi dəyişikliyi merge olunan komanda işindən ayır. Ölçü yoxdursa keyfiyyət təsirini izah et; rəqəm uydurma.')):mode==='system'?t(sys.a):mode==='coding'?t(lesson.solution):t(level==='junior'?lesson.intro:level==='senior'?lesson.judgment:lesson.mechanism);
- const followup=mode==='chapter'?historicalQ?.followup||'':t(lesson.exercise);const blocked=mode==='chapter'&&!historical.length||mode==='defense'&&(!state.snapshot||!state.privateNotes.confirmedAuthor);
- function start(){const id=crypto.randomUUID();setSessionId(id);setStarted(Date.now());setState(s=>({...s,sessions:[...s.sessions,{id,mode,level,turns:[],startedAt:Date.now()}]}));setEvaluating(false);setAnswer('');setHint(false);setScores([0,0,0,0,0]);}
- async function askProvider(){if(!state.ai||mode==='chapter'||mode==='defense')return;if(!window.confirm(t(b('Send this visible practice question and your written answer to ','Bu görünən praktika sualı və yazılı cavabını göndər: '))+state.ai.endpoint+t(b('? Do not include confidential code, secrets or customer data. Report, snapshot and private notes are excluded.','? Məxfi kod, sirr və müştəri datası daxil etmə. İcmal, snapshot və məxfi qeydlər göndərilmir.'))))return;setProviderBusy(true);try{setProviderFeedback(await requestFeedback(state.ai,q,answer))}catch(e){setProviderFeedback(t(b('Provider unavailable. Local self-assessment remains available. ','Provider əlçatmazdır. Lokal özünüqiymətləndirmə işləyir. '))+(e instanceof Error?e.message:''))}finally{setProviderBusy(false)}}
- function save(){setProviderFeedback('');if(!current)return;setState(s=>({...s,sessions:s.sessions.map(session=>session.id===sessionId?{...session,turns:[...session.turns,{questionId:mode==='chapter'?historicalQ.id:mode==='system'?'system-'+index:lesson.id+'-'+mode,question:q,answer,modelAnswer:model,followup,scores,at:Date.now()}]}:session)}));setAnswer('');setEvaluating(false);setHint(false);setScores([0,0,0,0,0]);setTimer(false);setRemaining(60);}
- function end(){setState(s=>({...s,sessions:s.sessions.map(session=>session.id===sessionId?{...session,endedAt:Date.now()}:session)}));setSessionId(null);setTimer(false);setEvaluating(false);}
- function voice(){type Recognition={lang:string;continuous:boolean;interimResults:boolean;start:()=>void;onresult:((event:{results:{0:{0:{transcript:string}}}})=>void)|null;onend:(()=>void)|null;onerror:(()=>void)|null};const w=window as unknown as {SpeechRecognition?:new()=>Recognition;webkitSpeechRecognition?:new()=>Recognition};const Recognition=w.SpeechRecognition||w.webkitSpeechRecognition;if(!Recognition){setError(t(b('Speech transcription is not supported in this browser. Written answers remain available.','Bu browser səs transkripsiyasını dəstəkləmir. Yazılı cavab işləyir.')));return}if(!window.confirm(t(b('Browser speech recognition may send audio to its vendor. Transcription only; no pronunciation scoring. Continue?','Browser səs tanıması audionu vendor-a göndərə bilər. Yalnız transkripsiyadır; tələffüz qiyməti yoxdur. Davam edilsin?'))))return;const rec=new Recognition();rec.lang=state.locale==='az'?'az-AZ':'en-US';rec.continuous=false;rec.interimResults=false;rec.onresult=e=>setAnswer(a=>a+(a?' ':'')+e.results[0][0].transcript);rec.onend=()=>setDictating(false);rec.onerror=()=>{setDictating(false);setError(t(b('Speech input failed. Continue with a written answer.','Səs girişi alınmadı. Yazılı cavabla davam et.')))};setDictating(true);rec.start();}
- useInterviewTimer(timer,remaining,setRemaining,()=>setTimer(false));
- return <><PageHeading eyebrow={t(b('PRACTICE THE CONVERSATION','SÖHBƏTİ MƏŞQ ET'))} title={t(b('Interview studio','Müsahibə studiyası'))} description={t(b('One question. Your reasoning. An honest look at what is missing. No paid provider required.','Bir sual. Sənin düşüncən. Çatışmayan hissələrə dürüst baxış. Ödənişli provider tələb olunmur.'))}/>{!sessionId?<><div className="mode-grid">{modes.map(([id,label,sub])=><button key={id} className={`mode-button ${mode===id?'selected':''}`} onClick={()=>setMode(id)}>{t(label)}<small>{t(sub)}</small></button>)}</div>{blocked?<Card><Empty title={t(b('This mode needs your private evidence.','Bu rejim sənin məxfi sübutunu tələb edir.'))} description={t(mode==='chapter'?b('Import the historical review privately in Settings. Its claims are not automatically verified against current code.','Settings-də tarixi icmalı məxfi gətir. İddiaları cari kodla avtomatik yoxlanılmır.'):b('Import a Git snapshot, then confirm your exact author identity under My contributions.','Git snapshot gətir və My contributions-da dəqiq author kimliyini təsdiqlə.'))} href={mode==='chapter'?'/settings':'/my-work'} label={t(b('Connect evidence','Sübut qoş'))}/></Card>:<Card className="padded"><h2>{t(b('Understanding beats a polished script.','Anlayış əzbər mətndən güclüdür.'))}</h2><p>{t(b('Write your answer before seeing the model. Then use the explicit rubric to assess it against the reference. Offline mode does not pretend to provide expert automatic grading.','Nümunə cavabı görməzdən əvvəl cavabını yaz. Sonra açıq rubric ilə müqayisə edib qiymətləndir. Oflayn rejim ekspert avtomatik qiymətləndirməsi iddiası etmir.'))}</p><button className="button primary" onClick={start}>{t(b('Start session','Sessiyanı başlat'))}<ArrowRight size={14}/></button>{state.sessions.some(s=>!s.endedAt)&&<div className="mt"><h3>{t(b('Resume an unfinished session','Yarımçıq sessiyaya qayıt'))}</h3>{state.sessions.filter(s=>!s.endedAt).map(s=><button key={s.id} className="button secondary" style={{marginRight:8,marginTop:8}} onClick={()=>{setMode(s.mode);setSessionId(s.id);setStarted(s.startedAt)}}>{s.mode} · {s.turns.length} {t(b('saved answers','saxlanan cavab'))}</button>)}</div>}</Card>}</>:<div className="interview-surface"><Card><div className="flex-between"><span className="chip green">{mode.toUpperCase()} · {String(index+1).padStart(2,'0')}</span><button className="text-link" style={{border:0,background:'none'}} onClick={end}><Square size={12}/>{t(b('End session','Sessiyanı bitir'))}</button></div>{mode==='chapter'&&<p className="notice mt">{t(b('Historical review question · original language preserved · current source not verified.','Tarixi icmal sualı · orijinal dil qorunur · cari mənbə yoxlanılmayıb.'))}</p>}<h2 className="interview-question">{q}</h2>{!evaluating?<><textarea className="interview-answer" aria-label={t(b('Your interview answer','Müsahibə cavabın'))} value={answer} onChange={e=>setAnswer(e.target.value)} placeholder={t(b('Think aloud in writing. Explain the mechanism, then the trade-off…','Düşüncəni yaz. Əvvəl mexanizmi, sonra seçimini izah et…'))}/><div className="toolbar mt"><button className="button primary" disabled={answer.trim().length<15} onClick={()=>setEvaluating(true)}>{t(b('Compare & self-assess','Müqayisə et və qiymətləndir'))}<ArrowRight size={14}/></button><button className="button secondary" onClick={()=>setHint(!hint)}><Lightbulb size={13}/>{t(b('Hint','İpucu'))}</button><button className="button secondary" onClick={voice} disabled={dictating}><Mic size={13}/>{t(dictating?b('Listening…','Dinlənilir…'):b('Dictate','Səslə yaz'))}</button>{mode==='rapid'&&<button className="button secondary" onClick={()=>{setRemaining(60);setTimer(true)}}><Timer size={13}/>{timer?remaining+'s':t(b('60s timer','60s taymer'))}</button>}</div>{hint&&<p className="notice">{t(b('Name the owner and the invariant. Trace a failure or suspension point. Explain a trade-off and the test that would expose a broken assumption.','Owner və invariantı adlandır. Xəta və ya suspension nöqtəsini izlə. Bir trade-off və səhv fərziyyəni üzə çıxaran testi izah et.'))}</p>}</>:<><div className="notice"><strong>{t(b('Your answer','Sənin cavabın'))}</strong><p style={{whiteSpace:'pre-wrap'}}>{answer}</p></div><h3>{t(b('Reference reasoning','Nümunə düşüncə'))}</h3><p>{model}</p><div className="notice"><strong>{t(b('Interviewer follow-up','Müsahibənin əlavə sualı'))}</strong><p>{followup}</p></div>{state.ai&&mode!=='chapter'&&mode!=='defense'&&<div className="notice"><p>{t(b('Optional provider feedback sends only this question and answer with your explicit consent. Private imports are excluded.','İstəyə bağlı provider feedback-i yalnız bu sual və cavabı açıq razılıqla göndərir. Məxfi import-lar daxil deyil.'))}</p><button className="button secondary" disabled={providerBusy} onClick={askProvider}>{providerBusy?t(b('Waiting for provider…','Provider gözlənilir…')):t(b('Request optional AI feedback','İstəyə bağlı AI feedback istə'))}</button>{providerFeedback&&<p style={{whiteSpace:'pre-wrap'}}>{providerFeedback}</p>}</div>}<h3>{t(b('Evidence-based self-assessment','Sübuta əsaslanan özünüqiymətləndirmə'))}</h3><p className="small">{t(b('Compare your answer to the reference: 0 absent · 1 incorrect/fragmentary · 2 partly explained · 3 correct with an example · 4 justified with limits and trade-offs. These are your ratings, not automatic expert scores.','Cavabı nümunə ilə müqayisə et: 0 yoxdur · 1 səhv/natamam · 2 qismən izah · 3 düzgün və nümunəli · 4 məhdudiyyət və seçimlə əsaslandırılıb. Bu sənin qiymətindir, avtomatik ekspert qiyməti deyil.'))}</p>{rubric.map((r,i)=><label key={i} className="rubric-row"><span>{t(r)} <small>({r.weight}%)</small></span><input type="range" min={0} max={4} value={scores[i]} onChange={e=>setScores(s=>s.map((v,j)=>i===j?Number(e.target.value):v))}/><span>{scores[i]}/4</span></label>)}<p className="small">{t(b('Weighted self-assessment: ','Çəkili özünüqiymətləndirmə: '))}{rubricScore(scores)}/100</p><button className="button primary" onClick={save}><Save size={14}/>{t(b('Save & next question','Saxla və növbəti suala keç'))}</button></>}{error&&<p className="notice danger mt" role="status">{error}</p>}<p className="small faint mt">{t(b('Saved answers remain on this device. Session started: ','Saxlanan cavablar bu cihazda qalır. Sessiya başlanğıcı: '))}{new Date(started).toLocaleString(state.locale==='az'?'az-AZ':'en-GB')}</p></Card></div>}<div className="interview-history"><div className="section-heading"><h2>{t(b('Session history','Sessiya tarixçəsi'))}</h2><Link href="/analytics" className="text-link">{t(b('View analytics','Analitikaya bax'))}<ArrowRight size={13}/></Link></div>{state.sessions.length?state.sessions.slice().reverse().slice(0,10).map(s=><Card key={s.id} className="padded mb"><div className="flex-between"><span className="chip">{s.mode.toUpperCase()}</span><span className="small faint">{s.turns.length} {t(b('answers','cavab'))} · {t(s.endedAt?b('Ended','Bitib'):b('In progress','Davam edir'))}</span></div>{s.turns.map((turn,i)=><details key={i}><summary>{turn.question}</summary><p style={{whiteSpace:'pre-wrap'}}>{turn.answer}</p><p className="small">{turn.modelAnswer}</p><span className="chip">{t(b('Self-rated','Özün qiymətləndirdin'))}: {rubricScore(turn.scores)}/100</span></details>)}</Card>):<p className="small faint">{t(b('Your first interview starts a useful history. No sample sessions or invented scores.','İlk müsahibən faydalı tarixçə yaradacaq. Nümunə sessiya və uydurma qiymət yoxdur.'))}</p>}</div></>
+export function Interview() {
+  const { state, setState, t } = useAcademy();
+  const [mode, setMode] = useState("middle");
+  const [answer, setAnswer] = useState("");
+  const [evaluating, setEvaluating] = useState(false);
+  const [hint, setHint] = useState(false);
+  const [scores, setScores] = useState<number[]>([0, 0, 0, 0, 0]);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [error, setError] = useState("");
+  const [dictating, setDictating] = useState(false);
+  const [providerFeedback, setProviderFeedback] = useState("");
+  const [providerBusy, setProviderBusy] = useState(false);
+  const [now] = useState(() => Date.now());
+  const [started, setStarted] = useState(now);
+  const [timer, setTimer] = useState(false);
+  const [remaining, setRemaining] = useState(60);
+  const historical = useMemo(
+    () => extractReportQuestions(state.report || ""),
+    [state.report],
+  );
+  const current = state.sessions.find((s) => s.id === sessionId);
+  const index = current?.turns.length || 0;
+  const previous = current?.turns.at(-1);
+  const previousRating = previous ? rubricScore(previous.scores) : 60;
+  const previousTopicID = previous?.questionId.match(
+    /^(topic-(?:extra-)?\d+)/,
+  )?.[1];
+  const revisit = mode === "middle" && previousRating < 50 && previousTopicID;
+  const lesson =
+    (revisit && lessons.find((l) => l.id === previousTopicID)) ||
+    lessons[index % lessons.length];
+  const level: Level =
+    mode === "junior"
+      ? "junior"
+      : mode === "senior"
+        ? "senior"
+        : mode === "middle" && previous
+          ? previousRating < 50
+            ? "junior"
+            : previousRating >= 80
+              ? "senior"
+              : "middle"
+          : "middle";
+  const title = t(lesson.title || topicById[lesson.id].title);
+  const historicalQ = historical[index % Math.max(1, historical.length)];
+  const sys = systemQuestions[index % systemQuestions.length];
+  const q =
+    mode === "chapter"
+      ? historicalQ?.question || ""
+      : mode === "defense"
+        ? t(
+            b(
+              "Choose one verified commit. Explain the original problem, your exact change, the alternatives, test evidence, and what remains unmeasured.",
+              "Yoxlanmış bir commit seç. İlkin problemi, dəqiq dəyişikliyini, alternativləri, test sübutunu və ölçülməyən nəticəni izah et.",
+            ),
+          )
+        : mode === "system"
+          ? t(sys.q)
+          : mode === "coding"
+            ? t(lesson.exercise)
+            : mode === "rapid"
+              ? t(lesson.question)
+              : level === "junior"
+                ? t(
+                    b(
+                      `Explain ${title} from zero. What problem does it solve, and what does this example show?`,
+                      `${title} mövzusunu sıfırdan izah et. Hansı problemi həll edir və bu nümunə nə göstərir?`,
+                    ),
+                  )
+                : level === "senior"
+                  ? t(
+                      b(
+                        `For ${title}, defend the system-wide trade-offs, ownership and migration constraints. What evidence would change your design?`,
+                        `${title} üçün sistem səviyyəli seçim, ownership və miqrasiya şərtlərini əsaslandır. Hansı sübut dizaynını dəyişər?`,
+                      ),
+                    )
+                  : t(lesson.exercise);
+  const model =
+    mode === "chapter"
+      ? historicalQ?.answer || ""
+      : mode === "defense"
+        ? t(
+            b(
+              "Use the exact author identity and commit diff as evidence. Separate your own changes from merged team work. Describe qualitative impact if no measurement exists; never invent numbers.",
+              "Dəqiq author kimliyi və commit diff-ini sübut kimi istifadə et. Şəxsi dəyişikliyi merge olunan komanda işindən ayır. Ölçü yoxdursa keyfiyyət təsirini izah et; rəqəm uydurma.",
+            ),
+          )
+        : mode === "system"
+          ? t(sys.a)
+          : mode === "coding"
+            ? t(lesson.solution)
+            : t(
+                level === "junior"
+                  ? lesson.intro
+                  : level === "senior"
+                    ? lesson.judgment
+                    : lesson.solution,
+              );
+  const followup =
+    mode === "chapter" ? historicalQ?.followup || "" : t(lesson.exercise);
+  const blocked =
+    (mode === "chapter" && !historical.length) ||
+    (mode === "defense" &&
+      (!state.snapshot || !state.privateNotes.confirmedAuthor));
+  function start() {
+    const id = crypto.randomUUID();
+    setSessionId(id);
+    setStarted(Date.now());
+    setState((s) => ({
+      ...s,
+      sessions: [
+        ...s.sessions,
+        { id, mode, level, turns: [], startedAt: Date.now() },
+      ],
+    }));
+    setEvaluating(false);
+    setAnswer("");
+    setHint(false);
+    setScores([0, 0, 0, 0, 0]);
+  }
+  async function askProvider() {
+    if (!state.ai || mode === "chapter" || mode === "defense") return;
+    if (
+      !window.confirm(
+        t(
+          b(
+            "Send this visible practice question and your written answer to ",
+            "Bu görünən praktika sualı və yazılı cavabını göndər: ",
+          ),
+        ) +
+          state.ai.endpoint +
+          t(
+            b(
+              "? Do not include confidential code, secrets or customer data. Report, snapshot and private notes are excluded.",
+              "? Məxfi kod, sirr və müştəri datası daxil etmə. İcmal, snapshot və məxfi qeydlər göndərilmir.",
+            ),
+          ),
+      )
+    )
+      return;
+    setProviderBusy(true);
+    try {
+      setProviderFeedback(await requestFeedback(state.ai, q, answer));
+    } catch (e) {
+      setProviderFeedback(
+        t(
+          b(
+            "Provider unavailable. Local self-assessment remains available. ",
+            "Provider əlçatmazdır. Lokal özünüqiymətləndirmə işləyir. ",
+          ),
+        ) + (e instanceof Error ? e.message : ""),
+      );
+    } finally {
+      setProviderBusy(false);
+    }
+  }
+  function save() {
+    setProviderFeedback("");
+    if (!current) return;
+    setState((s) => ({
+      ...s,
+      sessions: s.sessions.map((session) =>
+        session.id === sessionId
+          ? {
+              ...session,
+              turns: [
+                ...session.turns,
+                {
+                  questionId:
+                    mode === "chapter"
+                      ? historicalQ.id
+                      : mode === "system"
+                        ? "system-" + index
+                        : lesson.id + "-" + mode,
+                  question: q,
+                  answer,
+                  modelAnswer: model,
+                  followup,
+                  scores,
+                  at: Date.now(),
+                },
+              ],
+            }
+          : session,
+      ),
+    }));
+    setAnswer("");
+    setEvaluating(false);
+    setHint(false);
+    setScores([0, 0, 0, 0, 0]);
+    setTimer(false);
+    setRemaining(60);
+  }
+  function end() {
+    setState((s) => ({
+      ...s,
+      sessions: s.sessions.map((session) =>
+        session.id === sessionId
+          ? { ...session, endedAt: Date.now() }
+          : session,
+      ),
+    }));
+    setSessionId(null);
+    setTimer(false);
+    setEvaluating(false);
+  }
+  function voice() {
+    type Recognition = {
+      lang: string;
+      continuous: boolean;
+      interimResults: boolean;
+      start: () => void;
+      onresult:
+        | ((event: { results: { 0: { 0: { transcript: string } } } }) => void)
+        | null;
+      onend: (() => void) | null;
+      onerror: (() => void) | null;
+    };
+    const w = window as unknown as {
+      SpeechRecognition?: new () => Recognition;
+      webkitSpeechRecognition?: new () => Recognition;
+    };
+    const Recognition = w.SpeechRecognition || w.webkitSpeechRecognition;
+    if (!Recognition) {
+      setError(
+        t(
+          b(
+            "Speech transcription is not supported in this browser. Written answers remain available.",
+            "Bu browser səs transkripsiyasını dəstəkləmir. Yazılı cavab işləyir.",
+          ),
+        ),
+      );
+      return;
+    }
+    if (
+      !window.confirm(
+        t(
+          b(
+            "Browser speech recognition may send audio to its vendor. Transcription only; no pronunciation scoring. Continue?",
+            "Browser səs tanıması audionu vendor-a göndərə bilər. Yalnız transkripsiyadır; tələffüz qiyməti yoxdur. Davam edilsin?",
+          ),
+        ),
+      )
+    )
+      return;
+    const rec = new Recognition();
+    rec.lang = state.locale === "az" ? "az-AZ" : "en-US";
+    rec.continuous = false;
+    rec.interimResults = false;
+    rec.onresult = (e) =>
+      setAnswer((a) => a + (a ? " " : "") + e.results[0][0].transcript);
+    rec.onend = () => setDictating(false);
+    rec.onerror = () => {
+      setDictating(false);
+      setError(
+        t(
+          b(
+            "Speech input failed. Continue with a written answer.",
+            "Səs girişi alınmadı. Yazılı cavabla davam et.",
+          ),
+        ),
+      );
+    };
+    setDictating(true);
+    rec.start();
+  }
+  useInterviewTimer(timer, remaining, setRemaining, () => setTimer(false));
+  return (
+    <>
+      <PageHeading
+        eyebrow={t(b("PRACTICE THE CONVERSATION", "SÖHBƏTİ MƏŞQ ET"))}
+        title={t(b("Interview studio", "Müsahibə studiyası"))}
+        description={t(
+          b(
+            "One question. Your reasoning. An honest look at what is missing. No paid provider required.",
+            "Bir sual. Sənin düşüncən. Çatışmayan hissələrə dürüst baxış. Ödənişli provider tələb olunmur.",
+          ),
+        )}
+      />
+      {!sessionId ? (
+        <>
+          <div className="mode-grid">
+            {modes.map(([id, label, sub]) => (
+              <button
+                key={id}
+                className={`mode-button ${mode === id ? "selected" : ""}`}
+                onClick={() => setMode(id)}
+              >
+                {t(label)}
+                <small>{t(sub)}</small>
+              </button>
+            ))}
+          </div>
+          {blocked ? (
+            <Card>
+              <Empty
+                title={t(
+                  b(
+                    "This mode needs your private evidence.",
+                    "Bu rejim sənin məxfi sübutunu tələb edir.",
+                  ),
+                )}
+                description={t(
+                  mode === "chapter"
+                    ? b(
+                        "Import the historical review privately in Settings. Its claims are not automatically verified against current code.",
+                        "Settings-də tarixi icmalı məxfi gətir. İddiaları cari kodla avtomatik yoxlanılmır.",
+                      )
+                    : b(
+                        "Import a Git snapshot, then confirm your exact author identity under My contributions.",
+                        "Git snapshot gətir və My contributions-da dəqiq author kimliyini təsdiqlə.",
+                      ),
+                )}
+                href={mode === "chapter" ? "/settings" : "/my-work"}
+                label={t(b("Connect evidence", "Sübut qoş"))}
+              />
+            </Card>
+          ) : (
+            <Card className="padded">
+              <h2>
+                {t(
+                  b(
+                    "Understanding beats a polished script.",
+                    "Anlayış əzbər mətndən güclüdür.",
+                  ),
+                )}
+              </h2>
+              <p>
+                {t(
+                  b(
+                    "Write your answer before seeing the model. Then use the explicit rubric to assess it against the reference. Offline mode does not pretend to provide expert automatic grading.",
+                    "Nümunə cavabı görməzdən əvvəl cavabını yaz. Sonra açıq rubric ilə müqayisə edib qiymətləndir. Oflayn rejim ekspert avtomatik qiymətləndirməsi iddiası etmir.",
+                  ),
+                )}
+              </p>
+              <button className="button primary" onClick={start}>
+                {t(b("Start session", "Sessiyanı başlat"))}
+                <ArrowRight size={14} />
+              </button>
+              {state.sessions.some((s) => !s.endedAt) && (
+                <div className="mt">
+                  <h3>
+                    {t(
+                      b(
+                        "Resume an unfinished session",
+                        "Yarımçıq sessiyaya qayıt",
+                      ),
+                    )}
+                  </h3>
+                  {state.sessions
+                    .filter((s) => !s.endedAt)
+                    .map((s) => (
+                      <button
+                        key={s.id}
+                        className="button secondary"
+                        style={{ marginRight: 8, marginTop: 8 }}
+                        onClick={() => {
+                          setMode(s.mode);
+                          setSessionId(s.id);
+                          setStarted(s.startedAt);
+                        }}
+                      >
+                        {s.mode} · {s.turns.length}{" "}
+                        {t(b("saved answers", "saxlanan cavab"))}
+                      </button>
+                    ))}
+                </div>
+              )}
+            </Card>
+          )}
+        </>
+      ) : (
+        <div className="interview-surface">
+          <Card>
+            <div className="flex-between">
+              <span className="chip green">
+                {mode.toUpperCase()} · {String(index + 1).padStart(2, "0")}
+              </span>
+              <button
+                className="text-link"
+                style={{ border: 0, background: "none" }}
+                onClick={end}
+              >
+                <Square size={12} />
+                {t(b("End session", "Sessiyanı bitir"))}
+              </button>
+            </div>
+            {mode === "chapter" && (
+              <p className="notice mt">
+                {t(
+                  b(
+                    "Historical review question · original language preserved · current source not verified.",
+                    "Tarixi icmal sualı · orijinal dil qorunur · cari mənbə yoxlanılmayıb.",
+                  ),
+                )}
+              </p>
+            )}
+            {mode === "middle" && previous && (
+              <p className="notice small">
+                {t(
+                  b(
+                    `Adapted to ${level} depth from your last self-assessment (${previousRating}/100). This is a practice recommendation, not expert grading.`,
+                    `Son özünüqiymətləndirmənə görə (${previousRating}/100) ${level} dərinliyi seçildi. Bu praktika tövsiyəsidir, ekspert qiyməti deyil.`,
+                  ),
+                )}
+              </p>
+            )}
+            <h2 className="interview-question">{q}</h2>
+            {!["chapter", "defense", "system"].includes(mode) && (
+              <details>
+                <summary>
+                  {t(b("Example to reason about", "Düşünmək üçün nümunə"))}
+                </summary>
+                <CodeBlock code={lesson.code} />
+                {mode === "rapid" && (
+                  <ul className="plain-list">
+                    {lesson.choices.map((c, i) => (
+                      <li key={i}>{t(c)}</li>
+                    ))}
+                  </ul>
+                )}
+              </details>
+            )}
+            {!evaluating ? (
+              <>
+                <textarea
+                  className="interview-answer"
+                  aria-label={t(b("Your interview answer", "Müsahibə cavabın"))}
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  placeholder={t(
+                    b(
+                      "Think aloud in writing. Explain the mechanism, then the trade-off…",
+                      "Düşüncəni yaz. Əvvəl mexanizmi, sonra seçimini izah et…",
+                    ),
+                  )}
+                />
+                <div className="toolbar mt">
+                  <button
+                    className="button primary"
+                    disabled={answer.trim().length < 15}
+                    onClick={() => setEvaluating(true)}
+                  >
+                    {t(
+                      b("Compare & self-assess", "Müqayisə et və qiymətləndir"),
+                    )}
+                    <ArrowRight size={14} />
+                  </button>
+                  <button
+                    className="button secondary"
+                    onClick={() => setHint(!hint)}
+                  >
+                    <Lightbulb size={13} />
+                    {t(b("Hint", "İpucu"))}
+                  </button>
+                  <button
+                    className="button secondary"
+                    onClick={voice}
+                    disabled={dictating}
+                  >
+                    <Mic size={13} />
+                    {t(
+                      dictating
+                        ? b("Listening…", "Dinlənilir…")
+                        : b("Dictate", "Səslə yaz"),
+                    )}
+                  </button>
+                  {mode === "rapid" && (
+                    <button
+                      className="button secondary"
+                      onClick={() => {
+                        setRemaining(60);
+                        setTimer(true);
+                      }}
+                    >
+                      <Timer size={13} />
+                      {timer
+                        ? remaining + "s"
+                        : t(b("60s timer", "60s taymer"))}
+                    </button>
+                  )}
+                </div>
+                {hint && (
+                  <p className="notice">
+                    {t(
+                      b(
+                        "Name the owner and the invariant. Trace a failure or suspension point. Explain a trade-off and the test that would expose a broken assumption.",
+                        "Owner və invariantı adlandır. Xəta və ya suspension nöqtəsini izlə. Bir trade-off və səhv fərziyyəni üzə çıxaran testi izah et.",
+                      ),
+                    )}
+                  </p>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="notice">
+                  <strong>{t(b("Your answer", "Sənin cavabın"))}</strong>
+                  <p style={{ whiteSpace: "pre-wrap" }}>{answer}</p>
+                </div>
+                <h3>{t(b("Reference reasoning", "Nümunə düşüncə"))}</h3>
+                <p>{model}</p>
+                <div className="notice">
+                  <strong>
+                    {t(b("Interviewer follow-up", "Müsahibənin əlavə sualı"))}
+                  </strong>
+                  <p>{followup}</p>
+                </div>
+                {state.ai && mode !== "chapter" && mode !== "defense" && (
+                  <div className="notice">
+                    <p>
+                      {t(
+                        b(
+                          "Optional provider feedback sends only this question and answer with your explicit consent. Private imports are excluded.",
+                          "İstəyə bağlı provider feedback-i yalnız bu sual və cavabı açıq razılıqla göndərir. Məxfi import-lar daxil deyil.",
+                        ),
+                      )}
+                    </p>
+                    <button
+                      className="button secondary"
+                      disabled={providerBusy}
+                      onClick={askProvider}
+                    >
+                      {providerBusy
+                        ? t(b("Waiting for provider…", "Provider gözlənilir…"))
+                        : t(
+                            b(
+                              "Request optional AI feedback",
+                              "İstəyə bağlı AI feedback istə",
+                            ),
+                          )}
+                    </button>
+                    {providerFeedback && (
+                      <p style={{ whiteSpace: "pre-wrap" }}>
+                        {providerFeedback}
+                      </p>
+                    )}
+                  </div>
+                )}
+                <h3>
+                  {t(
+                    b(
+                      "Evidence-based self-assessment",
+                      "Sübuta əsaslanan özünüqiymətləndirmə",
+                    ),
+                  )}
+                </h3>
+                <p className="small">
+                  {t(
+                    b(
+                      "Compare your answer to the reference: 0 absent · 1 incorrect/fragmentary · 2 partly explained · 3 correct with an example · 4 justified with limits and trade-offs. These are your ratings, not automatic expert scores.",
+                      "Cavabı nümunə ilə müqayisə et: 0 yoxdur · 1 səhv/natamam · 2 qismən izah · 3 düzgün və nümunəli · 4 məhdudiyyət və seçimlə əsaslandırılıb. Bu sənin qiymətindir, avtomatik ekspert qiyməti deyil.",
+                    ),
+                  )}
+                </p>
+                {rubric.map((r, i) => (
+                  <label key={i} className="rubric-row">
+                    <span>
+                      {t(r)} <small>({r.weight}%)</small>
+                    </span>
+                    <input
+                      type="range"
+                      min={0}
+                      max={4}
+                      value={scores[i]}
+                      onChange={(e) =>
+                        setScores((s) =>
+                          s.map((v, j) =>
+                            i === j ? Number(e.target.value) : v,
+                          ),
+                        )
+                      }
+                    />
+                    <span>{scores[i]}/4</span>
+                  </label>
+                ))}
+                <p className="small">
+                  {t(
+                    b(
+                      "Weighted self-assessment: ",
+                      "Çəkili özünüqiymətləndirmə: ",
+                    ),
+                  )}
+                  {rubricScore(scores)}/100
+                </p>
+                <button className="button primary" onClick={save}>
+                  <Save size={14} />
+                  {t(b("Save & next question", "Saxla və növbəti suala keç"))}
+                </button>
+              </>
+            )}
+            {error && (
+              <p className="notice danger mt" role="status">
+                {error}
+              </p>
+            )}
+            <p className="small faint mt">
+              {t(
+                b(
+                  "Saved answers remain on this device. Session started: ",
+                  "Saxlanan cavablar bu cihazda qalır. Sessiya başlanğıcı: ",
+                ),
+              )}
+              {new Date(started).toLocaleString(
+                state.locale === "az" ? "az-AZ" : "en-GB",
+              )}
+            </p>
+          </Card>
+        </div>
+      )}
+      <div className="interview-history">
+        <div className="section-heading">
+          <h2>{t(b("Session history", "Sessiya tarixçəsi"))}</h2>
+          <Link href="/analytics" className="text-link">
+            {t(b("View analytics", "Analitikaya bax"))}
+            <ArrowRight size={13} />
+          </Link>
+        </div>
+        {state.sessions.length ? (
+          state.sessions
+            .slice()
+            .reverse()
+            .slice(0, 10)
+            .map((s) => (
+              <Card key={s.id} className="padded mb">
+                <div className="flex-between">
+                  <span className="chip">{s.mode.toUpperCase()}</span>
+                  <span className="small faint">
+                    {s.turns.length} {t(b("answers", "cavab"))} ·{" "}
+                    {t(
+                      s.endedAt
+                        ? b("Ended", "Bitib")
+                        : b("In progress", "Davam edir"),
+                    )}
+                  </span>
+                </div>
+                {s.turns.map((turn, i) => (
+                  <details key={i}>
+                    <summary>{turn.question}</summary>
+                    <p style={{ whiteSpace: "pre-wrap" }}>{turn.answer}</p>
+                    <p className="small">{turn.modelAnswer}</p>
+                    <span className="chip">
+                      {t(b("Self-rated", "Özün qiymətləndirdin"))}:{" "}
+                      {rubricScore(turn.scores)}/100
+                    </span>
+                  </details>
+                ))}
+              </Card>
+            ))
+        ) : (
+          <p className="small faint">
+            {t(
+              b(
+                "Your first interview starts a useful history. No sample sessions or invented scores.",
+                "İlk müsahibən faydalı tarixçə yaradacaq. Nümunə sessiya və uydurma qiymət yoxdur.",
+              ),
+            )}
+          </p>
+        )}
+      </div>
+    </>
+  );
 }
-import {useEffect} from 'react';
-function useInterviewTimer(active:boolean,remaining:number,setRemaining:(n:number)=>void,stop:()=>void){useEffect(()=>{if(!active)return;if(remaining<=0){stop();return}const id=setTimeout(()=>setRemaining(remaining-1),1000);return()=>clearTimeout(id)},[active,remaining,setRemaining,stop]);}
+import { useEffect } from "react";
+function useInterviewTimer(
+  active: boolean,
+  remaining: number,
+  setRemaining: (n: number) => void,
+  stop: () => void,
+) {
+  useEffect(() => {
+    if (!active) return;
+    if (remaining <= 0) {
+      stop();
+      return;
+    }
+    const id = setTimeout(() => setRemaining(remaining - 1), 1000);
+    return () => clearTimeout(id);
+  }, [active, remaining, setRemaining, stop]);
+}

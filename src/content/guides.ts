@@ -1,55 +1,1951 @@
-import {bi as b,type Lesson,type Localized} from '@/lib/types';
-const swift='https://docs.swift.org/swift-book/documentation/the-swift-programming-language/';
-const apple='https://developer.apple.com/documentation/';
+import { bi as b, type Lesson, type Localized } from "@/lib/types";
+const swift =
+  "https://docs.swift.org/swift-book/documentation/the-swift-programming-language/";
+const apple = "https://developer.apple.com/documentation/";
 // Each case is authored independently. The original inventory remains a separate coverage contract.
-function g(id:string,intro:Localized,mechanism:Localized,judgment:Localized,code:string,predicted:string,trap:Localized,exercise:Localized,solution:Localized,right:Localized,wrong:Localized,source:string,followup:Localized):Lesson{return {id,minutes:25,prerequisites:[],intro,mechanism,judgment,code,predicted,trap,exercise,solution,question:b('Which statement correctly explains this lesson’s example?','Hansı fikir bu dərsin nümunəsini düzgün izah edir?'),choices:[wrong,right],correct:1,followup,source,sourceLabel:source.includes('docs.swift.org')?'The Swift Programming Language':source.includes('developer.apple.com')?'Apple Developer Documentation':'Swift.org documentation'};}
-export const guides:Lesson[]=[
-g('topic-03',b('Control flow chooses which work executes. Pattern matching lets you inspect the shape and associated data of a value instead of assembling fragile Boolean checks.','İdarəetmə axını hansı işin icra olunduğunu seçir. Pattern matching kövrək Boolean yoxlamaları əvəzinə dəyərin formasını və əlaqəli məlumatını yoxlayır.'),b('A switch over a known enum must cover every case. guard moves failure branches out of the main path. if case and for case extract one pattern without pretending all other cases cannot occur.','Məlum enum üçün switch bütün halları əhatə etməlidir. guard xəta budağını əsas yoldan çıxarır. if case və for case qalan halların mümkünsüz olduğunu fərz etmədən bir pattern-i ayırır.'),b('Prefer explicit state transitions over deeply nested independent flags. For non-frozen external enums, @unknown default helps detect newly introduced cases while providing a fallback.','Dərin iç-içə flag-lar əvəzinə açıq state keçidləri seç. Xarici non-frozen enum üçün @unknown default yeni halı aşkar etməyə və fallback verməyə kömək edir.'),'enum Outcome { case loaded(Int), failed }\nlet value = Outcome.loaded(42)\nswitch value {\ncase .loaded(let amount): print(amount)\ncase .failed: print("Failed")\n}','42',b('A default branch can hide a new case you should handle. Exhaustiveness is useful feedback, not ceremony.','default yeni və idarə etməli olduğun halı gizlədə bilər. Exhaustiveness faydalı feedback-dir.'),b('Add an empty state and describe the compiler error until every switch is updated.','empty halı əlavə et və bütün switch-lər yenilənənə qədər compiler xətasını izah et.'),b('A switch without default must explicitly handle empty. This makes a new product state visible at every relevant decision.','default olmayan switch empty-ni açıq idarə etməlidir. Beləliklə yeni məhsul vəziyyəti bütün qərar yerlərində görünür.'),b('Associated-value matching extracts the loaded amount.','Associated-value matching loaded məbləği ayırır.'),b('The switch ignores the enum case and prints every branch.','switch enum halını nəzərə almır və bütün budaqları çap edir.'),swift+'controlflow/',b('When is guard clearer than if?','guard nə vaxt if-dən aydındır?')),
-g('topic-05',b('Enums describe one of several valid states. Associated values carry data for that state, preventing combinations such as “loading and failed and successful” from appearing accidentally.','Enum bir neçə düzgün vəziyyətdən birini ifadə edir. Associated value həmin vəziyyətin məlumatını saxlayır; təsadüfi “loading və failed və success” birləşməsini önləyir.'),b('Raw values identify cases; associated values are payloads of individual enum values. Result models success/failure; a screen usually also needs idle/loading/empty or partial-result distinctions.','Raw value halı identifikasiya edir; associated value konkret enum dəyərinin payload-udur. Result uğur/xəta verir; ekranda idle/loading/empty və qismən nəticə də lazım ola bilər.'),b('Model independent dimensions separately: filter loading can coexist with loaded rows. One giant enum for every combination can explode in complexity.','Müstəqil ölçüləri ayrı modelləşdir: filter yüklənməsi yüklənmiş sətirlərlə yanaşı ola bilər. Hər kombinasiya üçün bir nəhəng enum mürəkkəbliyi artıra bilər.'),'enum LoadState { case idle, loaded([Int]), failed(String) }\nlet state = LoadState.loaded([])\nif case .loaded(let rows) = state { print(rows.isEmpty) }','true',b('An empty successful collection is not the same as failure. Preserve that distinction in UI and telemetry.','Uğurlu boş kolleksiya xəta ilə eyni deyil. UI və telemetriyada fərqi saxla.'),b('Add a partial-results-with-error case. What should a Retry action preserve?','Xəta ilə qismən nəticə halı əlavə et. Retry nəyi qorumalıdır?'),b('Keep useful rows and attach a recoverable failure. Retry can replace or reconcile results according to stable identity.','Faydalı sətirləri saxla və bərpa edilən xəta əlavə et. Retry sabit identity ilə nəticəni əvəz və ya uzlaşdıra bilər.'),b('loaded([]) is a valid success containing no rows.','loaded([]) sətirsiz düzgün uğurdur.'),b('An empty collection automatically throws an error.','Boş kolleksiya avtomatik xəta atır.'),swift+'enumerations/',b('Which state combinations should be impossible by construction?','Hansı vəziyyət birləşmələri quruluşla mümkünsüz olmalıdır?')),
-g('topic-06',b('A struct is a value; a class has shared identity. Properties store values or compute them. Choose identity and ownership before choosing inheritance.','Struct dəyərdir; class paylaşılan identity-yə malikdir. Property dəyər saxlayır və ya hesablayır. Inheritance-dan əvvəl identity və ownership seç.'),b('A mutating struct method can change self. A class instance can mutate its properties through a let reference because the binding, not the object, is constant. lazy properties initialize on first access but do not supply general thread synchronization.','mutating struct metodu self-i dəyişə bilər. let class istinadı ilə property dəyişə bilər: sabit olan binding-dir, obyekt deyil. lazy ilk girişdə qurulur, amma ümumi thread sinxronizasiyası vermir.'),b('Prefer composition where behaviors vary independently. Use final when subclassing is not part of the contract, and narrow access control to protect invariants. A deinitializer is lifetime evidence, not a substitute for explicit resource cleanup.','Davranışlar müstəqil dəyişirsə composition seç. Subclass müqavilənin hissəsi deyilsə final, invariant üçün dar access control istifadə et. deinit lifetime sübutudur, açıq resurs təmizlənməsinin əvəzi deyil.'),'struct Balance { var amount: Int; mutating func add(_ n: Int) { amount += n } }\nvar a = Balance(amount: 10)\nvar c = a\nc.add(5)\nprint(a.amount, c.amount)','10 15',b('Subclassing purely to reuse a few methods can couple unrelated invariants. Extract a collaborator when the relationship is not genuinely substitutable.','Bir neçə metodu paylaşmaq üçün subclass etmək əlaqəsiz invariantları bağlaya bilər. Əvəzlənmə yoxdursa əməkdaş obyekt ayır.'),b('Give Balance a class-valued property. Which mutations remain independent after a copy?','Balance-a class property əlavə et. Kopyadan sonra hansı mutasiya müstəqil qalır?'),b('Stored value properties are independent; references inside both copies may still point to one object. Define deep-copy policy explicitly.','Saxlanan dəyər property-lər müstəqildir; daxili istinadlar yenə eyni obyektə çata bilər. Deep-copy qaydasını açıq qur.'),b('The struct copies have independent integer properties.','Struct kopyalarının integer property-ləri müstəqildir.'),b('All mutations of any struct automatically change every copy.','Struct mutasiyası avtomatik bütün kopyaları dəyişir.'),swift+'classesandstructures/',b('When does shared identity make a class the appropriate choice?','Paylaşılan identity nə vaxt class seçimini əsaslandırır?')),
-g('topic-09',b('Generics preserve relationships between types without committing to one concrete type. A generic stack can enforce that the element you remove has the same type as the element you inserted.','Generics konkret bir tip seçmədən tiplər arasındakı əlaqəni saxlayır. Generic stack çıxan elementin daxil edilənlə eyni tipdə olmasını təmin edə bilir.'),b('Constraints describe operations the generic algorithm may use. Associated types connect protocol inputs and outputs. some keeps one hidden concrete type; any erases concrete identity into an existential with available operations governed by the protocol and compiler.','Constraint generic alqoritmin istifadə edə biləcəyi əməliyyatı müəyyən edir. Associated type protokolun giriş və çıxışını əlaqələndirir. some tək gizli konkret tipi saxlayır; any existential yaradır və əməliyyatları protokol/compiler qaydaları ilə məhdudlaşdırır.'),b('Keep generic APIs focused. Specialization may improve performance, but code-size and compilation costs are implementation concerns to measure. Type erasure should solve a storage or API boundary problem, not merely hide difficult diagnostics.','Generic API-ni fokuslu saxla. Specialization performansı artıra bilər, amma kod ölçüsü və compile xərci ölçülməlidir. Type erasure sadəcə çətin diagnostic-i gizlətmək deyil, storage və ya API sərhədi problemi həll etməlidir.'),'func first<T>(_ values: [T]) -> T? { values.first }\nprint(first([10, 20]) ?? 0)\nprint(first(["AZ", "EN"]) ?? "")','10\nAZ',b('A generic function cannot assume capabilities that are not in its constraints. Add the smallest meaningful requirement.','Generic funksiya constraint-də olmayan bacarığı fərz edə bilməz. Ən kiçik əsaslı requirement əlavə et.'),b('Write a function that returns the larger of two values. Which constraint does it need?','İki dəyərdən böyüyünü qaytaran funksiya yaz. Hansı constraint lazımdır?'),b('Use T: Comparable. Equality alone is insufficient to establish ordering; avoid constraining to a concrete numeric type without need.','T: Comparable seç. Tək bərabərlik sıralama üçün yetmir; ehtiyac olmadan konkret numeric tiplə məhdudlaşdırma.'),b('T preserves the element type between argument and result.','T arqumentlə nəticə arasında element tipini saxlayır.'),b('The function returns an untyped object for every call.','Funksiya hər çağırışda tipsiz obyekt qaytarır.'),swift+'generics/',b('What relationship is lost if the result becomes Any?','Nəticə Any olsa hansı əlaqə itir?')),
-g('topic-10',b('Throwing functions report recoverable failures to their caller. do/catch chooses where to recover; propagation keeps failure information available to a higher-level policy.','Throwing funksiya bərpa edilə bilən xətanı çağırana ötürür. do/catch bərpa yerini seçir; propagation məlumatı yuxarı qaydaya saxlayır.'),b('try? converts failure to absence and can discard the reason. try! asserts failure is impossible and traps otherwise. defer performs scope cleanup on exit. Distinguish cancellation, decoding failures and business rejection before mapping errors for UI. Typed throws is available in Swift 6.','try? xətanı yoxluğa çevirir və səbəbi itirə bilər. try! xətanın mümkünsüzlüyünü iddia edir, əks halda trap olur. defer scope çıxışında təmizləyir. UI-a mapping-dən əvvəl cancellation, decoding və biznes rəddini ayır. Typed throws Swift 6-da mövcuddur.'),b('Error taxonomy should preserve recovery choices and observability without exposing secrets. Do not show a failure alert for ordinary user cancellation. Translate infrastructure errors at meaningful boundaries, retaining sanitized diagnostic context.','Xəta kateqoriyası sirr açmadan bərpa seçimini və müşahidə imkanını saxlamalıdır. Adi istifadəçi cancellation-una xəta alert-i göstərmə. İnfrastruktur xətasını mənalı sərhəddə çevir və sanitizasiya olunmuş konteksti saxla.'),'enum PaymentError: Error { case rejected }\nfunc pay() throws { throw PaymentError.rejected }\ndo { try pay() } catch { print("Recover") }','Recover',b('Returning [] for every network failure makes failed history look like no transactions. Preserve the failure outcome.','Hər şəbəkə xətasında [] qaytarmaq uğursuz tarixçəni əməliyyat yoxdur kimi göstərir. Xəta nəticəsini saxla.'),b('Choose between try?, do/catch and propagation when a mandatory signing document cannot load.','Məcburi imzalama sənədi yüklənməyəndə try?, do/catch və propagation arasında seç.'),b('Preserve failure for an explicit retry or workflow stop. Silently converting to nil can hide why signing cannot proceed.','Açıq retry və ya workflow dayandırılması üçün xətanı saxla. Səssiz nil imzalamanın niyə davam etmədiyini gizlədə bilər.'),b('The thrown error reaches catch.','Atılmış xəta catch-ə çatır.'),b('try catches and silently ignores every error.','try hər xətanı tutur və səssiz atır.'),swift+'errorhandling/',b('Where should user-facing localization happen?','İstifadəçiyə görünən lokallaşdırma harada olmalıdır?')),
-g('topic-11',b('Dispatch is the mechanism that selects an implementation for a call. The static type, protocol requirements, overrides and compiler optimization all influence how a Swift call behaves.','Dispatch çağırış üçün implementasiya seçən mexanizmdir. Statik tip, protocol requirement, override və compiler optimallaşdırması davranışa təsir edir.'),b('Class overrides provide dynamic behavior; protocol requirements use conformance witnesses through abstraction. Extension-only methods do not become requirements just because a conforming type declares the same name. final prevents overriding and can enable optimization.','Class override dinamik davranış verir; abstraksiya üzərindən protocol requirement conformance witness istifadə edir. Eyni ad uyğun tipdə elan olunsa da extension-only metod requirement olmur. final override-ı qadağan edir və optimallaşdırmaya imkan verə bilər.'),b('Do not rewrite APIs for speculative nanosecond savings. Establish semantics first and profile hot paths. Objective-C dynamic dispatch and Swift generics have distinct contracts; optimizer devirtualization is not a language promise for every call.','Fərziyyə edilən nanosaniyə qənaəti üçün API-ni yenidən yazma. Əvvəl semantikanı qur, sonra hot path ölç. Objective-C dynamic dispatch və Swift generics fərqli müqavilədir; optimizer devirtualization hər çağırış üçün dil zəmanəti deyil.'),'class Base { func value() -> Int { 1 } }\nfinal class Child: Base { override func value() -> Int { 2 } }\nlet item: Base = Child()\nprint(item.value())','2',b('Static variable type Base does not force a dynamically overridden method to call Base’s body.','Dəyişənin statik tipi Base olduğu üçün override olunan metod mütləq Base body-sini çağırmır.'),b('Compare this override with an extension-only protocol method through an existential.','Bu override-ı existential üzərindən extension-only protokol metodu ilə müqayisə et.'),b('The class method is dynamically overridden. An extension-only protocol method is not a requirement witness and may select the extension body from the static type.','Class metodu dinamik override olunur. Extension-only metod requirement witness deyil və statik tipə görə extension body-si seçilə bilər.'),b('The Child override is called.','Child override-ı çağırılır.'),b('The Base body is always called because the variable is Base.','Dəyişən Base olduğu üçün həmişə Base body-si çağırılır.'),swift+'inheritance/',b('Which guarantees does final actually add?','final konkret hansı zəmanəti əlavə edir?')),
-g('topic-13',b('UIKit views render and handle interaction; view controllers coordinate a screen’s lifecycle. Loading a view is different from appearing on screen.','UIKit view görüntüləyir və qarşılıqlı əlaqəni qəbul edir; view controller ekran lifecycle-ını koordinasiya edir. View yüklənməsi görünməsi ilə eyni deyil.'),b('viewDidLoad configures a newly loaded hierarchy once per loading. Appearance callbacks can repeat. Layout can run many times and must not blindly start requests. Hit testing chooses a view; the responder chain routes unhandled events.','viewDidLoad yeni yüklənən hierarchy-ni qurur. Appearance callback-ləri təkrarlana bilər. Layout çox dəfə işləyir və kor-koranə sorğu başlatmamalıdır. Hit testing view seçir; responder chain idarə olunmayan event-i yönləndirir.'),b('Define activation and cancellation policy per screen. A navigation transition, backgrounding and removal are different lifecycle events. Validate Dynamic Type, VoiceOver and keyboard avoidance as behavior, not merely visual polish.','Ekran üçün aktivləşmə və cancellation qaydasını müəyyən et. Naviqasiya keçidi, background və silinmə fərqli lifecycle event-ləridir. Dynamic Type, VoiceOver və klaviatura davranışını tək görünüş kimi deyil, funksiya kimi yoxla.'),'// Requires an Apple SDK.\nimport UIKit\nfinal class HistoryController: UIViewController {\n    override func viewDidLoad() {\n        super.viewDidLoad()\n        view.backgroundColor = .systemBackground\n    }\n}','UI example — no console output; Apple SDK required.',b('Starting network requests in viewDidLayoutSubviews can duplicate work on every layout pass.','viewDidLayoutSubviews-da sorğu başlatmaq hər layout keçidində işi təkrarlaya bilər.'),b('A screen reappears after a modal. Should data reload every time? State the freshness requirement.','Modal-dan sonra ekran qayıdır. Hər dəfə məlumat yenilənsinmi? Aktuallıq tələbini bildir.'),b('Choose based on freshness and operation ownership. Separate initial setup from idempotent activation and explicit user refresh.','Aktuallıq və əməliyyat ownership-i əsasında seç. İlkin qurulmanı idempotent aktivləşmə və açıq istifadəçi refresh-indən ayır.'),b('Appearance callbacks can run more than once.','Appearance callback-ləri birdən çox dəfə işləyə bilər.'),b('viewDidLoad runs on every frame.','viewDidLoad hər kadrda işləyir.'),apple+'uikit/uiviewcontroller',b('Why can a visible view fail hit testing?','Görünən view niyə hit testing ala bilməyə bilər?')),
-g('topic-14',b('Auto Layout solves constraints describing relationships between views. Intrinsic content size provides a preferred size; priorities decide which wishes may yield.','Auto Layout view-lər arasında münasibəti təsvir edən constraint-ləri həll edir. Intrinsic content size üstün ölçü verir; priority hansı istəyin güzəşt edəcəyini seçir.'),b('Content hugging resists growing beyond intrinsic size; compression resistance resists shrinking below it. Ambiguous constraints permit multiple solutions; unsatisfiable constraints conflict. layoutIfNeeded performs pending layout immediately in the relevant subtree.','Hugging intrinsic ölçüdən böyüməyə, compression resistance isə kiçilməyə müqavimətdir. Ambiguous constraint bir neçə həllə icazə verir; unsatisfiable constraint ziddiyyətdir. layoutIfNeeded uyğun subtree-də gözləyən layout-u dərhal edir.'),b('Test translated text, accessibility sizes and keyboard transitions. For scroll views, connect content layout guides to define content extent and frame guides for viewport constraints. Avoid fixing symptoms with arbitrary priority changes.','Tərcümə, accessibility ölçüsü və klaviatura keçidini test et. Scroll view-da content ölçüsünü content layout guide, viewport-u frame guide ilə qur. Təsadüfi priority dəyişməklə simptomu gizlətmə.'),'// Requires an Apple SDK.\nimport UIKit\nlet label = UILabel()\nlabel.translatesAutoresizingMaskIntoConstraints = false\nlabel.setContentCompressionResistancePriority(.required, for: .vertical)','UI example — no console output; Apple SDK required.',b('A scroll view without an unbroken content-height relationship may have no scrollable extent.','Kəsilməz content-height əlaqəsi olmayan scroll view-da scroll ölçüsü yaranmaya bilər.'),b('Two labels share a narrow row. Which priority prevents truncating the account amount first?','İki label dar sətirdədir. Məbləğin əvvəl kəsilməsini hansı priority önləyir?'),b('Give the amount stronger horizontal compression resistance than the optional description, while allowing a responsive alternative layout.','Məbləğə əlavə təsvirə nisbətən daha güclü horizontal compression resistance ver və adaptiv alternativ layout saxla.'),b('Compression resistance resists becoming smaller than intrinsic size.','Compression resistance intrinsic ölçüdən kiçilməyə müqavimətdir.'),b('Hugging always forces a fixed frame size.','Hugging həmişə sabit frame məcbur edir.'),apple+'uikit/uiview',b('How do you distinguish an ambiguous from a conflicting layout?','Ambiguous layout-u ziddiyyətli layout-dan necə ayırırsan?')),
-g('topic-15',b('Navigation changes the user’s location in a flow. Push/pop belong to a navigation stack; presentation/dismissal create and remove modal relationships.','Naviqasiya istifadəçinin axındakı yerini dəyişir. Push/pop naviqasiya stack-inə, presentation/dismissal modal əlaqəyə aiddir.'),b('A router executes typed destinations; a coordinator can own a multi-screen flow. The host should retain the coordinator long enough. Weak controller back-references can break cycles, but weak capture alone does not establish the whole graph’s lifetime.','Router typed destination icra edir; coordinator çoxekranlı axına sahib ola bilər. Host coordinator-u kifayət qədər saxlamalıdır. Weak controller geri istinadı dövrü qıra bilər, amma tək weak bütün qraf lifetime-ını qurmur.'),b('Validate deep-link input and authorization before routing. Represent restorable destinations as stable data rather than controller instances. Choose who owns dismissal when UIKit hosts SwiftUI.','Route-dan əvvəl deep-link girişini və avtorizasiyanı yoxla. Bərpa olunan destination-u controller obyekti deyil, sabit məlumat kimi saxla. UIKit SwiftUI host edirsə dismissal sahibini seç.'),'enum Route { case account(id: String), settings }\nlet route = Route.account(id: "A1")\nif case .account(let id) = route { print(id) }','A1',b('A deep link is untrusted input, not authorization to view any account.','Deep link etibarsız girişdir; istənilən hesabı görmək icazəsi deyil.'),b('A detail response completes after the user exits. What prevents a stale push?','İstifadəçi çıxandan sonra detail cavabı gəlir. Köhnə push-u nə önləyir?'),b('Validate operation identity and active flow ownership before routing; cancellation alone does not guarantee the callback disappears.','Route-dan əvvəl əməliyyat kimliyini və aktiv flow ownership-ini yoxla; tək cancellation callback-in yox olmasına zəmanət vermir.'),b('Typed routes make destination data explicit.','Typed route destination məlumatını açıq edir.'),b('Every route enum proves navigation is leak-free.','Hər route enum naviqasiyanın leak-siz olduğunu sübut edir.'),apple+'uikit/uinavigationcontroller',b('Who keeps a coordinator alive?','Coordinator-u kim yaşadır?')),
-g('topic-16',b('Reusable cells let lists display many rows without allocating one view for every item. A cell’s identity is temporary; the model’s identity must be stable.','Təkrar istifadə olunan cell bütün element üçün ayrı view yaratmadan böyük siyahı göstərir. Cell identity-si müvəqqətidir; model identity-si sabit olmalıdır.'),b('Cancel or invalidate image work during reuse and verify the represented model ID before assigning a result. Diffable snapshots describe stable item identities and changes, not permission to duplicate IDs. Prefetching is speculative and must tolerate cancellation.','Reuse zamanı şəkil işini ləğv və ya etibarsız et; nəticə yazmazdan əvvəl təmsil edilən model ID-sini yoxla. Diffable snapshot sabit item identity və dəyişikliyi təsvir edir, təkrar ID icazəsi deyil. Prefetch təxminidir və cancellation-a dözməlidir.'),b('Profile main-thread mapping, decoding, image sizing and layout under realistic data volumes. Correctness of reuse comes before adding background queues. Pagination needs identity-aware merging and explicit end-of-list/error state.','Real məlumat ölçüsü ilə main-thread mapping, decoding, şəkil ölçüləndirmə və layout-u ölç. Background queue əlavə etməzdən əvvəl reuse düzgünlüyünü qur. Pagination identity əsaslı merging və son/xəta state-i istəyir.'),'struct Row: Hashable { let id: Int }\nlet rows = [Row(id: 1), Row(id: 2)]\nprint(Set(rows).count)','2',b('Index paths can change after inserts and sorting. Verify stable model identity in asynchronous completions.','Insert və sort-dan sonra index path dəyişə bilər. Async completion-da sabit model identity yoxla.'),b('An old image request finishes after a cell shows another row. Specify the guard.','Cell başqa sətir göstərərkən köhnə şəkil sorğusu bitir. Guard-ı müəyyən et.'),b('Capture the requested item ID and assign only if it still equals the cell’s represented ID; also cancel unnecessary work on reuse.','Sorğunun item ID-sini capture et; yalnız cell-in cari represented ID-si ilə eynidirsə yaz. Reuse zamanı lazımsız işi də ləğv et.'),b('Stable IDs are distinct from current index paths.','Sabit ID cari index path-dən fərqlidir.'),b('A reused cell always represents its first item.','Reuse olunan cell həmişə ilk elementi təmsil edir.'),apple+'uikit/uicollectionview',b('What does a diffable snapshot test leave unproven?','Diffable snapshot testi nəyi sübut etmir?')),
-g('topic-18',b('Patterns name recurring solutions and their costs. An adapter translates an external capability; a factory creates objects; a coordinator manages a flow. Naming a type after a pattern does not establish its behavior.','Pattern təkrarlanan həlli və xərcini adlandırır. Adapter xarici bacarığı çevirir; factory obyekt yaradır; coordinator axını idarə edir. Tipə pattern adı vermək davranışı sübut etmir.'),b('Choose a strategy when one policy varies independently. Decorators add behavior around a stable contract. Observer introduces subscription lifetime and delivery-order questions. A singleton supplies shared identity but can hide mutable global state.','Bir qayda müstəqil dəyişirsə strategy seç. Decorator sabit müqavilə ətrafına davranış əlavə edir. Observer subscription lifetime və çatdırılma sırası sualı yaradır. Singleton paylaşılan identity verir, amma qlobal mutable state gizlədə bilər.'),b('Select the smallest pattern that isolates a real change. Test lifecycle and failure behavior, not merely construction. Avoid factories or protocols that forward one fixed implementation without a concrete variation point.','Real dəyişikliyi ayıran ən kiçik pattern seç. Tək qurulmanı deyil, lifecycle və xəta davranışını test et. Konkret dəyişkənlik olmadan bir implementasiyanı ötürən factory/protokoldan qaç.'),'protocol FeePolicy { func fee(_ amount: Int) -> Int }\nstruct FlatFee: FeePolicy { func fee(_ amount: Int) -> Int { 2 } }\nfunc total(_ amount: Int, policy: any FeePolicy) -> Int { amount + policy.fee(amount) }\nprint(total(10, policy: FlatFee()))','12',b('An adapter around an SDK should not return vendor types through every public feature API.','SDK adapter-i vendor tiplərini bütün public feature API-lərə sızdırmamalıdır.'),b('Replace FlatFee with a percentage policy without changing total(). What remains a domain decision?','total()-ı dəyişmədən FlatFee-ni faiz qaydası ilə əvəz et. Nə domen qərarı olaraq qalır?'),b('Supply another FeePolicy. Rounding, currency and limits are policy decisions; use explicit monetary types rather than casual floating-point arithmetic.','Başqa FeePolicy ötür. Yuvarlaqlaşdırma, valyuta və limit domen qərarıdır; təsadüfi floating-point əvəzinə açıq pul tipi istifadə et.'),b('The strategy varies fee calculation independently of total().','Strategy fee hesabını total()-dan müstəqil dəyişir.'),b('A singleton is required for every strategy.','Hər strategy üçün singleton məcburidir.'),'https://www.swift.org/documentation/api-design-guidelines/',b('Which pattern would actually reduce the next likely change?','Növbəti ehtimal olunan dəyişikliyi hansı pattern azaldar?')),
-g('topic-19',b('SOLID is a set of questions about change and substitution. Single responsibility asks about reasons to change, not a maximum number of lines. Dependency inversion asks who owns an abstraction.','SOLID dəyişmə və əvəzlənmə haqqında suallardır. Single responsibility maksimum sətir sayını deyil, dəyişmə səbəbini soruşur. Dependency inversion abstraksiyanın sahibini soruşur.'),b('Interface segregation keeps consumers dependent on the capabilities they use. Liskov substitution requires preserving the promised behavior, not merely matching signatures. Open/closed does not mean an enum can never gain a case.','Interface segregation istehlakçını istifadə etdiyi bacarıqlara bağlayır. Liskov substitution tək signature deyil, vəd olunan davranışın qorunmasıdır. Open/closed enum-a heç vaxt hal əlavə etməmək demək deyil.'),b('Refactor where independent change causes measurable friction. A shared signing workflow and display mapping may deserve different owners. Splitting every method into a separate class can increase coupling through excessive wiring.','Müstəqil dəyişmə real sürtünmə yaradırsa refactor et. İmzalama workflow-u və display mapping ayrı sahiblər tələb edə bilər. Hər metodu ayrı class etmək artıq wiring ilə coupling-i artıra bilər.'),'protocol BalanceReading { func read() -> Int }\nstruct StubBalance: BalanceReading { func read() -> Int { 42 } }\nfunc display(_ source: any BalanceReading) { print(source.read()) }\ndisplay(StubBalance())','42',b('Depending on a protocol does not guarantee a good boundary if the protocol exposes every infrastructure detail.','Protokol bütün infrastruktur detalını açırsa ona bağlanmaq yaxşı sərhəd zəmanəti deyil.'),b('A ViewModel formats sections, signs documents and manages network retries. Identify independent reasons to change.','ViewModel section formatlayır, sənəd imzalayır və network retry idarə edir. Müstəqil dəyişmə səbəblərini tap.'),b('Design changes affect mapping; signing-provider changes affect signing; transport policy affects retries. Characterize behavior before extracting cohesive responsibilities.','Dizayn mapping-i, provider imzalamanı, transport qaydası retry-ni dəyişir. Məsuliyyət ayırmazdan əvvəl davranışı testlə müəyyən et.'),b('A narrow read capability reduces what the consumer needs to know.','Dar oxuma bacarığı istehlakçının bilməli olduğu məlumatı azaldır.'),b('SOLID requires one class for every method.','SOLID hər metod üçün bir class tələb edir.'),'https://www.swift.org/documentation/api-design-guidelines/',b('When is a concrete dependency simpler and sufficiently testable?','Konkret asılılıq nə vaxt daha sadə və yetərincə test ediləndir?')),
-g('topic-23',b('State-driven architectures describe the current screen and how intent changes it. MVVM and MVI are families of conventions; only the actual implementation establishes mutation, effect and lifetime guarantees.','State əsaslı arxitektura ekranı və niyyətin onu necə dəyişdirdiyini təsvir edir. MVVM və MVI qayda ailələridir; mutasiya, effect və lifetime zəmanətini real implementasiya qurur.'),b('Actions express intent; durable state supports rendering and restoration; effects request transient work. A custom action-forwarding store with mutable reference state is not automatically a reducer system or TCA.','Action niyyətdir; qalıcı state rendering və restoration-u dəstəkləyir; effect keçici iş istəyir. Mutable reference state ilə action ötürən custom store avtomatik reducer sistemi və ya TCA deyil.'),b('Evaluate replay, cancellation, navigation ownership and migration costs before changing frameworks. Strengthen action-only writes or actor ownership incrementally rather than simultaneously rewriting working UI and business behavior.','Framework dəyişməzdən əvvəl replay, cancellation, naviqasiya ownership və miqrasiya xərcini qiymətləndir. İşlək UI və biznesi eyni anda yazmaq əvəzinə action-only mutasiya və actor ownership-i mərhələli gücləndir.'),'enum Action { case increment }\nstruct Counter {\n    private(set) var value = 0\n    mutating func send(_ action: Action) {\n        switch action { case .increment: value += 1 }\n    }\n}\nvar counter = Counter(); counter.send(.increment); print(counter.value)','1',b('A public mutable state lets views bypass an action convention. Be explicit about what is compiler-enforced and what is only policy.','Public mutable state view-a action qaydasını keçməyə imkan verir. Compiler zəmanəti ilə komanda qaydasını açıq ayır.'),b('Should an error be state or effect? Compare a persistent failed screen with a one-off toast.','Xəta state-dir, yoxsa effect? Qalıcı failed ekranla birdəfəlik toast-u müqayisə et.'),b('A recoverable screen failure belongs in renderable state; a transient announcement may be an effect. Define replay and restoration behavior rather than categorizing by name alone.','Bərpa edilən ekran xətası görünən state-dədir; keçici bildiriş effect ola bilər. Tək ada deyil, replay və restoration-a əsaslan.'),b('The example routes mutation through send.','Nümunə mutasiyanı send üzərindən keçirir.'),b('Every store with send is a full TCA implementation.','send olan hər store tam TCA-dır.'),apple+'swiftui/managing-model-data-in-your-app',b('Can effects be emitted before a host attaches its handler?','Host handler qoşmazdan əvvəl effect göndərilə bilərmi?')),
-g('topic-24',b('HTTP defines request and response semantics. Methods, status codes and headers matter even when every payload is JSON. Authentication and authorization answer different questions.','HTTP sorğu və cavab semantikasını müəyyən edir. Payload JSON olsa da metod, status və header vacibdir. Autentifikasiya və avtorizasiya fərqli sualı cavablayır.'),b('401 generally signals missing/invalid authentication; 403 indicates refusal of authorization. Idempotency concerns repeated effects, not identical responses. Cache-Control and ETag coordinate freshness and conditional requests. TLS protects transport, not business correctness.','401 adətən çatışmayan/səhv autentifikasiyanı, 403 icazə rəddini göstərir. Idempotency eyni cavab deyil, təkrar təsir haqqındadır. Cache-Control və ETag aktuallığı və conditional request-i idarə edir. TLS transport-u qoruyur, biznes düzgünlüyünü deyil.'),b('Define safe retries and server idempotency explicitly for mutations. Interpret 429 with a bounded delay policy. Never assume all successful status codes contain the same response envelope or a non-empty body.','Mutasiyalar üçün təhlükəsiz retry və server idempotency-ni açıq qur. 429 üçün məhdud gecikmə qaydası seç. Hər uğurlu status-un eyni envelope və ya boş olmayan body daşıdığını fərz etmə.'),'let status = 204\nswitch status {\ncase 204: print("Success without a body")\ncase 200: print("Validate expected payload")\ndefault: print("Handle status")\n}','Success without a body',b('Trying to decode a required JSON model from a valid 204 response confuses protocol success with payload expectations.','Düzgün 204 cavabından məcburi JSON model decode etmək protokol uğurunu payload gözləntisi ilə qarışdırır.'),b('A GET returns 304. Which earlier response state must your cache retain?','GET 304 qaytarır. Cache əvvəlki hansı cavab state-ini saxlamalıdır?'),b('Retain the validated cached representation and metadata needed for freshness; 304 alone does not contain a replacement payload.','Yoxlanmış cache təqdimatını və aktuallıq metadata-sını saxla; 304 əvəz payload daşımır.'),b('204 can represent success without response data.','204 cavab datası olmadan uğur ola bilər.'),b('Every 2xx response must decode into a non-empty array.','Hər 2xx cavabı boş olmayan array-a decode olunmalıdır.'),apple+'foundation/httpurlresponse',b('Why can blindly retrying POST duplicate a business operation?','POST-u kor-koranə retry etmək niyə biznes əməliyyatını təkrarlaya bilər?')),
-g('topic-26',b('Codable describes encoding and decoding contracts. Decodable builds a type from external data; it does not automatically establish business validity.','Codable encoding və decoding müqaviləsini ifadə edir. Decodable xarici məlumatdan tip qurur; biznes etibarlılığını avtomatik sübut etmir.'),b('Missing optional keys can decode as nil; missing required keys fail. CodingKeys map names; custom decoding handles documented schema variation. Distinguish missing, null and invalid values when the product contract requires it.','Çatışmayan Optional key nil ola bilər; məcburi key yoxdursa decoding uğursuzdur. CodingKeys adları uyğunlaşdırır; custom decoding sənədləşmiş schema fərqini idarə edir. Məhsul tələb edirsə missing, null və invalid-i ayır.'),b('Tolerant decoding should not hide invalid account identity or monetary values. Version contracts, write fixture tests and instrument schema failures without logging customer payloads. Keep DTO-to-domain mapping explicit.','Tolerant decoding səhv hesab kimliyini və məbləği gizlətməməlidir. Müqaviləni versiyala, fixture test yaz və müştəri payload-u log etmədən schema xətasını izlə. DTO-domain mapping-i açıq saxla.'),'import Foundation\nstruct Account: Decodable { let id: Int; let nickname: String? }\nlet json = Data(#"{"id":42}"#.utf8)\nlet account = try JSONDecoder().decode(Account.self, from: json)\nprint(account.id, account.nickname == nil)','42 true',b('Defaulting every malformed field can turn corrupted data into plausible but wrong UI.','Hər səhv sahəyə default vermək pozulmuş məlumatı inandırıcı yanlış UI-a çevirə bilər.'),b('A backend adds a new enum string. Choose reject, unknown(rawValue), or fallback based on the feature risk.','Backend yeni enum string əlavə edir. Feature riskinə görə reject, unknown(rawValue) və ya fallback seç.'),b('Preserve unknown values when forward compatibility is safe; reject if an unknown action could violate a payment rule. Keep UI fallback separate from authorization.','Forward compatibility təhlükəsizdirsə unknown dəyəri saxla; naməlum action ödəniş qaydasını poza bilərsə rədd et. UI fallback-i avtorizasiyadan ayır.'),b('The optional missing nickname becomes nil.','Çatışmayan Optional nickname nil olur.'),b('Decodable proves the account is authorized.','Decodable hesabın icazəli olduğunu sübut edir.'),apple+'swift/codable',b('Where should a missing mandatory ID be rejected?','Çatışmayan məcburi ID harada rədd edilməlidir?')),
-g('topic-27',b('A network layer separates feature intent from HTTP mechanics. Endpoints describe requests; transport executes them; response validation and decoding interpret results.','Şəbəkə qatı feature niyyətini HTTP mexanikasından ayırır. Endpoint sorğunu təsvir edir; transport icra edir; validasiya və decoding nəticəni şərh edir.'),b('Keep retries bounded, add exponential backoff with jitter when appropriate, and deduplicate only operations whose semantics allow sharing. A logical operation must own replacement requests across refresh and retry so cancellation remains meaningful.','Retry-ni məhdudlaşdır, uyğun olduqda jitter ilə exponential backoff əlavə et; yalnız semantikası icazə verən işi deduplicate et. Cancellation mənalı qalsın deyə məntiqi əməliyyat refresh və retry əvəz sorğularına sahib olmalıdır.'),b('Balance reuse with feature-specific response contracts. A repository adds value when it owns cache, source selection or reconciliation; pass-through wrappers may only add ceremony. Use sanitized correlation metadata to diagnose failures.','Reuse ilə feature response müqaviləsi arasında tarazlıq qur. Repository cache, mənbə seçimi və reconciliation sahibidirsə faydalıdır; forwarding wrapper əlavə mərasim ola bilər. Xətanı sanitizasiya edilmiş correlation metadata ilə araşdır.'),'struct RetryPolicy {\n    let maximumAttempts: Int\n    func mayRetry(_ attempt: Int) -> Bool { attempt < maximumAttempts }\n}\nprint(RetryPolicy(maximumAttempts: 3).mayRetry(3))','false',b('A retry policy needs both a bound and a semantic safety check. A loop limit alone does not make mutation retries safe.','Retry həm say sərhədi, həm semantik təhlükəsizlik istəyir. Tək loop limiti mutasiya retry-sini təhlükəsiz etmir.'),b('Specify a paginated request key that includes all filters and account identity.','Bütün filter və hesab kimliyini daxil edən pagination request key müəyyən et.'),b('Scope cursor and merge state to account, query and filters. Invalidate old generation on changes; merge by stable ID with an explicit update policy.','Cursor və merge state-i hesab, sorğu və filter-ə bağla. Dəyişəndə köhnə generation-u etibarsız et; sabit ID və açıq update qaydası ilə birləşdir.'),b('At the maximum attempt count this policy stops retrying.','Maksimum cəhd sayında bu qayda retry-ni dayandırır.'),b('Bounded retries guarantee every payment is idempotent.','Məhdud retry hər ödənişin idempotentliyinə zəmanətdir.'),apple+'foundation/urlsession',b('How do you preserve cancellation through refresh and retry?','Refresh və retry boyunca cancellation-u necə qoruyursan?')),
-g('topic-28',b('UserDefaults stores preferences and small configuration values. It is convenient local persistence, not a credential vault or a transactional application database.','UserDefaults preference və kiçik konfiqurasiya saxlayır. Rahat lokal persistence-dir, credential seyfi və ya transactional database deyil.'),b('Use typed keys and documented defaults. @AppStorage connects supported values to SwiftUI. Encoding complex structures does not add schema migration or atomic multi-key transactions automatically.','Tipli key və sənədləşmiş default istifadə et. @AppStorage uyğun dəyəri SwiftUI-a bağlayır. Mürəkkəb struktur encode etmək avtomatik migration və atomik multi-key transaction vermir.'),b('Keep secrets in appropriate secure storage. Plan compatibility when preference meanings change. A failed or missing stored setting should recover safely without silently resetting unrelated user data.','Sirləri uyğun təhlükəsiz storage-da saxla. Preference mənası dəyişəndə compatibility planla. Saxlanan ayar yoxdursa və ya səhvdirsə əlaqəsiz nəticələri sıfırlamadan təhlükəsiz bərpa et.'),'import Foundation\nlet defaults = UserDefaults(suiteName: "AcademyExample")!\ndefaults.set("az", forKey: "language")\nprint(defaults.string(forKey: "language") ?? "en")\ndefaults.removePersistentDomain(forName: "AcademyExample")','az',b('Base64 or Codable encoding does not make a stored token secret.','Base64 və ya Codable token-i məxfi etmir.'),b('Choose storage for a language setting, access token and 50,000 transactions.','Dil ayarı, access token və 50 min əməliyyat üçün storage seç.'),b('Preferences fit UserDefaults; tokens need Keychain policy; large queryable history needs a database with migration and concurrency design.','Preference UserDefaults-a uyğundur; token Keychain siyasəti istəyir; böyük sorğulanan tarixçə migration və concurrency-li database tələb edir.'),b('The preference can be read after writing.','Preference yazıldıqdan sonra oxunur.'),b('Encoding a token makes UserDefaults a secure vault.','Token encode etmək UserDefaults-u təhlükəsiz seyf edir.'),apple+'foundation/userdefaults',b('How do you migrate a renamed preference key?','Adı dəyişən preference key-ni necə miqrasiya edirsən?')),
-g('topic-29',b('Keychain is an operating-system facility for storing small secrets with access policies. Choosing Keychain is the beginning of a security decision, not the whole threat model.','Keychain kiçik sirləri access policy ilə saxlayan OS xidmətidir. Keychain seçmək təhlükəsizlik qərarının başlanğıcıdır, bütün threat model deyil.'),b('Accessibility classes control when an item is available, including locked-device and device-migration behavior. Handle OSStatus results and update existing items intentionally. Biometric UI success and server-side transaction authorization are distinct.','Accessibility class elementin nə vaxt əlçatan olduğunu, kilidli cihaz və cihaz miqrasiyasını idarə edir. OSStatus nəticəsini yoxla və mövcud elementi məqsədli yenilə. Biometrik UI uğuru server transaction avtorizasiyasından fərqlidir.'),b('Decide logout deletion, refresh rotation, access groups and backup semantics with security requirements. Never log secrets, even in debug paths. Test unavailable and denied access as real user states.','Logout silinməsi, refresh rotation, access group və backup semantikasını təhlükəsizlik tələbi ilə seç. Debug yolunda da sirr log etmə. Əlçatmaz və rədd edilmiş girişi real user state kimi test et.'),'enum SecretState { case available, locked, missing, failed }\nlet state = SecretState.locked\nif case .locked = state { print("Request unlock or defer") }','Request unlock or defer',b('A missing Keychain item and an inaccessible locked item may require different recovery. Do not erase a valid session merely because protected data is temporarily unavailable.','Keychain item-in yoxluğu və kilid səbəbli əlçatmazlığı ayrı bərpa tələb edə bilər. Protected data müvəqqəti əlçatmazdır deyə etibarlı sessiyanı silmə.'),b('A background refresh needs a token while the phone is locked. Which product and security constraints must be decided?','Telefon kilidli olarkən background refresh token istəyir. Hansı məhsul və təhlükəsizlik qərarları lazımdır?'),b('Specify whether background access is required and choose an accessibility policy consistent with that threat model. Do not weaken protection just to suppress an error.','Background girişin lazım olub-olmadığını müəyyən et və threat model-ə uyğun accessibility seç. Xətanı gizlətmək üçün qorumanı zəiflətmə.'),b('Locked is distinct from missing.','Locked missing-dən fərqlidir.'),b('Keychain guarantees every access always succeeds.','Keychain hər girişin uğurlu olmasına zəmanət verir.'),apple+'security/keychain-services',b('What must be cleared on logout and what can remain?','Logout-da nə silinməli və nə qala bilər?')),
-g('topic-30',b('Files are useful for documents, media and explicit exports. Documents, caches and temporary directories have different lifetime expectations.','Fayl sənəd, media və açıq export üçün uyğundur. Documents, caches və temporary qovluqlarının lifetime gözləntisi fərqlidir.'),b('Atomic replacement reduces partial-file exposure but does not automatically make a multi-file workflow transactional. Coordinate concurrent readers and writers and apply appropriate file protection. Caches must tolerate eviction.','Atomic replacement qismən fayl riskini azaldır, amma çoxfayllı workflow-u avtomatik transaction etmir. Paralel reader/writer-i koordinasiya et və file protection seç. Cache silinməyə dözməlidir.'),b('Define disk budgets, cleanup and backup policy. Treat file names and imported paths as untrusted; resolve within an explicit allowlist and reject traversal or symlink escapes in server adapters.','Disk büdcəsi, təmizləmə və backup siyasəti qur. Fayl adı və import yolunu etibarsız say; server adapter-də açıq allowlist daxilində həll et, traversal və symlink qaçışını rədd et.'),'import Foundation\nlet data = Data("Receipt".utf8)\nprint(data.count)','7',b('A temporary file is not a durable source of truth. The OS may remove it.','Temporary fayl qalıcı source of truth deyil. OS onu silə bilər.'),b('Where should a downloadable statement cache live, and how does the app recover if it disappears?','Endirilən çıxarış cache-i harada olmalı və silinsə app necə bərpa etməlidir?'),b('Use an appropriate cache directory with a size/expiry policy and refetch safely. User-owned exported documents need a different lifecycle and protection policy.','Ölçü/expiry siyasətli cache qovluğu seç və təhlükəsiz yenidən yüklə. İstifadəçinin export sənədi başqa lifetime və protection istəyir.'),b('The example measures UTF-8 data length.','Nümunə UTF-8 məlumat uzunluğunu ölçür.'),b('Data automatically writes itself to a secure file.','Data avtomatik özünü təhlükəsiz fayla yazır.'),apple+'foundation/filemanager',b('When do atomic writes fail to protect the whole invariant?','Atomic write nə vaxt bütün invariantı qorumur?')),
-g('topic-31',b('Core Data and SwiftData manage persistent model graphs. Their contexts define ownership and change tracking; they are not just convenient arrays saved to disk.','Core Data və SwiftData persistent model qrafını idarə edir. Context ownership və change tracking sərhədidir; sadəcə diskə yazılan array deyil.'),b('Use each context according to its concurrency contract. Pass stable identifiers or value snapshots across boundaries rather than casually sharing managed objects. Migrations change stored schema and require test fixtures from older versions.','Hər context-i concurrency müqaviləsinə uyğun istifadə et. Managed object-i təsadüfi paylaşmaq əvəzinə sabit ID və ya value snapshot ötür. Migration saxlanmış schema-nı dəyişir və köhnə versiya fixture-i ilə test tələb edir.'),b('Choose SwiftData/Core Data based on OS targets, query needs, migration maturity and team constraints. A repository may isolate source policy but must not pretend persistence errors cannot occur. Test migration and recovery before production rollout.','OS target, sorğu ehtiyacı, migration yetkinliyi və komanda şərtinə görə SwiftData/Core Data seç. Repository mənbə siyasətini ayıra bilər, amma persistence xətasını gizlətməməlidir. Rollout-dan əvvəl migration və recovery test et.'),'struct TransactionSnapshot: Sendable { let id: String; let amount: Int }\nlet snapshot = TransactionSnapshot(id: "T1", amount: 50)\nprint(snapshot.id)','T1',b('A managed object is not made safely transferable merely by putting its reference into a struct.','Managed object istinadını struct-a qoymaq onu təhlükəsiz transferable etmir.'),b('A background import updates a visible transaction. What crosses the context boundary?','Background import görünən əməliyyatı yeniləyir. Context sərhədindən nə keçir?'),b('Use identifiers or immutable value data and resolve/update through the destination context’s supported queue or actor.','ID və ya dəyişməz value data ötür, destination context-in dəstəklənən queue/actor-u ilə həll və update et.'),b('A value snapshot can avoid sharing context-owned objects.','Value snapshot context-owned obyekt paylaşmağı önləyə bilər.'),b('All contexts permit arbitrary concurrent object mutation.','Bütün context-lər istənilən paralel object mutasiyasına icazə verir.'),apple+'coredata',b('How do you test an old-store migration?','Köhnə store migration-unu necə test edirsən?')),
-g('topic-32',b('Offline-first means local data remains useful when the network is absent. It requires a freshness and synchronization policy, not merely keeping the last JSON response.','Offline-first şəbəkə yoxkən lokal məlumatın faydalı qalmasıdır. Tək son JSON-u saxlamaq deyil, aktuallıq və sinxronizasiya qaydası tələb edir.'),b('A local source of truth renders durable state; network responses reconcile into it. Queued mutations need identity, ordering, retry bounds and conflict rules. Cached balance must be labeled stale when appropriate.','Lokal source of truth qalıcı state göstərir; şəbəkə cavabı ona uzlaşdırılır. Növbədəki mutasiya identity, sıra, retry sərhədi və konflikt qaydası tələb edir. Cache balansı lazım olduqda köhnə kimi göstərilməlidir.'),b('Do not pretend an offline transfer is server-authorized. Separate draft, queued, submitted, confirmed and unknown outcomes. Conflict resolution is domain policy; last-write-wins can be wrong for money.','Oflayn köçürməni server avtorizasiyalı sayma. Draft, queued, submitted, confirmed və unknown-u ayır. Konflikt həlli domen qaydasıdır; last-write-wins pul üçün səhv ola bilər.'),'enum Freshness { case fresh, stale }\nstruct CachedBalance { let value: Int; let freshness: Freshness }\nlet balance = CachedBalance(value: 42, freshness: .stale)\nif case .stale = balance.freshness { print("Last known balance") }','Last known balance',b('Showing stale data without context can mislead a financial decision.','Köhnə məlumatı kontekstsiz göstərmək maliyyə qərarını çaşdıra bilər.'),b('A queued mutation is retried after restart. How is duplicate submission prevented?','Restart-dan sonra queued mutasiya retry edilir. Təkrar göndəriş necə önlənir?'),b('Persist stable operation identity and use backend idempotency and reconciliation. Local queue deletion alone does not prove remote completion.','Sabit operation identity saxla, backend idempotency və reconciliation istifadə et. Lokal queue-dan silinmə uzaqda tamamlanmanı sübut etmir.'),b('The UI explicitly identifies last-known data.','UI son məlum məlumatı açıq göstərir.'),b('Cached balances are always current.','Cache balansı həmişə caridir.'),apple+'foundation/urlcache',b('Which mutations should never silently use last-write-wins?','Hansı mutasiyada last-write-wins səssiz istifadə edilməməlidir?')),
-g('topic-33',b('A SwiftUI View is a value describing UI for current inputs. Composition builds larger interfaces from smaller descriptions. body can be evaluated repeatedly without recreating every rendered pixel.','SwiftUI View cari girişlər üçün UI təsvir edən dəyərdir. Composition kiçik təsvirlərdən böyük interfeys qurur. body təkrarlansa da hər piksel mütləq yenidən yaranmır.'),b('Modifiers produce new view descriptions. Stable identity connects data and state across evaluations. ForEach requires stable unique IDs, and lazy containers defer some work but do not remove lifecycle or layout cost.','Modifier yeni view təsviri yaradır. Sabit identity hesablamalar arasında data və state-i bağlayır. ForEach sabit unikal ID tələb edir; lazy container bəzi işi gecikdirir, lifecycle və layout xərcini yox etmir.'),b('Design semantic accessibility, Dynamic Type and localized layout from the start. Extract components around meaningful inputs and observation boundaries, not just to shorten body.','Semantik accessibility, Dynamic Type və lokallaşdırılmış layout-u əvvəldən qur. Komponenti tək body qısaltmaq üçün deyil, mənalı input və observation sərhədinə görə ayır.'),'// Requires an Apple SDK.\nimport SwiftUI\nstruct AccountLabel: View {\n    let name: String\n    var body: some View { Text(name).font(.headline) }\n}','UI example — no console output; Apple SDK required.',b('A computed helper property is not automatically a new observation boundary.','Computed helper property avtomatik yeni observation sərhədi deyil.'),b('A row gets a new UUID every render. Explain the state and animation consequences.','Sətir hər render-də yeni UUID alır. State və animasiya nəticəsini izah et.'),b('Identity changes can reset local state and treat old/new rows as unrelated. Use persistent model identity rather than a newly generated ID.','Identity dəyişməsi lokal state-i sıfırlayıb köhnə/yeni sətiri əlaqəsiz saya bilər. Yeni ID deyil, persistent model identity seç.'),b('View describes UI from its input.','View girişindən UI təsvir edir.'),b('Every body evaluation guarantees a full screen redraw.','Hər body hesablanması bütün ekranın yenidən çəkilməsinə zəmanətdir.'),apple+'swiftui/view',b('What makes a reusable component accessible?','Təkrar istifadə olunan komponenti əlçatan edən nədir?')),
-g('topic-35',b('SwiftUI architecture connects state ownership to task and navigation ownership. Rendering should not silently start unbounded work each time body is evaluated.','SwiftUI arxitekturası state ownership-i task və naviqasiya ownership-i ilə bağlayır. body hər dəfə limitsiz iş başlatmamalıdır.'),b('.task associates async work with view lifecycle and .task(id:) restarts when its ID changes. A Task created inside that action is a separate unstructured task unless its lifetime is explicitly managed. Cancellation is cooperative.',' .task async işi view lifecycle-ına bağlayır; .task(id:) ID dəyişəndə yenidən başlayır. Action daxilində yaradılan Task lifetime açıq idarə edilməzsə ayrıca unstructured task-dır. Cancellation əməkdaşlıq tələb edir.'),b('When mixing UIKit and SwiftUI, define who owns the model, hosting controller, router and effects. Characterize state and route behavior before changing frameworks. @MainActor does not by itself make stale responses irrelevant.','UIKit/SwiftUI qarışığında model, hosting controller, router və effect sahibini seç. Framework dəyişmədən state və route davranışını testlə qur. @MainActor köhnə cavabı öz-özünə etibarsız etmir.'),'// Requires an Apple SDK.\nimport SwiftUI\nstruct SearchScreen: View {\n    let query: String\n    var body: some View {\n        Text(query).task(id: query) {\n            guard !Task.isCancelled else { return }\n        }\n    }\n}','UI example — no console output; Apple SDK required.',b('Calling a ViewModel method that starts its own Task does not make that task a structured child of .task.','Öz Task-ını yaradan ViewModel metodunu çağırmaq həmin task-ı .task-ın structured child-ı etmir.'),b('Specify whether navigating to details stops or preserves an incremental search.','Details-ə keçid incremental search-i dayandırır, yoxsa saxlayır? Qaydanı qur.'),b('Choose product semantics, then place cancellation at the responsible owner. View disappearance and model deallocation are different events.','Məhsul semantikasını seç və cancellation-u məsul owner-ə ver. View görünməməsi ilə model silinməsi fərqli event-dir.'),b('Task identity and model identity are different lifetimes.','Task identity və model identity ayrı lifetime-lardır.'),b('Weak capture automatically cancels every child operation.','Weak capture bütün child əməliyyatı avtomatik ləğv edir.'),apple+'swiftui/view/task(priority:_:)',b('Who retains the hosting controller’s ViewModel?','Hosting controller-in ViewModel-ini kim saxlayır?')),
-g('topic-36',b('NavigationStack models navigation using data. A typed path can represent destinations and be restored, while sheets express a different presentation relationship.','NavigationStack naviqasiyanı məlumatla modelləşdirir. Typed path destination-u ifadə və bərpa edir; sheet fərqli presentation əlaqəsidir.'),b('Match path element types to destination builders. Keep identity stable when state should survive. Layout containers propose sizes; GeometryReader reports geometry but can alter layout expectations.','Path element tipini destination builder ilə uyğunlaşdır. State qalmalıdırsa identity-ni sabit saxla. Layout container ölçü təklif edir; GeometryReader geometry verir, amma layout gözləntisini dəyişə bilər.'),b('Treat deep links as validated input and gate protected screens by session state. Preserve navigation data compatibly across app versions or deliberately discard stale routes. Test restoration and modal dismissal separately.','Deep link-i yoxlanmalı giriş say və qorunan ekranı sessiyaya bağla. Versiyalar arasında navigation data-nı uyğun saxla və ya köhnə route-u məqsədli at. Restoration və modal dismissal-u ayrı test et.'),'enum Destination: Hashable { case account(String) }\nvar path: [Destination] = []\npath.append(.account("A1"))\nprint(path.count)','1',b('Restoring a route does not authorize access to the referenced account.','Route bərpası həmin hesaba giriş icazəsi vermir.'),b('A logged-out app receives an account deep link. Preserve intent without exposing protected data.','Logout olmuş app hesab deep link-i alır. Qorunan data açmadan niyyəti saxla.'),b('Validate destination, store non-secret intent, authenticate, re-check authorization, then navigate. Do not trust raw URL parameters.','Destination-u yoxla, qeyri-məxfi niyyəti saxla, autentifikasiya et, icazəni yenidən yoxla və naviqasiya et. Raw URL parametrinə güvənmə.'),b('The path is data representing one destination.','Path bir destination-u ifadə edən məlumatdır.'),b('Adding a path item proves account access is allowed.','Path elementi əlavə etmək hesab icazəsini sübut edir.'),apple+'swiftui/navigationstack',b('How should invalid restored routes fail gracefully?','Səhv restored route necə təhlükəsiz dayandırılmalıdır?')),
-g('topic-37',b('SwiftUI performance depends on the work caused by updates, not just how often body appears in logs. Stable identity, narrow dependencies and inexpensive rendering are useful starting points.','SwiftUI performansı tək body log sayından deyil, update-in yaratdığı işdən asılıdır. Sabit identity, dar asılılıq və ucuz rendering yaxşı başlanğıcdır.'),b('Observation tracks dependencies; broad object changes can invalidate more observers. Lazy containers defer creation but still pay layout, image and state costs. AnyView erases type information; its real impact depends on context and measurement.','Observation asılılıqları izləyir; geniş object dəyişməsi çox observer-i invalidate edə bilər. Lazy container yaratmanı gecikdirir, layout, şəkil və state xərci qalır. AnyView tip məlumatını gizlədir; real təsir kontekst və ölçüdən asılıdır.'),b('Profile representative scrolling and updates using Instruments. Batch stream events only when latency trade-offs are acceptable. Avoid optimization folklore such as moving code into computed properties and assuming it creates isolation.','Real scroll və update-i Instruments ilə ölç. Gecikmə trade-off-u uyğundursa stream event-ləri batch et. Kodu computed property-yə köçürüb izolyasiya yarandığını fərz etmə.'),'let rows = Array(1...1000)\nlet visible = rows.prefix(10)\nprint(visible.count)','10',b('A smaller visible slice is a conceptual workload example, not evidence of measured SwiftUI frame-rate improvement.','Kiçik görünən slice konseptual iş nümunəsidir, ölçülmüş SwiftUI FPS artımı sübutu deyil.'),b('A streamed list stutters. Identify measurement points before proposing a rewrite.','Stream olunan list donur. Rewrite təklif etmədən ölçmə nöqtələrini tap.'),b('Measure event rate, mapping, identity scans, insertion cost, main-actor time and render invalidations. Change the dominant measured cost first.','Event sürəti, mapping, identity axtarışı, insert xərci, main-actor vaxtı və render invalidation ölç. Əvvəl dominant ölçülmüş xərci dəyiş.'),b('The slice contains ten values.','Slice on dəyər saxlayır.'),b('This console example proves a 60 FPS UI.','Bu konsol nümunəsi 60 FPS UI sübut edir.'),apple+'swiftui/understanding-and-improving-swiftui-performance',b('When can batching hurt responsiveness?','Batching nə vaxt cavab sürətini pisləşdirə bilər?')),
-g('topic-39',b('Application security protects assets under an explicit threat model. TLS, Keychain and biometrics solve different parts of the problem; none replaces server authorization.','Tətbiq təhlükəsizliyi açıq threat model altında aktivləri qoruyur. TLS, Keychain və biometrika fərqli problemi həll edir; heç biri server avtorizasiyasını əvəz etmir.'),b('Validate deep links and imported data, restrict logging metadata, and choose secure storage/protection levels. Pinning narrows trust but introduces rotation and recovery obligations. Jailbreak detection is a signal, not proof of device integrity.','Deep link və import datanı yoxla, log metadata-sını məhdudlaşdır, secure storage/protection seç. Pinning trust-u daraldır, amma rotation və recovery öhdəliyi yaradır. Jailbreak detection siqnaldır, cihaz bütövlüyü sübutu deyil.'),b('Design certificate rotation, incident response and telemetry minimization before deployment. Avoid collecting secrets in the first place. Enforce critical financial rules on the backend and test the complete logging pipeline.','Deployment-dən əvvəl certificate rotation, incident response və minimal telemetriya qur. Əvvəldən sirr toplama. Kritik maliyyə qaydasını backend-də təmin et və bütün log xəttini test et.'),'struct SafeLog { let operation: String; let status: Int }\nlet log = SafeLog(operation: "refresh", status: 401)\nprint(log.operation, log.status)','refresh 401',b('Redaction at a final sink is not a reason to pass tokens into logging calls. Remove secrets at the source.','Son sink redaction-u token-i log çağırışına verməyə əsas deyil. Sirri mənbədə çıxar.'),b('Choose diagnostic fields for a failed transfer without customer payload or credentials.','Müştəri payload-u və credential olmadan uğursuz köçürmə üçün diagnostic sahə seç.'),b('Use sanitized operation category, status, duration and narrowly scoped correlation identity. Review whether each field can identify a customer.','Sanitizasiya edilmiş operation category, status, müddət və dar correlation identity seç. Hər sahənin müştərini tanıdıb-tanımadığını yoxla.'),b('The log structure excludes credentials.','Log strukturu credential saxlamır.'),b('Debug builds make logging tokens safe.','Debug build token log etməyi təhlükəsiz edir.'),apple+'security',b('How would pin rotation fail and recover?','Pin rotation necə sıradan çıxa və bərpa oluna bilər?')),
-g('topic-41',b('Debugging turns a symptom into a reproducible cause. Start with the failing behavior, environment and evidence, not a favorite fix.','Sazlama simptomu təkrarlanan səbəbə çevirir. Sevimli düzəlişdən deyil, uğursuz davranış, mühit və sübutdan başla.'),b('Use symbolic and conditional breakpoints, inspect ownership with Memory Graph, profile allocations, and symbolicate crash logs with matching dSYMs. Thread Sanitizer finds some data races, not all logical ordering bugs.','Symbolic/conditional breakpoint, Memory Graph ownership, allocation profiling və uyğun dSYM ilə crash symbolication istifadə et. Thread Sanitizer bəzi data race-ləri tapır, bütün məntiqi sıra xətasını deyil.'),b('Create the smallest controlled reproduction and test the hypothesis. Distinguish retained cache from leak and source-level risk from measured incident. Avoid changing many independent variables simultaneously.','Ən kiçik idarə olunan reproduksiya qur və fərziyyəni yoxla. Cache saxlanmasını leak-dən, mənbə riskini ölçülmüş hadisədən ayır. Bir neçə müstəqil dəyişəni eyni anda dəyişmə.'),'let values = [10, 20]\nlet index = 2\nif values.indices.contains(index) { print(values[index]) }\nelse { print("Invalid index") }','Invalid index',b('Adding weak everywhere is not an investigation of memory growth. Follow actual retention paths.','Hər yerə weak əlavə etmək yaddaş artımının araşdırması deyil. Real retention yollarını izlə.'),b('A crash cannot reproduce locally. What evidence makes the next hypothesis testable?','Crash lokal təkrarlanmır. Növbəti fərziyyəni test etmək üçün hansı sübut lazımdır?'),b('Match build and symbols, isolate device/OS and navigation context, inspect sanitized breadcrumbs, and create controlled input or timing reproductions.','Build və symbol-u uyğunlaşdır, cihaz/OS və naviqasiya kontekstini ayır, sanitizasiya edilmiş breadcrumb oxu və idarə olunan input/timing reproduksiyası qur.'),b('The bounds guard prevents an invalid access.','Sərhəd guard-ı səhv girişi önləyir.'),b('Array index 2 is valid for every two-element array.','İki elementli hər array üçün indeks 2 düzgündür.'),apple+'xcode/debugging',b('Which tool distinguishes allocation rate from retained lifetime?','Allocation sürətini retained lifetime-dan hansı alət ayırır?')),
-g('topic-42',b('Performance is a user-visible constraint measured under a workload. Main-thread blocking, allocation churn and oversized images can each make an app feel slow for different reasons.','Performans iş yükü altında ölçülən istifadəçi məhdudiyyətidir. Main-thread bloklama, allocation çoxluğu və böyük şəkil ayrı səbəblərlə app-i yavaşladır.'),b('Use Time Profiler for CPU and Allocations for memory behavior. Downsample images to display needs rather than decoding enormous originals unnecessarily. Expected O(1) dictionary lookup does not eliminate hashing, allocation or worst-case concerns.','CPU üçün Time Profiler, yaddaş üçün Allocations istifadə et. Lazımsız böyük orijinal decode əvəzinə görüntü ölçüsünə downsample et. Dictionary expected O(1) hashing, allocation və worst-case məsələsini silmir.'),b('Set budgets and compare before/after on representative devices. Separate cold/warm launch, throughput and latency. Batching improves throughput at the possible cost of freshness; measure the product trade-off.','Büdcə qur və real cihazda əvvəl/sonra müqayisə et. Cold/warm launch, throughput və latency-ni ayır. Batching throughput-u yaxşılaşdırıb aktuallığı gecikdirə bilər; məhsul trade-off-unu ölç.'),'let ids = Set(1...1000)\nprint(ids.contains(999))','true',b('An illustrative operation count is not a benchmark. Do not claim a speedup without comparable measurements.','İllüstrativ əməliyyat sayı benchmark deyil. Müqayisəli ölçü olmadan sürət artımı iddia etmə.'),b('A list stutters only after 2,000 streamed items. Identify a likely growth hypothesis and a measurement.','List yalnız 2000 stream item-dən sonra donur. Artım fərziyyəsi və ölçü seç.'),b('Repeated linear scans and sorted insertion may accumulate quadratic work. Measure hot stacks and event rates, then compare an identity index or batching under the same workload.','Təkrar linear scan və sorted insert kvadratik iş yığa bilər. Hot stack və event sürətini ölç, eyni workload-da identity index və ya batching müqayisə et.'),b('Set membership tests whether 999 is present.','Set membership 999-un mövcudluğunu yoxlayır.'),b('This print measures the exact runtime complexity.','Bu print dəqiq runtime mürəkkəbliyini ölçür.'),apple+'xcode/improving-your-app-s-performance',b('What makes two benchmark runs comparable?','İki benchmark nəticəsini müqayisə edilən edən nədir?')),
-g('topic-43',b('Reliability is how the app behaves when dependencies fail. Logs, metrics and crash reports are evidence; feature flags and rollback plans are operational controls.','Etibarlılıq asılılıq sıradan çıxanda app-in davranışıdır. Log, metric və crash report sübutdur; feature flag və rollback planı əməliyyat nəzarətidir.'),b('Model partial success, retry, degraded mode and unknown outcomes explicitly. Correlation IDs connect sanitized events across a logical operation. Feature flags need safe defaults, compatibility and ownership.','Qismən uğur, retry, degraded mode və unknown nəticəni açıq modelləşdir. Correlation ID sanitizasiya edilmiş event-i məntiqi əməliyyatda birləşdirir. Feature flag təhlükəsiz default, compatibility və ownership istəyir.'),b('Release incrementally with measurable guardrails and a bounded rollback unit. A mobile binary cannot always be instantly rolled back, so backend compatibility and kill switches matter. Do not collect secrets to improve diagnostics.','Ölçülən guardrail və məhdud rollback vahidi ilə mərhələli burax. Mobil binary həmişə dərhal geri dönmür; backend compatibility və kill switch vacibdir. Diagnostic üçün sirr toplama.'),'enum Outcome { case complete, partial, failed, cancelled }\nlet outcome = Outcome.partial\nif case .partial = outcome { print("Keep useful results and offer retry") }','Keep useful results and offer retry',b('A catch block that calls the normal finish path can make a failed stream appear successfully empty.','Adi finish yolunu çağıran catch uğursuz stream-i uğurlu boş nəticə kimi göstərə bilər.'),b('Plan rollout for a new signing provider. What signals stop the rollout?','Yeni imza provider-i üçün rollout qur. Hansı siqnal rollout-u dayandırır?'),b('Define signing completion/failure and unknown-outcome guardrails, sanitized telemetry, fallback compatibility and an owner for disabling the flag.','İmzalama completion/failure və unknown outcome guardrail, sanitizasiya edilmiş telemetriya, fallback uyğunluğu və flag söndürmə sahibi qur.'),b('Partial results can remain useful while failure is explicit.','Xəta açıq qalsa da qismən nəticə faydalı qala bilər.'),b('Reliability means hiding every error from users.','Etibarlılıq bütün xətanı istifadəçidən gizlətməkdir.'),apple+'os/logging',b('Which critical user journey would you monitor first?','Əvvəl hansı kritik user journey-ni izləyərsən?')),
-g('topic-44',b('An iOS process moves through lifecycle states and can be suspended or terminated. Background execution is constrained, not a promise that arbitrary tasks will finish.','iOS process lifecycle vəziyyətlərindən keçir, suspend və ya terminate ola bilər. Background icra məhduddur; istənilən task-ın bitməsi vədi deyil.'),b('Separate scene state from process-wide state. Persist recoverable non-secret operation identity before relying on future callbacks. Background URLSession has different ownership from a foreground async task; silent pushes are not guaranteed delivery.','Scene state-i process state-indən ayır. Gələcək callback-ə güvənməzdən əvvəl bərpa olunan qeyri-məxfi əməliyyat identity saxla. Background URLSession foreground task-dan fərqli ownership-dir; silent push çatdırılması zəmanətli deyil.'),b('Design restoration and reconciliation rather than trying to keep the app permanently running. Test interruption at meaningful workflow boundaries, including during authentication and financial mutations.','App-i daim işlətmək əvəzinə restoration və reconciliation qur. Autentifikasiya və maliyyə mutasiyası daxil mənalı workflow sərhədində kəsilməni test et.'),'enum PendingOperation { case transfer(id: String) }\nlet operation = PendingOperation.transfer(id: "op-42")\nif case .transfer(let id) = operation { print(id) }','op-42',b('Termination is not guaranteed to run cleanup callbacks or deinit for every object.','Termination hər obyekt üçün cleanup callback və ya deinit zəmanəti vermir.'),b('The app restarts after an unknown transfer outcome. What should it restore?','Naməlum köçürmə nəticəsindən sonra app başlayır. Nə bərpa olunmalıdır?'),b('Restore stable non-secret operation identity, reauthenticate if needed, then ask the server for authoritative status before another submission.','Sabit qeyri-məxfi operation identity bərpa et, lazımdırsa autentifikasiya et, yenidən göndərmədən serverdən səlahiyyətli status al.'),b('An operation ID can support reconciliation after restart.','Operation ID restart-dan sonra reconciliation-a kömək edir.'),b('Backgrounding guarantees unlimited task execution.','Background limitsiz task icrasına zəmanətdir.'),apple+'uikit/app_and_environment/managing_your_app_s_life_cycle',b('How does multi-scene support change ownership?','Multi-scene ownership-i necə dəyişir?')),
-g('topic-45',b('Signing establishes which team and capabilities an app uses. Certificates, provisioning profiles, entitlements and bundle identifiers must agree with the build and distribution channel.','İmzalama app-in komanda və capability-sini müəyyən edir. Certificate, provisioning profile, entitlement və bundle ID build/yayım kanalı ilə uyğun olmalıdır.'),b('Build numbers identify uploads; versions identify releases. Development and distribution signing differ. CI needs controlled signing material and reproducible schemes; never commit private keys or certificates with secrets.','Build number upload-u, version release-i identifikasiya edir. Development və distribution signing fərqlidir. CI idarə olunan signing materialı və təkrarlanan scheme istəyir; private key və sirrli certificate commit etmə.'),b('Plan staged rollout and backend compatibility because replacing a released binary takes time. TestFlight is useful validation, not proof of all production conditions. Keep signing access least-privileged and auditable.','Yayımlanmış binary-ni əvəz etmək vaxt aldığı üçün staged rollout və backend compatibility planla. TestFlight faydalı yoxlamadır, bütün production şəraitinin sübutu deyil. Signing girişini minimal və audit edilən saxla.'),'struct Release { let version: String; let build: Int }\nlet release = Release(version: "1.2.0", build: 42)\nprint(release.version, release.build)','1.2.0 42',b('A successful local debug build does not establish distribution signing or App Store acceptance.','Uğurlu lokal debug build distribution signing və App Store qəbulunu sübut etmir.'),b('CI archives successfully but export fails. Which signing contracts do you inspect?','CI archive uğurludur, export uğursuzdur. Hansı signing müqaviləsinə baxırsan?'),b('Check export method, distribution identity, matching profile, bundle ID, entitlements and certificate validity without exposing key material.','Export method, distribution identity, uyğun profile, bundle ID, entitlement və certificate etibarlılığını sirr açmadan yoxla.'),b('Version and build are different identifiers.','Version və build ayrı identifikatorlardır.'),b('Incrementing the version automatically fixes entitlements.','Version artırmaq entitlement-i avtomatik düzəldir.'),apple+'xcode/distributing-your-app-for-beta-testing-and-releases',b('What is a realistic rollback boundary for a mobile release?','Mobil release üçün real rollback sərhədi nədir?')),
-g('topic-46',b('Localization adapts meaning, not just strings. Accessibility makes controls and content usable through different senses, input methods and text sizes.','Lokallaşdırma tək string deyil, mənanı uyğunlaşdırır. Accessibility control və məzmunu fərqli hiss, input və mətn ölçüsü ilə işlək edir.'),b('Use pluralization rules, locale-aware formatting and semantic labels. Dynamic Type changes layout constraints; VoiceOver needs correct grouping and actions. Media permissions require clear purpose and denied-state recovery.','Pluralization qaydası, locale formatter və semantik label istifadə et. Dynamic Type layout-u dəyişir; VoiceOver düzgün grouping/action istəyir. Media icazəsi aydın məqsəd və denied-state bərpası tələb edir.'),b('Validate with assistive technologies and real translated content, not just a scanner. Respect reduced motion. Choose minimal media access, and keep privacy manifests consistent with actual collection behavior.','Tək scanner deyil, assistive technology və real tərcümə ilə yoxla. Reduce Motion-a hörmət et. Minimal media girişi seç və privacy manifest-i real collection ilə uyğun saxla.'),'import Foundation\nlet number = 1234.5\nprint(number.formatted(.number.locale(Locale(identifier: "en_US"))))','1,234.5',b('Hard-coded concatenated review-count text can break grammar and pluralization across languages.','Hard-coded birləşdirilmiş review sayı dillərdə qrammatika və pluralization-u poza bilər.'),b('A balance card masks the amount visually. What should VoiceOver announce?','Balans kartı məbləği vizual gizlədir. VoiceOver nə deməlidir?'),b('Respect the same privacy state for accessibility output. Expose an intentional reveal action rather than reading the hidden amount.','Accessibility çıxışında eyni məxfilik state-ini qoru. Gizli məbləği oxumaq əvəzinə məqsədli reveal action ver.'),b('Formatting is locale-sensitive rather than manual separator insertion.','Format locale-dən asılıdır, manual separator əlavə etmək deyil.'),b('Translating button labels alone localizes every lesson.','Tək button label tərcüməsi bütün dərsi lokallaşdırır.'),apple+'accessibility',b('How do you test a layout at the largest accessibility text size?','Ən böyük accessibility mətn ölçüsündə layout-u necə test edirsən?')),
-g('topic-47',b('Git records snapshots and ancestry. Merge combines histories; rebase replays commits onto another base; revert adds an inverse change without erasing shared history.','Git snapshot və ancestry saxlayır. Merge tarixçələri birləşdirir; rebase commit-i başqa baza üzərinə yenidən oynadır; revert paylaşılan tarixçəni silmədən əks dəyişiklik əlavə edir.'),b('Reset changes local branch/index/worktree state depending on mode and can discard work. Cherry-pick applies selected commits. Resolve conflicts using intended behavior, then test the integration rather than merely removing markers.','Reset rejimdən asılı branch/index/worktree state-i dəyişir və işi itirə bilər. Cherry-pick seçilmiş commit-i tətbiq edir. Konflikti gözlənilən davranışla həll et, sonra tək marker silmək deyil, inteqrasiyanı test et.'),b('Avoid rewriting shared history without coordination. Keep changes reviewable, preserve unrelated user work and distinguish a merge author from ownership of every merged change. Trace exact identity and diff evidence for interview narratives.','Razılaşdırmadan shared history-ni yenidən yazma. Dəyişikliyi review edilən saxla, əlaqəsiz işi qoru və merge author-u bütün merged işin sahibi sayma. Hekayə üçün dəqiq identity və diff sübutunu izlə.'),'struct CommitEvidence { let sha: String; let authorEmail: String }\nlet item = CommitEvidence(sha: "example", authorEmail: "dev@example.com")\nprint(item.authorEmail == "other@example.com")','false',b('A ticket mentioned in a merge message is not proof that you personally implemented the feature.','Merge mesajındakı ticket feature-i şəxsən sən yazdığını sübut etmir.'),b('Undo a bad shared release commit while preserving audit history. Reset or revert?','Audit tarixçəsini saxlayaraq səhv shared release commit-i geri al. Reset, yoxsa revert?'),b('Prefer a reviewed revert commit on shared history; inspect dependencies and verify the resulting behavior. A local reset has different semantics.','Shared history-də review olunan revert seç; asılılığı və nəticəni yoxla. Lokal reset fərqli semantikadır.'),b('Exact author identity is evidence to inspect, not assumed ownership.','Dəqiq author identity araşdırılmalı sübutdur, fərz olunan ownership deyil.'),b('A merge message proves every changed line belongs to the merger.','Merge mesajı bütün sətrin merge edənə aid olduğunu sübut edir.'),'https://git-scm.com/docs',b('What changes if teammates already based work on the commit?','Komanda artıq commit üzərində işləyibsə nə dəyişir?')),
-g('topic-48',b('CI makes build and test steps repeatable outside one laptop. Schemes, configurations, resolved dependencies and signing inputs define what is actually being validated.','CI build və test-i bir laptop xaricində təkrarlanan edir. Scheme, configuration, resolved dependency və signing girişi konkret nə yoxlandığını müəyyən edir.'),b('Use lockfiles and pinned tools where supported. Cache keys must include relevant toolchain and dependency inputs. A restored cache is not proof of correctness; the required command must execute and preserve its exit status.','Dəstəklənirsə lockfile və pinned tool istifadə et. Cache key uyğun toolchain və dependency input-u daxil etməlidir. Cache bərpası düzgünlük sübutu deyil; tələb olunan komanda işləməli və exit status qorunmalıdır.'),b('Separate fast deterministic checks from costly integration builds. Protect signing secrets and release permissions. Report skipped and disabled suites separately instead of treating their presence as active protection.','Sürətli deterministik yoxlamanı bahalı integration build-dən ayır. Signing sirri və release icazəsini qoru. Skipped/disabled suite-i aktiv qoruma saymadan ayrıca bildir.'),'struct BuildInput { let scheme: String; let configuration: String }\nlet input = BuildInput(scheme: "Bank", configuration: "Release")\nprint(input.configuration)','Release',b('A pipeline that swallows a failing command’s exit status can report success without a valid build.','Uğursuz komandanın exit status-unu udan pipeline düzgün build olmadan uğur göstərə bilər.'),b('A cache hit passes CI but a clean machine fails. Which inputs and commands do you compare?','Cache hit ilə CI keçir, clean maşın uğursuzdur. Hansı input və komandanı müqayisə edirsən?'),b('Compare toolchain, lockfiles, generated code, environment setup, schemes and actual command outcomes. Rebuild only invalid cached outputs.','Toolchain, lockfile, generated code, environment setup, scheme və real command nəticəsini müqayisə et. Yalnız etibarsız cache output-u yenidən qur.'),b('Release configuration is explicit build input.','Release configuration açıq build girişidir.'),b('A cache hit guarantees every test ran.','Cache hit bütün testin işlədiyinə zəmanətdir.'),apple+'xcode/continuous-integration',b('Which cache key change invalidates an incompatible artifact?','Hansı cache key dəyişikliyi uyğun olmayan artifact-i etibarsız edir?')),
-g('topic-49',b('Maintainability is the cost of understanding and safely changing a system. Technical debt is useful to discuss through concrete change friction, risk and ownership, not dislike of old code.','Dəstəklənmə sistemi anlamaq və təhlükəsiz dəyişməyin xərcidir. Technical debt köhnə kodu sevməmək deyil, konkret dəyişmə çətinliyi, risk və ownership ilə müzakirə olunur.'),b('Use characterization tests before refactoring behavior-heavy legacy flows. An ADR records context, alternatives, decision and consequences. Deprecation needs a consumer migration path rather than only an annotation.','Davranışı ağır legacy axından əvvəl characterization test yaz. ADR kontekst, alternativ, qərar və nəticəni saxlayır. Deprecation tək annotation deyil, istehlakçı üçün migration yolu tələb edir.'),b('Prioritize work that reduces real failure or delivery risk. Split a migration into independently reversible changes and align backend, QA and product acceptance. Track uncertainty honestly and avoid inventing impact metrics.','Real xəta və ya çatdırılma riskini azaldan işi prioritet et. Miqrasiyanı müstəqil geri dönən addıma böl, backend/QA/product qəbulunu uyğunlaşdır. Qeyri-müəyyənliyi dürüst izlə, təsir rəqəmi uydurma.'),'struct ADR { let context: String; let decision: String; let tradeoff: String }\nlet adr = ADR(context: "Legacy screen", decision: "Extract mapping first", tradeoff: "Keep navigation stable")\nprint(adr.decision)','Extract mapping first',b('Moving methods into extensions does not by itself reduce independent reasons to change.','Metodu extension-a köçürmək müstəqil dəyişmə səbəbini öz-özünə azaltmır.'),b('Plan the first safe extraction from a ViewModel that maps UI and signs contracts.','UI mapping və contract signing edən ViewModel üçün ilk təhlükəsiz extraction planla.'),b('Characterize state and routes, extract pure mapping with fixture tests, preserve the signing workflow, then evaluate a separate provider boundary.','State/route davranışını qur, fixture test ilə pure mapping ayır, signing workflow-u qoru, sonra ayrıca provider sərhədini qiymətləndir.'),b('An ADR includes the cost of a decision.','ADR qərarın xərcini də saxlayır.'),b('Every legacy screen needs an immediate full rewrite.','Hər legacy ekran dərhal tam rewrite tələb edir.'),'https://www.swift.org/documentation/api-design-guidelines/',b('How do you explain a trade-off to a product owner?','Trade-off-u product owner-ə necə izah edirsən?')),
-g('topic-51',b('A feature design is a set of contracts under constraints. Transaction history, image feeds and secure transfers need different choices even if their screens all use MVVM.','Feature dizaynı məhdudiyyət altında müqavilələrdir. Tarixçə, şəkil lenti və təhlükəsiz köçürmə hamısı MVVM olsa da ayrı seçim istəyir.'),b('For cursor pagination, scope the cursor to the active query, merge by stable identity, guard in-flight work and preserve partial results on recoverable failure. For image pipelines, ownership and cancellation must survive reuse.','Cursor pagination-da cursor-u aktiv sorğuya bağla, sabit identity ilə merge et, in-flight işi qoru və bərpa olunan xətada qismən nəticəni saxla. Şəkil pipeline-da ownership/cancellation reuse-a dözməlidir.'),b('Compare source-of-truth, failure semantics and backend capabilities before reusing one generic architecture. Document rollout and reconciliation, especially for mutations with unknown outcome.','Bir generic arxitekturanı paylaşmazdan əvvəl source of truth, xəta semantikası və backend bacarığını müqayisə et. Xüsusən unknown outcome mutasiyası üçün rollout və reconciliation yaz.'),'let old = [1, 2]\nlet page = [2, 3]\nvar seen = Set(old)\nlet merged = old + page.filter { seen.insert($0).inserted }\nprint(merged)','[1, 2, 3]',b('Deduplication may discard legitimate updates. Decide whether events are inserts, replacements or patches before choosing merge policy.','Deduplication düzgün update-i ata bilər. Merge qaydasından əvvəl event-in insert, replacement və ya patch olduğunu seç.'),b('A backend sends an updated transaction with the same ID. Is ignore-duplicates correct?','Backend eyni ID ilə yenilənmiş əməliyyat göndərir. Ignore-duplicates düzgündürmü?'),b('Only if the contract guarantees immutable records. Otherwise update the matching record with ordering/version semantics and test stale updates.','Yalnız müqavilə immutable record zəmanəti verirsə. Əks halda uyğun record-u ordering/version semantikası ilə yenilə və köhnə update-i test et.'),b('This policy preserves order and ignores repeated IDs.','Bu qayda sıranı saxlayır və təkrar ID-ni atır.'),b('This policy handles every possible update contract.','Bu qayda bütün update müqaviləsini həll edir.'),apple+'foundation/urlsession',b('What changes if pagination is offset-based instead of cursor-based?','Pagination cursor deyil offset olsa nə dəyişir?')),
-g('topic-52',b('A good architecture decision compares viable alternatives against requirements. There is no universal answer to structs versus classes, direct services versus use cases, or MVVM versus MVI.','Yaxşı arxitektura qərarı real alternativi tələblə müqayisə edir. Struct/class, birbaşa servis/use case və MVVM/MVI üçün universal cavab yoxdur.'),b('State the invariant, expected change and ownership model, then choose the smallest design that protects them. Explain the rejected alternative fairly and name the requirement that would reverse your decision.','Invariant, gözlənilən dəyişmə və ownership modelini bildir, sonra onları qoruyan ən kiçik dizaynı seç. Rədd edilən alternativi dürüst izah et və qərarı dəyişən tələbi adlandır.'),b('Evaluate reversibility, migration and team cost in addition to runtime behavior. Architecture quality is demonstrated through controlled change and observable outcomes, not a diagram’s complexity.','Runtime davranışdan əlavə geri dönüş, miqrasiya və komanda xərcini qiymətləndir. Arxitektura keyfiyyəti qraf mürəkkəbliyi deyil, idarə olunan dəyişmə və görünən nəticə ilə sübut olunur.'),'struct Decision { let choice: String; let revisitWhen: String }\nlet decision = Decision(choice: "Direct injected service", revisitWhen: "Shared business policy emerges")\nprint(decision.choice)','Direct injected service',b('Adding a repository and use case automatically does not make code cleaner or more testable. Each boundary needs a job.','Repository və use case əlavə etmək kodu avtomatik daha təmiz və testable etmir. Hər sərhədin işi olmalıdır.'),b('Defend a direct service in a small feature, then explain the first requirement that justifies a use case.','Kiçik feature-də birbaşa servisi müdafiə et, sonra use case əsaslandıran ilk tələbi izah et.'),b('Direct injection preserves test seams for simple orchestration. Shared validation, multi-operation policy or transport-independent business rules can justify extraction.','Birbaşa injection sadə koordinasiya üçün test sərhədi saxlayır. Paylaşılan validation, çoxəməliyyatlı qayda və transport-dan müstəqil biznes extraction-u əsaslandıra bilər.'),b('The decision includes a condition for reconsideration.','Qərar yenidən baxılma şərti saxlayır.'),b('A chosen pattern must never change as requirements evolve.','Tələb dəyişsə də pattern heç vaxt dəyişməməlidir.'),'https://www.swift.org/documentation/api-design-guidelines/',b('Which evidence would show your choice was wrong?','Seçiminin səhv olduğunu hansı sübut göstərər?'))
+function g(
+  id: string,
+  intro: Localized,
+  mechanism: Localized,
+  judgment: Localized,
+  code: string,
+  predicted: string,
+  trap: Localized,
+  exercise: Localized,
+  solution: Localized,
+  right: Localized,
+  wrong: Localized,
+  source: string,
+  followup: Localized,
+): Lesson {
+  return {
+    id,
+    minutes: 25,
+    prerequisites: [],
+    intro,
+    mechanism,
+    judgment,
+    code,
+    predicted,
+    trap,
+    exercise,
+    solution,
+    question: b(
+      "Which statement correctly explains this lesson’s example?",
+      "Hansı fikir bu dərsin nümunəsini düzgün izah edir?",
+    ),
+    choices:
+      Number(id.replace(/\D/g, "")) % 2 ? [wrong, right] : [right, wrong],
+    correct: Number(id.replace(/\D/g, "")) % 2 ? 1 : 0,
+    followup,
+    source,
+    sourceLabel: source.includes("docs.swift.org")
+      ? "The Swift Programming Language"
+      : source.includes("developer.apple.com")
+        ? "Apple Developer Documentation"
+        : "Swift.org documentation",
+  };
+}
+export const guides: Lesson[] = [
+  g(
+    "topic-03",
+    b(
+      "Control flow chooses which work executes. Pattern matching lets you inspect the shape and associated data of a value instead of assembling fragile Boolean checks.",
+      "İdarəetmə axını hansı işin icra olunduğunu seçir. Pattern matching kövrək Boolean yoxlamaları əvəzinə dəyərin formasını və əlaqəli məlumatını yoxlayır.",
+    ),
+    b(
+      "A switch over a known enum must cover every case. guard moves failure branches out of the main path. if case and for case extract one pattern without pretending all other cases cannot occur.",
+      "Məlum enum üçün switch bütün halları əhatə etməlidir. guard xəta budağını əsas yoldan çıxarır. if case və for case qalan halların mümkünsüz olduğunu fərz etmədən bir pattern-i ayırır.",
+    ),
+    b(
+      "Prefer explicit state transitions over deeply nested independent flags. For non-frozen external enums, @unknown default helps detect newly introduced cases while providing a fallback.",
+      "Dərin iç-içə flag-lar əvəzinə açıq state keçidləri seç. Xarici non-frozen enum üçün @unknown default yeni halı aşkar etməyə və fallback verməyə kömək edir.",
+    ),
+    'enum Outcome { case loaded(Int), failed }\nlet value = Outcome.loaded(42)\nswitch value {\ncase .loaded(let amount): print(amount)\ncase .failed: print("Failed")\n}',
+    "42",
+    b(
+      "A default branch can hide a new case you should handle. Exhaustiveness is useful feedback, not ceremony.",
+      "default yeni və idarə etməli olduğun halı gizlədə bilər. Exhaustiveness faydalı feedback-dir.",
+    ),
+    b(
+      "Add an empty state and describe the compiler error until every switch is updated.",
+      "empty halı əlavə et və bütün switch-lər yenilənənə qədər compiler xətasını izah et.",
+    ),
+    b(
+      "A switch without default must explicitly handle empty. This makes a new product state visible at every relevant decision.",
+      "default olmayan switch empty-ni açıq idarə etməlidir. Beləliklə yeni məhsul vəziyyəti bütün qərar yerlərində görünür.",
+    ),
+    b(
+      "Associated-value matching extracts the loaded amount.",
+      "Associated-value matching loaded məbləği ayırır.",
+    ),
+    b(
+      "The switch ignores the enum case and prints every branch.",
+      "switch enum halını nəzərə almır və bütün budaqları çap edir.",
+    ),
+    swift + "controlflow/",
+    b("When is guard clearer than if?", "guard nə vaxt if-dən aydındır?"),
+  ),
+  g(
+    "topic-05",
+    b(
+      "Enums describe one of several valid states. Associated values carry data for that state, preventing combinations such as “loading and failed and successful” from appearing accidentally.",
+      "Enum bir neçə düzgün vəziyyətdən birini ifadə edir. Associated value həmin vəziyyətin məlumatını saxlayır; təsadüfi “loading və failed və success” birləşməsini önləyir.",
+    ),
+    b(
+      "Raw values identify cases; associated values are payloads of individual enum values. Result models success/failure; a screen usually also needs idle/loading/empty or partial-result distinctions.",
+      "Raw value halı identifikasiya edir; associated value konkret enum dəyərinin payload-udur. Result uğur/xəta verir; ekranda idle/loading/empty və qismən nəticə də lazım ola bilər.",
+    ),
+    b(
+      "Model independent dimensions separately: filter loading can coexist with loaded rows. One giant enum for every combination can explode in complexity.",
+      "Müstəqil ölçüləri ayrı modelləşdir: filter yüklənməsi yüklənmiş sətirlərlə yanaşı ola bilər. Hər kombinasiya üçün bir nəhəng enum mürəkkəbliyi artıra bilər.",
+    ),
+    "enum LoadState { case idle, loaded([Int]), failed(String) }\nlet state = LoadState.loaded([])\nif case .loaded(let rows) = state { print(rows.isEmpty) }",
+    "true",
+    b(
+      "An empty successful collection is not the same as failure. Preserve that distinction in UI and telemetry.",
+      "Uğurlu boş kolleksiya xəta ilə eyni deyil. UI və telemetriyada fərqi saxla.",
+    ),
+    b(
+      "Add a partial-results-with-error case. What should a Retry action preserve?",
+      "Xəta ilə qismən nəticə halı əlavə et. Retry nəyi qorumalıdır?",
+    ),
+    b(
+      "Keep useful rows and attach a recoverable failure. Retry can replace or reconcile results according to stable identity.",
+      "Faydalı sətirləri saxla və bərpa edilən xəta əlavə et. Retry sabit identity ilə nəticəni əvəz və ya uzlaşdıra bilər.",
+    ),
+    b(
+      "loaded([]) is a valid success containing no rows.",
+      "loaded([]) sətirsiz düzgün uğurdur.",
+    ),
+    b(
+      "An empty collection automatically throws an error.",
+      "Boş kolleksiya avtomatik xəta atır.",
+    ),
+    swift + "enumerations/",
+    b(
+      "Which state combinations should be impossible by construction?",
+      "Hansı vəziyyət birləşmələri quruluşla mümkünsüz olmalıdır?",
+    ),
+  ),
+  g(
+    "topic-06",
+    b(
+      "A struct is a value; a class has shared identity. Properties store values or compute them. Choose identity and ownership before choosing inheritance.",
+      "Struct dəyərdir; class paylaşılan identity-yə malikdir. Property dəyər saxlayır və ya hesablayır. Inheritance-dan əvvəl identity və ownership seç.",
+    ),
+    b(
+      "A mutating struct method can change self. A class instance can mutate its properties through a let reference because the binding, not the object, is constant. lazy properties initialize on first access but do not supply general thread synchronization.",
+      "mutating struct metodu self-i dəyişə bilər. let class istinadı ilə property dəyişə bilər: sabit olan binding-dir, obyekt deyil. lazy ilk girişdə qurulur, amma ümumi thread sinxronizasiyası vermir.",
+    ),
+    b(
+      "Prefer composition where behaviors vary independently. Use final when subclassing is not part of the contract, and narrow access control to protect invariants. A deinitializer is lifetime evidence, not a substitute for explicit resource cleanup.",
+      "Davranışlar müstəqil dəyişirsə composition seç. Subclass müqavilənin hissəsi deyilsə final, invariant üçün dar access control istifadə et. deinit lifetime sübutudur, açıq resurs təmizlənməsinin əvəzi deyil.",
+    ),
+    "struct Balance { var amount: Int; mutating func add(_ n: Int) { amount += n } }\nvar a = Balance(amount: 10)\nvar c = a\nc.add(5)\nprint(a.amount, c.amount)",
+    "10 15",
+    b(
+      "Subclassing purely to reuse a few methods can couple unrelated invariants. Extract a collaborator when the relationship is not genuinely substitutable.",
+      "Bir neçə metodu paylaşmaq üçün subclass etmək əlaqəsiz invariantları bağlaya bilər. Əvəzlənmə yoxdursa əməkdaş obyekt ayır.",
+    ),
+    b(
+      "Give Balance a class-valued property. Which mutations remain independent after a copy?",
+      "Balance-a class property əlavə et. Kopyadan sonra hansı mutasiya müstəqil qalır?",
+    ),
+    b(
+      "Stored value properties are independent; references inside both copies may still point to one object. Define deep-copy policy explicitly.",
+      "Saxlanan dəyər property-lər müstəqildir; daxili istinadlar yenə eyni obyektə çata bilər. Deep-copy qaydasını açıq qur.",
+    ),
+    b(
+      "The struct copies have independent integer properties.",
+      "Struct kopyalarının integer property-ləri müstəqildir.",
+    ),
+    b(
+      "All mutations of any struct automatically change every copy.",
+      "Struct mutasiyası avtomatik bütün kopyaları dəyişir.",
+    ),
+    swift + "classesandstructures/",
+    b(
+      "When does shared identity make a class the appropriate choice?",
+      "Paylaşılan identity nə vaxt class seçimini əsaslandırır?",
+    ),
+  ),
+  g(
+    "topic-09",
+    b(
+      "Generics preserve relationships between types without committing to one concrete type. A generic stack can enforce that the element you remove has the same type as the element you inserted.",
+      "Generics konkret bir tip seçmədən tiplər arasındakı əlaqəni saxlayır. Generic stack çıxan elementin daxil edilənlə eyni tipdə olmasını təmin edə bilir.",
+    ),
+    b(
+      "Constraints describe operations the generic algorithm may use. Associated types connect protocol inputs and outputs. some keeps one hidden concrete type; any erases concrete identity into an existential with available operations governed by the protocol and compiler.",
+      "Constraint generic alqoritmin istifadə edə biləcəyi əməliyyatı müəyyən edir. Associated type protokolun giriş və çıxışını əlaqələndirir. some tək gizli konkret tipi saxlayır; any existential yaradır və əməliyyatları protokol/compiler qaydaları ilə məhdudlaşdırır.",
+    ),
+    b(
+      "Keep generic APIs focused. Specialization may improve performance, but code-size and compilation costs are implementation concerns to measure. Type erasure should solve a storage or API boundary problem, not merely hide difficult diagnostics.",
+      "Generic API-ni fokuslu saxla. Specialization performansı artıra bilər, amma kod ölçüsü və compile xərci ölçülməlidir. Type erasure sadəcə çətin diagnostic-i gizlətmək deyil, storage və ya API sərhədi problemi həll etməlidir.",
+    ),
+    'func first<T>(_ values: [T]) -> T? { values.first }\nprint(first([10, 20]) ?? 0)\nprint(first(["AZ", "EN"]) ?? "")',
+    "10\nAZ",
+    b(
+      "A generic function cannot assume capabilities that are not in its constraints. Add the smallest meaningful requirement.",
+      "Generic funksiya constraint-də olmayan bacarığı fərz edə bilməz. Ən kiçik əsaslı requirement əlavə et.",
+    ),
+    b(
+      "Write a function that returns the larger of two values. Which constraint does it need?",
+      "İki dəyərdən böyüyünü qaytaran funksiya yaz. Hansı constraint lazımdır?",
+    ),
+    b(
+      "Use T: Comparable. Equality alone is insufficient to establish ordering; avoid constraining to a concrete numeric type without need.",
+      "T: Comparable seç. Tək bərabərlik sıralama üçün yetmir; ehtiyac olmadan konkret numeric tiplə məhdudlaşdırma.",
+    ),
+    b(
+      "T preserves the element type between argument and result.",
+      "T arqumentlə nəticə arasında element tipini saxlayır.",
+    ),
+    b(
+      "The function returns an untyped object for every call.",
+      "Funksiya hər çağırışda tipsiz obyekt qaytarır.",
+    ),
+    swift + "generics/",
+    b(
+      "What relationship is lost if the result becomes Any?",
+      "Nəticə Any olsa hansı əlaqə itir?",
+    ),
+  ),
+  g(
+    "topic-10",
+    b(
+      "Throwing functions report recoverable failures to their caller. do/catch chooses where to recover; propagation keeps failure information available to a higher-level policy.",
+      "Throwing funksiya bərpa edilə bilən xətanı çağırana ötürür. do/catch bərpa yerini seçir; propagation məlumatı yuxarı qaydaya saxlayır.",
+    ),
+    b(
+      "try? converts failure to absence and can discard the reason. try! asserts failure is impossible and traps otherwise. defer performs scope cleanup on exit. Distinguish cancellation, decoding failures and business rejection before mapping errors for UI. Typed throws is available in Swift 6.",
+      "try? xətanı yoxluğa çevirir və səbəbi itirə bilər. try! xətanın mümkünsüzlüyünü iddia edir, əks halda trap olur. defer scope çıxışında təmizləyir. UI-a mapping-dən əvvəl cancellation, decoding və biznes rəddini ayır. Typed throws Swift 6-da mövcuddur.",
+    ),
+    b(
+      "Error taxonomy should preserve recovery choices and observability without exposing secrets. Do not show a failure alert for ordinary user cancellation. Translate infrastructure errors at meaningful boundaries, retaining sanitized diagnostic context.",
+      "Xəta kateqoriyası sirr açmadan bərpa seçimini və müşahidə imkanını saxlamalıdır. Adi istifadəçi cancellation-una xəta alert-i göstərmə. İnfrastruktur xətasını mənalı sərhəddə çevir və sanitizasiya olunmuş konteksti saxla.",
+    ),
+    'enum PaymentError: Error { case rejected }\nfunc pay() throws { throw PaymentError.rejected }\ndo { try pay() } catch { print("Recover") }',
+    "Recover",
+    b(
+      "Returning [] for every network failure makes failed history look like no transactions. Preserve the failure outcome.",
+      "Hər şəbəkə xətasında [] qaytarmaq uğursuz tarixçəni əməliyyat yoxdur kimi göstərir. Xəta nəticəsini saxla.",
+    ),
+    b(
+      "Choose between try?, do/catch and propagation when a mandatory signing document cannot load.",
+      "Məcburi imzalama sənədi yüklənməyəndə try?, do/catch və propagation arasında seç.",
+    ),
+    b(
+      "Preserve failure for an explicit retry or workflow stop. Silently converting to nil can hide why signing cannot proceed.",
+      "Açıq retry və ya workflow dayandırılması üçün xətanı saxla. Səssiz nil imzalamanın niyə davam etmədiyini gizlədə bilər.",
+    ),
+    b("The thrown error reaches catch.", "Atılmış xəta catch-ə çatır."),
+    b(
+      "try catches and silently ignores every error.",
+      "try hər xətanı tutur və səssiz atır.",
+    ),
+    swift + "errorhandling/",
+    b(
+      "Where should user-facing localization happen?",
+      "İstifadəçiyə görünən lokallaşdırma harada olmalıdır?",
+    ),
+  ),
+  g(
+    "topic-11",
+    b(
+      "Dispatch is the mechanism that selects an implementation for a call. The static type, protocol requirements, overrides and compiler optimization all influence how a Swift call behaves.",
+      "Dispatch çağırış üçün implementasiya seçən mexanizmdir. Statik tip, protocol requirement, override və compiler optimallaşdırması davranışa təsir edir.",
+    ),
+    b(
+      "Class overrides provide dynamic behavior; protocol requirements use conformance witnesses through abstraction. Extension-only methods do not become requirements just because a conforming type declares the same name. final prevents overriding and can enable optimization.",
+      "Class override dinamik davranış verir; abstraksiya üzərindən protocol requirement conformance witness istifadə edir. Eyni ad uyğun tipdə elan olunsa da extension-only metod requirement olmur. final override-ı qadağan edir və optimallaşdırmaya imkan verə bilər.",
+    ),
+    b(
+      "Do not rewrite APIs for speculative nanosecond savings. Establish semantics first and profile hot paths. Objective-C dynamic dispatch and Swift generics have distinct contracts; optimizer devirtualization is not a language promise for every call.",
+      "Fərziyyə edilən nanosaniyə qənaəti üçün API-ni yenidən yazma. Əvvəl semantikanı qur, sonra hot path ölç. Objective-C dynamic dispatch və Swift generics fərqli müqavilədir; optimizer devirtualization hər çağırış üçün dil zəmanəti deyil.",
+    ),
+    "class Base { func value() -> Int { 1 } }\nfinal class Child: Base { override func value() -> Int { 2 } }\nlet item: Base = Child()\nprint(item.value())",
+    "2",
+    b(
+      "Static variable type Base does not force a dynamically overridden method to call Base’s body.",
+      "Dəyişənin statik tipi Base olduğu üçün override olunan metod mütləq Base body-sini çağırmır.",
+    ),
+    b(
+      "Compare this override with an extension-only protocol method through an existential.",
+      "Bu override-ı existential üzərindən extension-only protokol metodu ilə müqayisə et.",
+    ),
+    b(
+      "The class method is dynamically overridden. An extension-only protocol method is not a requirement witness and may select the extension body from the static type.",
+      "Class metodu dinamik override olunur. Extension-only metod requirement witness deyil və statik tipə görə extension body-si seçilə bilər.",
+    ),
+    b("The Child override is called.", "Child override-ı çağırılır."),
+    b(
+      "The Base body is always called because the variable is Base.",
+      "Dəyişən Base olduğu üçün həmişə Base body-si çağırılır.",
+    ),
+    swift + "inheritance/",
+    b(
+      "Which guarantees does final actually add?",
+      "final konkret hansı zəmanəti əlavə edir?",
+    ),
+  ),
+  g(
+    "topic-13",
+    b(
+      "UIKit views render and handle interaction; view controllers coordinate a screen’s lifecycle. Loading a view is different from appearing on screen.",
+      "UIKit view görüntüləyir və qarşılıqlı əlaqəni qəbul edir; view controller ekran lifecycle-ını koordinasiya edir. View yüklənməsi görünməsi ilə eyni deyil.",
+    ),
+    b(
+      "viewDidLoad configures a newly loaded hierarchy once per loading. Appearance callbacks can repeat. Layout can run many times and must not blindly start requests. Hit testing chooses a view; the responder chain routes unhandled events.",
+      "viewDidLoad yeni yüklənən hierarchy-ni qurur. Appearance callback-ləri təkrarlana bilər. Layout çox dəfə işləyir və kor-koranə sorğu başlatmamalıdır. Hit testing view seçir; responder chain idarə olunmayan event-i yönləndirir.",
+    ),
+    b(
+      "Define activation and cancellation policy per screen. A navigation transition, backgrounding and removal are different lifecycle events. Validate Dynamic Type, VoiceOver and keyboard avoidance as behavior, not merely visual polish.",
+      "Ekran üçün aktivləşmə və cancellation qaydasını müəyyən et. Naviqasiya keçidi, background və silinmə fərqli lifecycle event-ləridir. Dynamic Type, VoiceOver və klaviatura davranışını tək görünüş kimi deyil, funksiya kimi yoxla.",
+    ),
+    "// Requires an Apple SDK.\nimport UIKit\nfinal class HistoryController: UIViewController {\n    override func viewDidLoad() {\n        super.viewDidLoad()\n        view.backgroundColor = .systemBackground\n    }\n}",
+    "UI example — no console output; Apple SDK required.",
+    b(
+      "Starting network requests in viewDidLayoutSubviews can duplicate work on every layout pass.",
+      "viewDidLayoutSubviews-da sorğu başlatmaq hər layout keçidində işi təkrarlaya bilər.",
+    ),
+    b(
+      "A screen reappears after a modal. Should data reload every time? State the freshness requirement.",
+      "Modal-dan sonra ekran qayıdır. Hər dəfə məlumat yenilənsinmi? Aktuallıq tələbini bildir.",
+    ),
+    b(
+      "Choose based on freshness and operation ownership. Separate initial setup from idempotent activation and explicit user refresh.",
+      "Aktuallıq və əməliyyat ownership-i əsasında seç. İlkin qurulmanı idempotent aktivləşmə və açıq istifadəçi refresh-indən ayır.",
+    ),
+    b(
+      "Appearance callbacks can run more than once.",
+      "Appearance callback-ləri birdən çox dəfə işləyə bilər.",
+    ),
+    b("viewDidLoad runs on every frame.", "viewDidLoad hər kadrda işləyir."),
+    apple + "uikit/uiviewcontroller",
+    b(
+      "Why can a visible view fail hit testing?",
+      "Görünən view niyə hit testing ala bilməyə bilər?",
+    ),
+  ),
+  g(
+    "topic-14",
+    b(
+      "Auto Layout solves constraints describing relationships between views. Intrinsic content size provides a preferred size; priorities decide which wishes may yield.",
+      "Auto Layout view-lər arasında münasibəti təsvir edən constraint-ləri həll edir. Intrinsic content size üstün ölçü verir; priority hansı istəyin güzəşt edəcəyini seçir.",
+    ),
+    b(
+      "Content hugging resists growing beyond intrinsic size; compression resistance resists shrinking below it. Ambiguous constraints permit multiple solutions; unsatisfiable constraints conflict. layoutIfNeeded performs pending layout immediately in the relevant subtree.",
+      "Hugging intrinsic ölçüdən böyüməyə, compression resistance isə kiçilməyə müqavimətdir. Ambiguous constraint bir neçə həllə icazə verir; unsatisfiable constraint ziddiyyətdir. layoutIfNeeded uyğun subtree-də gözləyən layout-u dərhal edir.",
+    ),
+    b(
+      "Test translated text, accessibility sizes and keyboard transitions. For scroll views, connect content layout guides to define content extent and frame guides for viewport constraints. Avoid fixing symptoms with arbitrary priority changes.",
+      "Tərcümə, accessibility ölçüsü və klaviatura keçidini test et. Scroll view-da content ölçüsünü content layout guide, viewport-u frame guide ilə qur. Təsadüfi priority dəyişməklə simptomu gizlətmə.",
+    ),
+    "// Requires an Apple SDK.\nimport UIKit\nlet label = UILabel()\nlabel.translatesAutoresizingMaskIntoConstraints = false\nlabel.setContentCompressionResistancePriority(.required, for: .vertical)",
+    "UI example — no console output; Apple SDK required.",
+    b(
+      "A scroll view without an unbroken content-height relationship may have no scrollable extent.",
+      "Kəsilməz content-height əlaqəsi olmayan scroll view-da scroll ölçüsü yaranmaya bilər.",
+    ),
+    b(
+      "Two labels share a narrow row. Which priority prevents truncating the account amount first?",
+      "İki label dar sətirdədir. Məbləğin əvvəl kəsilməsini hansı priority önləyir?",
+    ),
+    b(
+      "Give the amount stronger horizontal compression resistance than the optional description, while allowing a responsive alternative layout.",
+      "Məbləğə əlavə təsvirə nisbətən daha güclü horizontal compression resistance ver və adaptiv alternativ layout saxla.",
+    ),
+    b(
+      "Compression resistance resists becoming smaller than intrinsic size.",
+      "Compression resistance intrinsic ölçüdən kiçilməyə müqavimətdir.",
+    ),
+    b(
+      "Hugging always forces a fixed frame size.",
+      "Hugging həmişə sabit frame məcbur edir.",
+    ),
+    apple + "uikit/uiview",
+    b(
+      "How do you distinguish an ambiguous from a conflicting layout?",
+      "Ambiguous layout-u ziddiyyətli layout-dan necə ayırırsan?",
+    ),
+  ),
+  g(
+    "topic-15",
+    b(
+      "Navigation changes the user’s location in a flow. Push/pop belong to a navigation stack; presentation/dismissal create and remove modal relationships.",
+      "Naviqasiya istifadəçinin axındakı yerini dəyişir. Push/pop naviqasiya stack-inə, presentation/dismissal modal əlaqəyə aiddir.",
+    ),
+    b(
+      "A router executes typed destinations; a coordinator can own a multi-screen flow. The host should retain the coordinator long enough. Weak controller back-references can break cycles, but weak capture alone does not establish the whole graph’s lifetime.",
+      "Router typed destination icra edir; coordinator çoxekranlı axına sahib ola bilər. Host coordinator-u kifayət qədər saxlamalıdır. Weak controller geri istinadı dövrü qıra bilər, amma tək weak bütün qraf lifetime-ını qurmur.",
+    ),
+    b(
+      "Validate deep-link input and authorization before routing. Represent restorable destinations as stable data rather than controller instances. Choose who owns dismissal when UIKit hosts SwiftUI.",
+      "Route-dan əvvəl deep-link girişini və avtorizasiyanı yoxla. Bərpa olunan destination-u controller obyekti deyil, sabit məlumat kimi saxla. UIKit SwiftUI host edirsə dismissal sahibini seç.",
+    ),
+    'enum Route { case account(id: String), settings }\nlet route = Route.account(id: "A1")\nif case .account(let id) = route { print(id) }',
+    "A1",
+    b(
+      "A deep link is untrusted input, not authorization to view any account.",
+      "Deep link etibarsız girişdir; istənilən hesabı görmək icazəsi deyil.",
+    ),
+    b(
+      "A detail response completes after the user exits. What prevents a stale push?",
+      "İstifadəçi çıxandan sonra detail cavabı gəlir. Köhnə push-u nə önləyir?",
+    ),
+    b(
+      "Validate operation identity and active flow ownership before routing; cancellation alone does not guarantee the callback disappears.",
+      "Route-dan əvvəl əməliyyat kimliyini və aktiv flow ownership-ini yoxla; tək cancellation callback-in yox olmasına zəmanət vermir.",
+    ),
+    b(
+      "Typed routes make destination data explicit.",
+      "Typed route destination məlumatını açıq edir.",
+    ),
+    b(
+      "Every route enum proves navigation is leak-free.",
+      "Hər route enum naviqasiyanın leak-siz olduğunu sübut edir.",
+    ),
+    apple + "uikit/uinavigationcontroller",
+    b("Who keeps a coordinator alive?", "Coordinator-u kim yaşadır?"),
+  ),
+  g(
+    "topic-16",
+    b(
+      "Reusable cells let lists display many rows without allocating one view for every item. A cell’s identity is temporary; the model’s identity must be stable.",
+      "Təkrar istifadə olunan cell bütün element üçün ayrı view yaratmadan böyük siyahı göstərir. Cell identity-si müvəqqətidir; model identity-si sabit olmalıdır.",
+    ),
+    b(
+      "Cancel or invalidate image work during reuse and verify the represented model ID before assigning a result. Diffable snapshots describe stable item identities and changes, not permission to duplicate IDs. Prefetching is speculative and must tolerate cancellation.",
+      "Reuse zamanı şəkil işini ləğv və ya etibarsız et; nəticə yazmazdan əvvəl təmsil edilən model ID-sini yoxla. Diffable snapshot sabit item identity və dəyişikliyi təsvir edir, təkrar ID icazəsi deyil. Prefetch təxminidir və cancellation-a dözməlidir.",
+    ),
+    b(
+      "Profile main-thread mapping, decoding, image sizing and layout under realistic data volumes. Correctness of reuse comes before adding background queues. Pagination needs identity-aware merging and explicit end-of-list/error state.",
+      "Real məlumat ölçüsü ilə main-thread mapping, decoding, şəkil ölçüləndirmə və layout-u ölç. Background queue əlavə etməzdən əvvəl reuse düzgünlüyünü qur. Pagination identity əsaslı merging və son/xəta state-i istəyir.",
+    ),
+    "struct Row: Hashable { let id: Int }\nlet rows = [Row(id: 1), Row(id: 2)]\nprint(Set(rows).count)",
+    "2",
+    b(
+      "Index paths can change after inserts and sorting. Verify stable model identity in asynchronous completions.",
+      "Insert və sort-dan sonra index path dəyişə bilər. Async completion-da sabit model identity yoxla.",
+    ),
+    b(
+      "An old image request finishes after a cell shows another row. Specify the guard.",
+      "Cell başqa sətir göstərərkən köhnə şəkil sorğusu bitir. Guard-ı müəyyən et.",
+    ),
+    b(
+      "Capture the requested item ID and assign only if it still equals the cell’s represented ID; also cancel unnecessary work on reuse.",
+      "Sorğunun item ID-sini capture et; yalnız cell-in cari represented ID-si ilə eynidirsə yaz. Reuse zamanı lazımsız işi də ləğv et.",
+    ),
+    b(
+      "Stable IDs are distinct from current index paths.",
+      "Sabit ID cari index path-dən fərqlidir.",
+    ),
+    b(
+      "A reused cell always represents its first item.",
+      "Reuse olunan cell həmişə ilk elementi təmsil edir.",
+    ),
+    apple + "uikit/uicollectionview",
+    b(
+      "What does a diffable snapshot test leave unproven?",
+      "Diffable snapshot testi nəyi sübut etmir?",
+    ),
+  ),
+  g(
+    "topic-18",
+    b(
+      "Patterns name recurring solutions and their costs. An adapter translates an external capability; a factory creates objects; a coordinator manages a flow. Naming a type after a pattern does not establish its behavior.",
+      "Pattern təkrarlanan həlli və xərcini adlandırır. Adapter xarici bacarığı çevirir; factory obyekt yaradır; coordinator axını idarə edir. Tipə pattern adı vermək davranışı sübut etmir.",
+    ),
+    b(
+      "Choose a strategy when one policy varies independently. Decorators add behavior around a stable contract. Observer introduces subscription lifetime and delivery-order questions. A singleton supplies shared identity but can hide mutable global state.",
+      "Bir qayda müstəqil dəyişirsə strategy seç. Decorator sabit müqavilə ətrafına davranış əlavə edir. Observer subscription lifetime və çatdırılma sırası sualı yaradır. Singleton paylaşılan identity verir, amma qlobal mutable state gizlədə bilər.",
+    ),
+    b(
+      "Select the smallest pattern that isolates a real change. Test lifecycle and failure behavior, not merely construction. Avoid factories or protocols that forward one fixed implementation without a concrete variation point.",
+      "Real dəyişikliyi ayıran ən kiçik pattern seç. Tək qurulmanı deyil, lifecycle və xəta davranışını test et. Konkret dəyişkənlik olmadan bir implementasiyanı ötürən factory/protokoldan qaç.",
+    ),
+    "protocol FeePolicy { func fee(_ amount: Int) -> Int }\nstruct FlatFee: FeePolicy { func fee(_ amount: Int) -> Int { 2 } }\nfunc total(_ amount: Int, policy: any FeePolicy) -> Int { amount + policy.fee(amount) }\nprint(total(10, policy: FlatFee()))",
+    "12",
+    b(
+      "An adapter around an SDK should not return vendor types through every public feature API.",
+      "SDK adapter-i vendor tiplərini bütün public feature API-lərə sızdırmamalıdır.",
+    ),
+    b(
+      "Replace FlatFee with a percentage policy without changing total(). What remains a domain decision?",
+      "total()-ı dəyişmədən FlatFee-ni faiz qaydası ilə əvəz et. Nə domen qərarı olaraq qalır?",
+    ),
+    b(
+      "Supply another FeePolicy. Rounding, currency and limits are policy decisions; use explicit monetary types rather than casual floating-point arithmetic.",
+      "Başqa FeePolicy ötür. Yuvarlaqlaşdırma, valyuta və limit domen qərarıdır; təsadüfi floating-point əvəzinə açıq pul tipi istifadə et.",
+    ),
+    b(
+      "The strategy varies fee calculation independently of total().",
+      "Strategy fee hesabını total()-dan müstəqil dəyişir.",
+    ),
+    b(
+      "A singleton is required for every strategy.",
+      "Hər strategy üçün singleton məcburidir.",
+    ),
+    "https://www.swift.org/documentation/api-design-guidelines/",
+    b(
+      "Which pattern would actually reduce the next likely change?",
+      "Növbəti ehtimal olunan dəyişikliyi hansı pattern azaldar?",
+    ),
+  ),
+  g(
+    "topic-19",
+    b(
+      "SOLID is a set of questions about change and substitution. Single responsibility asks about reasons to change, not a maximum number of lines. Dependency inversion asks who owns an abstraction.",
+      "SOLID dəyişmə və əvəzlənmə haqqında suallardır. Single responsibility maksimum sətir sayını deyil, dəyişmə səbəbini soruşur. Dependency inversion abstraksiyanın sahibini soruşur.",
+    ),
+    b(
+      "Interface segregation keeps consumers dependent on the capabilities they use. Liskov substitution requires preserving the promised behavior, not merely matching signatures. Open/closed does not mean an enum can never gain a case.",
+      "Interface segregation istehlakçını istifadə etdiyi bacarıqlara bağlayır. Liskov substitution tək signature deyil, vəd olunan davranışın qorunmasıdır. Open/closed enum-a heç vaxt hal əlavə etməmək demək deyil.",
+    ),
+    b(
+      "Refactor where independent change causes measurable friction. A shared signing workflow and display mapping may deserve different owners. Splitting every method into a separate class can increase coupling through excessive wiring.",
+      "Müstəqil dəyişmə real sürtünmə yaradırsa refactor et. İmzalama workflow-u və display mapping ayrı sahiblər tələb edə bilər. Hər metodu ayrı class etmək artıq wiring ilə coupling-i artıra bilər.",
+    ),
+    "protocol BalanceReading { func read() -> Int }\nstruct StubBalance: BalanceReading { func read() -> Int { 42 } }\nfunc display(_ source: any BalanceReading) { print(source.read()) }\ndisplay(StubBalance())",
+    "42",
+    b(
+      "Depending on a protocol does not guarantee a good boundary if the protocol exposes every infrastructure detail.",
+      "Protokol bütün infrastruktur detalını açırsa ona bağlanmaq yaxşı sərhəd zəmanəti deyil.",
+    ),
+    b(
+      "A ViewModel formats sections, signs documents and manages network retries. Identify independent reasons to change.",
+      "ViewModel section formatlayır, sənəd imzalayır və network retry idarə edir. Müstəqil dəyişmə səbəblərini tap.",
+    ),
+    b(
+      "Design changes affect mapping; signing-provider changes affect signing; transport policy affects retries. Characterize behavior before extracting cohesive responsibilities.",
+      "Dizayn mapping-i, provider imzalamanı, transport qaydası retry-ni dəyişir. Məsuliyyət ayırmazdan əvvəl davranışı testlə müəyyən et.",
+    ),
+    b(
+      "A narrow read capability reduces what the consumer needs to know.",
+      "Dar oxuma bacarığı istehlakçının bilməli olduğu məlumatı azaldır.",
+    ),
+    b(
+      "SOLID requires one class for every method.",
+      "SOLID hər metod üçün bir class tələb edir.",
+    ),
+    "https://www.swift.org/documentation/api-design-guidelines/",
+    b(
+      "When is a concrete dependency simpler and sufficiently testable?",
+      "Konkret asılılıq nə vaxt daha sadə və yetərincə test ediləndir?",
+    ),
+  ),
+  g(
+    "topic-23",
+    b(
+      "State-driven architectures describe the current screen and how intent changes it. MVVM and MVI are families of conventions; only the actual implementation establishes mutation, effect and lifetime guarantees.",
+      "State əsaslı arxitektura ekranı və niyyətin onu necə dəyişdirdiyini təsvir edir. MVVM və MVI qayda ailələridir; mutasiya, effect və lifetime zəmanətini real implementasiya qurur.",
+    ),
+    b(
+      "Actions express intent; durable state supports rendering and restoration; effects request transient work. A custom action-forwarding store with mutable reference state is not automatically a reducer system or TCA.",
+      "Action niyyətdir; qalıcı state rendering və restoration-u dəstəkləyir; effect keçici iş istəyir. Mutable reference state ilə action ötürən custom store avtomatik reducer sistemi və ya TCA deyil.",
+    ),
+    b(
+      "Evaluate replay, cancellation, navigation ownership and migration costs before changing frameworks. Strengthen action-only writes or actor ownership incrementally rather than simultaneously rewriting working UI and business behavior.",
+      "Framework dəyişməzdən əvvəl replay, cancellation, naviqasiya ownership və miqrasiya xərcini qiymətləndir. İşlək UI və biznesi eyni anda yazmaq əvəzinə action-only mutasiya və actor ownership-i mərhələli gücləndir.",
+    ),
+    "enum Action { case increment }\nstruct Counter {\n    private(set) var value = 0\n    mutating func send(_ action: Action) {\n        switch action { case .increment: value += 1 }\n    }\n}\nvar counter = Counter(); counter.send(.increment); print(counter.value)",
+    "1",
+    b(
+      "A public mutable state lets views bypass an action convention. Be explicit about what is compiler-enforced and what is only policy.",
+      "Public mutable state view-a action qaydasını keçməyə imkan verir. Compiler zəmanəti ilə komanda qaydasını açıq ayır.",
+    ),
+    b(
+      "Should an error be state or effect? Compare a persistent failed screen with a one-off toast.",
+      "Xəta state-dir, yoxsa effect? Qalıcı failed ekranla birdəfəlik toast-u müqayisə et.",
+    ),
+    b(
+      "A recoverable screen failure belongs in renderable state; a transient announcement may be an effect. Define replay and restoration behavior rather than categorizing by name alone.",
+      "Bərpa edilən ekran xətası görünən state-dədir; keçici bildiriş effect ola bilər. Tək ada deyil, replay və restoration-a əsaslan.",
+    ),
+    b(
+      "The example routes mutation through send.",
+      "Nümunə mutasiyanı send üzərindən keçirir.",
+    ),
+    b(
+      "Every store with send is a full TCA implementation.",
+      "send olan hər store tam TCA-dır.",
+    ),
+    apple + "swiftui/managing-model-data-in-your-app",
+    b(
+      "Can effects be emitted before a host attaches its handler?",
+      "Host handler qoşmazdan əvvəl effect göndərilə bilərmi?",
+    ),
+  ),
+  g(
+    "topic-24",
+    b(
+      "HTTP defines request and response semantics. Methods, status codes and headers matter even when every payload is JSON. Authentication and authorization answer different questions.",
+      "HTTP sorğu və cavab semantikasını müəyyən edir. Payload JSON olsa da metod, status və header vacibdir. Autentifikasiya və avtorizasiya fərqli sualı cavablayır.",
+    ),
+    b(
+      "401 generally signals missing/invalid authentication; 403 indicates refusal of authorization. Idempotency concerns repeated effects, not identical responses. Cache-Control and ETag coordinate freshness and conditional requests. TLS protects transport, not business correctness.",
+      "401 adətən çatışmayan/səhv autentifikasiyanı, 403 icazə rəddini göstərir. Idempotency eyni cavab deyil, təkrar təsir haqqındadır. Cache-Control və ETag aktuallığı və conditional request-i idarə edir. TLS transport-u qoruyur, biznes düzgünlüyünü deyil.",
+    ),
+    b(
+      "Define safe retries and server idempotency explicitly for mutations. Interpret 429 with a bounded delay policy. Never assume all successful status codes contain the same response envelope or a non-empty body.",
+      "Mutasiyalar üçün təhlükəsiz retry və server idempotency-ni açıq qur. 429 üçün məhdud gecikmə qaydası seç. Hər uğurlu status-un eyni envelope və ya boş olmayan body daşıdığını fərz etmə.",
+    ),
+    'let status = 204\nswitch status {\ncase 204: print("Success without a body")\ncase 200: print("Validate expected payload")\ndefault: print("Handle status")\n}',
+    "Success without a body",
+    b(
+      "Trying to decode a required JSON model from a valid 204 response confuses protocol success with payload expectations.",
+      "Düzgün 204 cavabından məcburi JSON model decode etmək protokol uğurunu payload gözləntisi ilə qarışdırır.",
+    ),
+    b(
+      "A GET returns 304. Which earlier response state must your cache retain?",
+      "GET 304 qaytarır. Cache əvvəlki hansı cavab state-ini saxlamalıdır?",
+    ),
+    b(
+      "Retain the validated cached representation and metadata needed for freshness; 304 alone does not contain a replacement payload.",
+      "Yoxlanmış cache təqdimatını və aktuallıq metadata-sını saxla; 304 əvəz payload daşımır.",
+    ),
+    b(
+      "204 can represent success without response data.",
+      "204 cavab datası olmadan uğur ola bilər.",
+    ),
+    b(
+      "Every 2xx response must decode into a non-empty array.",
+      "Hər 2xx cavabı boş olmayan array-a decode olunmalıdır.",
+    ),
+    apple + "foundation/httpurlresponse",
+    b(
+      "Why can blindly retrying POST duplicate a business operation?",
+      "POST-u kor-koranə retry etmək niyə biznes əməliyyatını təkrarlaya bilər?",
+    ),
+  ),
+  g(
+    "topic-26",
+    b(
+      "Codable describes encoding and decoding contracts. Decodable builds a type from external data; it does not automatically establish business validity.",
+      "Codable encoding və decoding müqaviləsini ifadə edir. Decodable xarici məlumatdan tip qurur; biznes etibarlılığını avtomatik sübut etmir.",
+    ),
+    b(
+      "Missing optional keys can decode as nil; missing required keys fail. CodingKeys map names; custom decoding handles documented schema variation. Distinguish missing, null and invalid values when the product contract requires it.",
+      "Çatışmayan Optional key nil ola bilər; məcburi key yoxdursa decoding uğursuzdur. CodingKeys adları uyğunlaşdırır; custom decoding sənədləşmiş schema fərqini idarə edir. Məhsul tələb edirsə missing, null və invalid-i ayır.",
+    ),
+    b(
+      "Tolerant decoding should not hide invalid account identity or monetary values. Version contracts, write fixture tests and instrument schema failures without logging customer payloads. Keep DTO-to-domain mapping explicit.",
+      "Tolerant decoding səhv hesab kimliyini və məbləği gizlətməməlidir. Müqaviləni versiyala, fixture test yaz və müştəri payload-u log etmədən schema xətasını izlə. DTO-domain mapping-i açıq saxla.",
+    ),
+    'import Foundation\nstruct Account: Decodable { let id: Int; let nickname: String? }\nlet json = Data(#"{"id":42}"#.utf8)\nlet account = try JSONDecoder().decode(Account.self, from: json)\nprint(account.id, account.nickname == nil)',
+    "42 true",
+    b(
+      "Defaulting every malformed field can turn corrupted data into plausible but wrong UI.",
+      "Hər səhv sahəyə default vermək pozulmuş məlumatı inandırıcı yanlış UI-a çevirə bilər.",
+    ),
+    b(
+      "A backend adds a new enum string. Choose reject, unknown(rawValue), or fallback based on the feature risk.",
+      "Backend yeni enum string əlavə edir. Feature riskinə görə reject, unknown(rawValue) və ya fallback seç.",
+    ),
+    b(
+      "Preserve unknown values when forward compatibility is safe; reject if an unknown action could violate a payment rule. Keep UI fallback separate from authorization.",
+      "Forward compatibility təhlükəsizdirsə unknown dəyəri saxla; naməlum action ödəniş qaydasını poza bilərsə rədd et. UI fallback-i avtorizasiyadan ayır.",
+    ),
+    b(
+      "The optional missing nickname becomes nil.",
+      "Çatışmayan Optional nickname nil olur.",
+    ),
+    b(
+      "Decodable proves the account is authorized.",
+      "Decodable hesabın icazəli olduğunu sübut edir.",
+    ),
+    apple + "swift/codable",
+    b(
+      "Where should a missing mandatory ID be rejected?",
+      "Çatışmayan məcburi ID harada rədd edilməlidir?",
+    ),
+  ),
+  g(
+    "topic-27",
+    b(
+      "A network layer separates feature intent from HTTP mechanics. Endpoints describe requests; transport executes them; response validation and decoding interpret results.",
+      "Şəbəkə qatı feature niyyətini HTTP mexanikasından ayırır. Endpoint sorğunu təsvir edir; transport icra edir; validasiya və decoding nəticəni şərh edir.",
+    ),
+    b(
+      "Keep retries bounded, add exponential backoff with jitter when appropriate, and deduplicate only operations whose semantics allow sharing. A logical operation must own replacement requests across refresh and retry so cancellation remains meaningful.",
+      "Retry-ni məhdudlaşdır, uyğun olduqda jitter ilə exponential backoff əlavə et; yalnız semantikası icazə verən işi deduplicate et. Cancellation mənalı qalsın deyə məntiqi əməliyyat refresh və retry əvəz sorğularına sahib olmalıdır.",
+    ),
+    b(
+      "Balance reuse with feature-specific response contracts. A repository adds value when it owns cache, source selection or reconciliation; pass-through wrappers may only add ceremony. Use sanitized correlation metadata to diagnose failures.",
+      "Reuse ilə feature response müqaviləsi arasında tarazlıq qur. Repository cache, mənbə seçimi və reconciliation sahibidirsə faydalıdır; forwarding wrapper əlavə mərasim ola bilər. Xətanı sanitizasiya edilmiş correlation metadata ilə araşdır.",
+    ),
+    "struct RetryPolicy {\n    let maximumAttempts: Int\n    func mayRetry(_ attempt: Int) -> Bool { attempt < maximumAttempts }\n}\nprint(RetryPolicy(maximumAttempts: 3).mayRetry(3))",
+    "false",
+    b(
+      "A retry policy needs both a bound and a semantic safety check. A loop limit alone does not make mutation retries safe.",
+      "Retry həm say sərhədi, həm semantik təhlükəsizlik istəyir. Tək loop limiti mutasiya retry-sini təhlükəsiz etmir.",
+    ),
+    b(
+      "Specify a paginated request key that includes all filters and account identity.",
+      "Bütün filter və hesab kimliyini daxil edən pagination request key müəyyən et.",
+    ),
+    b(
+      "Scope cursor and merge state to account, query and filters. Invalidate old generation on changes; merge by stable ID with an explicit update policy.",
+      "Cursor və merge state-i hesab, sorğu və filter-ə bağla. Dəyişəndə köhnə generation-u etibarsız et; sabit ID və açıq update qaydası ilə birləşdir.",
+    ),
+    b(
+      "At the maximum attempt count this policy stops retrying.",
+      "Maksimum cəhd sayında bu qayda retry-ni dayandırır.",
+    ),
+    b(
+      "Bounded retries guarantee every payment is idempotent.",
+      "Məhdud retry hər ödənişin idempotentliyinə zəmanətdir.",
+    ),
+    apple + "foundation/urlsession",
+    b(
+      "How do you preserve cancellation through refresh and retry?",
+      "Refresh və retry boyunca cancellation-u necə qoruyursan?",
+    ),
+  ),
+  g(
+    "topic-28",
+    b(
+      "UserDefaults stores preferences and small configuration values. It is convenient local persistence, not a credential vault or a transactional application database.",
+      "UserDefaults preference və kiçik konfiqurasiya saxlayır. Rahat lokal persistence-dir, credential seyfi və ya transactional database deyil.",
+    ),
+    b(
+      "Use typed keys and documented defaults. @AppStorage connects supported values to SwiftUI. Encoding complex structures does not add schema migration or atomic multi-key transactions automatically.",
+      "Tipli key və sənədləşmiş default istifadə et. @AppStorage uyğun dəyəri SwiftUI-a bağlayır. Mürəkkəb struktur encode etmək avtomatik migration və atomik multi-key transaction vermir.",
+    ),
+    b(
+      "Keep secrets in appropriate secure storage. Plan compatibility when preference meanings change. A failed or missing stored setting should recover safely without silently resetting unrelated user data.",
+      "Sirləri uyğun təhlükəsiz storage-da saxla. Preference mənası dəyişəndə compatibility planla. Saxlanan ayar yoxdursa və ya səhvdirsə əlaqəsiz nəticələri sıfırlamadan təhlükəsiz bərpa et.",
+    ),
+    'import Foundation\nlet defaults = UserDefaults(suiteName: "AcademyExample")!\ndefaults.set("az", forKey: "language")\nprint(defaults.string(forKey: "language") ?? "en")\ndefaults.removePersistentDomain(forName: "AcademyExample")',
+    "az",
+    b(
+      "Base64 or Codable encoding does not make a stored token secret.",
+      "Base64 və ya Codable token-i məxfi etmir.",
+    ),
+    b(
+      "Choose storage for a language setting, access token and 50,000 transactions.",
+      "Dil ayarı, access token və 50 min əməliyyat üçün storage seç.",
+    ),
+    b(
+      "Preferences fit UserDefaults; tokens need Keychain policy; large queryable history needs a database with migration and concurrency design.",
+      "Preference UserDefaults-a uyğundur; token Keychain siyasəti istəyir; böyük sorğulanan tarixçə migration və concurrency-li database tələb edir.",
+    ),
+    b(
+      "The preference can be read after writing.",
+      "Preference yazıldıqdan sonra oxunur.",
+    ),
+    b(
+      "Encoding a token makes UserDefaults a secure vault.",
+      "Token encode etmək UserDefaults-u təhlükəsiz seyf edir.",
+    ),
+    apple + "foundation/userdefaults",
+    b(
+      "How do you migrate a renamed preference key?",
+      "Adı dəyişən preference key-ni necə miqrasiya edirsən?",
+    ),
+  ),
+  g(
+    "topic-29",
+    b(
+      "Keychain is an operating-system facility for storing small secrets with access policies. Choosing Keychain is the beginning of a security decision, not the whole threat model.",
+      "Keychain kiçik sirləri access policy ilə saxlayan OS xidmətidir. Keychain seçmək təhlükəsizlik qərarının başlanğıcıdır, bütün threat model deyil.",
+    ),
+    b(
+      "Accessibility classes control when an item is available, including locked-device and device-migration behavior. Handle OSStatus results and update existing items intentionally. Biometric UI success and server-side transaction authorization are distinct.",
+      "Accessibility class elementin nə vaxt əlçatan olduğunu, kilidli cihaz və cihaz miqrasiyasını idarə edir. OSStatus nəticəsini yoxla və mövcud elementi məqsədli yenilə. Biometrik UI uğuru server transaction avtorizasiyasından fərqlidir.",
+    ),
+    b(
+      "Decide logout deletion, refresh rotation, access groups and backup semantics with security requirements. Never log secrets, even in debug paths. Test unavailable and denied access as real user states.",
+      "Logout silinməsi, refresh rotation, access group və backup semantikasını təhlükəsizlik tələbi ilə seç. Debug yolunda da sirr log etmə. Əlçatmaz və rədd edilmiş girişi real user state kimi test et.",
+    ),
+    'enum SecretState { case available, locked, missing, failed }\nlet state = SecretState.locked\nif case .locked = state { print("Request unlock or defer") }',
+    "Request unlock or defer",
+    b(
+      "A missing Keychain item and an inaccessible locked item may require different recovery. Do not erase a valid session merely because protected data is temporarily unavailable.",
+      "Keychain item-in yoxluğu və kilid səbəbli əlçatmazlığı ayrı bərpa tələb edə bilər. Protected data müvəqqəti əlçatmazdır deyə etibarlı sessiyanı silmə.",
+    ),
+    b(
+      "A background refresh needs a token while the phone is locked. Which product and security constraints must be decided?",
+      "Telefon kilidli olarkən background refresh token istəyir. Hansı məhsul və təhlükəsizlik qərarları lazımdır?",
+    ),
+    b(
+      "Specify whether background access is required and choose an accessibility policy consistent with that threat model. Do not weaken protection just to suppress an error.",
+      "Background girişin lazım olub-olmadığını müəyyən et və threat model-ə uyğun accessibility seç. Xətanı gizlətmək üçün qorumanı zəiflətmə.",
+    ),
+    b("Locked is distinct from missing.", "Locked missing-dən fərqlidir."),
+    b(
+      "Keychain guarantees every access always succeeds.",
+      "Keychain hər girişin uğurlu olmasına zəmanət verir.",
+    ),
+    apple + "security/keychain-services",
+    b(
+      "What must be cleared on logout and what can remain?",
+      "Logout-da nə silinməli və nə qala bilər?",
+    ),
+  ),
+  g(
+    "topic-30",
+    b(
+      "Files are useful for documents, media and explicit exports. Documents, caches and temporary directories have different lifetime expectations.",
+      "Fayl sənəd, media və açıq export üçün uyğundur. Documents, caches və temporary qovluqlarının lifetime gözləntisi fərqlidir.",
+    ),
+    b(
+      "Atomic replacement reduces partial-file exposure but does not automatically make a multi-file workflow transactional. Coordinate concurrent readers and writers and apply appropriate file protection. Caches must tolerate eviction.",
+      "Atomic replacement qismən fayl riskini azaldır, amma çoxfayllı workflow-u avtomatik transaction etmir. Paralel reader/writer-i koordinasiya et və file protection seç. Cache silinməyə dözməlidir.",
+    ),
+    b(
+      "Define disk budgets, cleanup and backup policy. Treat file names and imported paths as untrusted; resolve within an explicit allowlist and reject traversal or symlink escapes in server adapters.",
+      "Disk büdcəsi, təmizləmə və backup siyasəti qur. Fayl adı və import yolunu etibarsız say; server adapter-də açıq allowlist daxilində həll et, traversal və symlink qaçışını rədd et.",
+    ),
+    'import Foundation\nlet data = Data("Receipt".utf8)\nprint(data.count)',
+    "7",
+    b(
+      "A temporary file is not a durable source of truth. The OS may remove it.",
+      "Temporary fayl qalıcı source of truth deyil. OS onu silə bilər.",
+    ),
+    b(
+      "Where should a downloadable statement cache live, and how does the app recover if it disappears?",
+      "Endirilən çıxarış cache-i harada olmalı və silinsə app necə bərpa etməlidir?",
+    ),
+    b(
+      "Use an appropriate cache directory with a size/expiry policy and refetch safely. User-owned exported documents need a different lifecycle and protection policy.",
+      "Ölçü/expiry siyasətli cache qovluğu seç və təhlükəsiz yenidən yüklə. İstifadəçinin export sənədi başqa lifetime və protection istəyir.",
+    ),
+    b(
+      "The example measures UTF-8 data length.",
+      "Nümunə UTF-8 məlumat uzunluğunu ölçür.",
+    ),
+    b(
+      "Data automatically writes itself to a secure file.",
+      "Data avtomatik özünü təhlükəsiz fayla yazır.",
+    ),
+    apple + "foundation/filemanager",
+    b(
+      "When do atomic writes fail to protect the whole invariant?",
+      "Atomic write nə vaxt bütün invariantı qorumur?",
+    ),
+  ),
+  g(
+    "topic-31",
+    b(
+      "Core Data and SwiftData manage persistent model graphs. Their contexts define ownership and change tracking; they are not just convenient arrays saved to disk.",
+      "Core Data və SwiftData persistent model qrafını idarə edir. Context ownership və change tracking sərhədidir; sadəcə diskə yazılan array deyil.",
+    ),
+    b(
+      "Use each context according to its concurrency contract. Pass stable identifiers or value snapshots across boundaries rather than casually sharing managed objects. Migrations change stored schema and require test fixtures from older versions.",
+      "Hər context-i concurrency müqaviləsinə uyğun istifadə et. Managed object-i təsadüfi paylaşmaq əvəzinə sabit ID və ya value snapshot ötür. Migration saxlanmış schema-nı dəyişir və köhnə versiya fixture-i ilə test tələb edir.",
+    ),
+    b(
+      "Choose SwiftData/Core Data based on OS targets, query needs, migration maturity and team constraints. A repository may isolate source policy but must not pretend persistence errors cannot occur. Test migration and recovery before production rollout.",
+      "OS target, sorğu ehtiyacı, migration yetkinliyi və komanda şərtinə görə SwiftData/Core Data seç. Repository mənbə siyasətini ayıra bilər, amma persistence xətasını gizlətməməlidir. Rollout-dan əvvəl migration və recovery test et.",
+    ),
+    'struct TransactionSnapshot: Sendable { let id: String; let amount: Int }\nlet snapshot = TransactionSnapshot(id: "T1", amount: 50)\nprint(snapshot.id)',
+    "T1",
+    b(
+      "A managed object is not made safely transferable merely by putting its reference into a struct.",
+      "Managed object istinadını struct-a qoymaq onu təhlükəsiz transferable etmir.",
+    ),
+    b(
+      "A background import updates a visible transaction. What crosses the context boundary?",
+      "Background import görünən əməliyyatı yeniləyir. Context sərhədindən nə keçir?",
+    ),
+    b(
+      "Use identifiers or immutable value data and resolve/update through the destination context’s supported queue or actor.",
+      "ID və ya dəyişməz value data ötür, destination context-in dəstəklənən queue/actor-u ilə həll və update et.",
+    ),
+    b(
+      "A value snapshot can avoid sharing context-owned objects.",
+      "Value snapshot context-owned obyekt paylaşmağı önləyə bilər.",
+    ),
+    b(
+      "All contexts permit arbitrary concurrent object mutation.",
+      "Bütün context-lər istənilən paralel object mutasiyasına icazə verir.",
+    ),
+    apple + "coredata",
+    b(
+      "How do you test an old-store migration?",
+      "Köhnə store migration-unu necə test edirsən?",
+    ),
+  ),
+  g(
+    "topic-32",
+    b(
+      "Offline-first means local data remains useful when the network is absent. It requires a freshness and synchronization policy, not merely keeping the last JSON response.",
+      "Offline-first şəbəkə yoxkən lokal məlumatın faydalı qalmasıdır. Tək son JSON-u saxlamaq deyil, aktuallıq və sinxronizasiya qaydası tələb edir.",
+    ),
+    b(
+      "A local source of truth renders durable state; network responses reconcile into it. Queued mutations need identity, ordering, retry bounds and conflict rules. Cached balance must be labeled stale when appropriate.",
+      "Lokal source of truth qalıcı state göstərir; şəbəkə cavabı ona uzlaşdırılır. Növbədəki mutasiya identity, sıra, retry sərhədi və konflikt qaydası tələb edir. Cache balansı lazım olduqda köhnə kimi göstərilməlidir.",
+    ),
+    b(
+      "Do not pretend an offline transfer is server-authorized. Separate draft, queued, submitted, confirmed and unknown outcomes. Conflict resolution is domain policy; last-write-wins can be wrong for money.",
+      "Oflayn köçürməni server avtorizasiyalı sayma. Draft, queued, submitted, confirmed və unknown-u ayır. Konflikt həlli domen qaydasıdır; last-write-wins pul üçün səhv ola bilər.",
+    ),
+    'enum Freshness { case fresh, stale }\nstruct CachedBalance { let value: Int; let freshness: Freshness }\nlet balance = CachedBalance(value: 42, freshness: .stale)\nif case .stale = balance.freshness { print("Last known balance") }',
+    "Last known balance",
+    b(
+      "Showing stale data without context can mislead a financial decision.",
+      "Köhnə məlumatı kontekstsiz göstərmək maliyyə qərarını çaşdıra bilər.",
+    ),
+    b(
+      "A queued mutation is retried after restart. How is duplicate submission prevented?",
+      "Restart-dan sonra queued mutasiya retry edilir. Təkrar göndəriş necə önlənir?",
+    ),
+    b(
+      "Persist stable operation identity and use backend idempotency and reconciliation. Local queue deletion alone does not prove remote completion.",
+      "Sabit operation identity saxla, backend idempotency və reconciliation istifadə et. Lokal queue-dan silinmə uzaqda tamamlanmanı sübut etmir.",
+    ),
+    b(
+      "The UI explicitly identifies last-known data.",
+      "UI son məlum məlumatı açıq göstərir.",
+    ),
+    b("Cached balances are always current.", "Cache balansı həmişə caridir."),
+    apple + "foundation/urlcache",
+    b(
+      "Which mutations should never silently use last-write-wins?",
+      "Hansı mutasiyada last-write-wins səssiz istifadə edilməməlidir?",
+    ),
+  ),
+  g(
+    "topic-33",
+    b(
+      "A SwiftUI View is a value describing UI for current inputs. Composition builds larger interfaces from smaller descriptions. body can be evaluated repeatedly without recreating every rendered pixel.",
+      "SwiftUI View cari girişlər üçün UI təsvir edən dəyərdir. Composition kiçik təsvirlərdən böyük interfeys qurur. body təkrarlansa da hər piksel mütləq yenidən yaranmır.",
+    ),
+    b(
+      "Modifiers produce new view descriptions. Stable identity connects data and state across evaluations. ForEach requires stable unique IDs, and lazy containers defer some work but do not remove lifecycle or layout cost.",
+      "Modifier yeni view təsviri yaradır. Sabit identity hesablamalar arasında data və state-i bağlayır. ForEach sabit unikal ID tələb edir; lazy container bəzi işi gecikdirir, lifecycle və layout xərcini yox etmir.",
+    ),
+    b(
+      "Design semantic accessibility, Dynamic Type and localized layout from the start. Extract components around meaningful inputs and observation boundaries, not just to shorten body.",
+      "Semantik accessibility, Dynamic Type və lokallaşdırılmış layout-u əvvəldən qur. Komponenti tək body qısaltmaq üçün deyil, mənalı input və observation sərhədinə görə ayır.",
+    ),
+    "// Requires an Apple SDK.\nimport SwiftUI\nstruct AccountLabel: View {\n    let name: String\n    var body: some View { Text(name).font(.headline) }\n}",
+    "UI example — no console output; Apple SDK required.",
+    b(
+      "A computed helper property is not automatically a new observation boundary.",
+      "Computed helper property avtomatik yeni observation sərhədi deyil.",
+    ),
+    b(
+      "A row gets a new UUID every render. Explain the state and animation consequences.",
+      "Sətir hər render-də yeni UUID alır. State və animasiya nəticəsini izah et.",
+    ),
+    b(
+      "Identity changes can reset local state and treat old/new rows as unrelated. Use persistent model identity rather than a newly generated ID.",
+      "Identity dəyişməsi lokal state-i sıfırlayıb köhnə/yeni sətiri əlaqəsiz saya bilər. Yeni ID deyil, persistent model identity seç.",
+    ),
+    b("View describes UI from its input.", "View girişindən UI təsvir edir."),
+    b(
+      "Every body evaluation guarantees a full screen redraw.",
+      "Hər body hesablanması bütün ekranın yenidən çəkilməsinə zəmanətdir.",
+    ),
+    apple + "swiftui/view",
+    b(
+      "What makes a reusable component accessible?",
+      "Təkrar istifadə olunan komponenti əlçatan edən nədir?",
+    ),
+  ),
+  g(
+    "topic-35",
+    b(
+      "SwiftUI architecture connects state ownership to task and navigation ownership. Rendering should not silently start unbounded work each time body is evaluated.",
+      "SwiftUI arxitekturası state ownership-i task və naviqasiya ownership-i ilə bağlayır. body hər dəfə limitsiz iş başlatmamalıdır.",
+    ),
+    b(
+      ".task associates async work with view lifecycle and .task(id:) restarts when its ID changes. A Task created inside that action is a separate unstructured task unless its lifetime is explicitly managed. Cancellation is cooperative.",
+      " .task async işi view lifecycle-ına bağlayır; .task(id:) ID dəyişəndə yenidən başlayır. Action daxilində yaradılan Task lifetime açıq idarə edilməzsə ayrıca unstructured task-dır. Cancellation əməkdaşlıq tələb edir.",
+    ),
+    b(
+      "When mixing UIKit and SwiftUI, define who owns the model, hosting controller, router and effects. Characterize state and route behavior before changing frameworks. @MainActor does not by itself make stale responses irrelevant.",
+      "UIKit/SwiftUI qarışığında model, hosting controller, router və effect sahibini seç. Framework dəyişmədən state və route davranışını testlə qur. @MainActor köhnə cavabı öz-özünə etibarsız etmir.",
+    ),
+    "// Requires an Apple SDK.\nimport SwiftUI\nstruct SearchScreen: View {\n    let query: String\n    var body: some View {\n        Text(query).task(id: query) {\n            guard !Task.isCancelled else { return }\n        }\n    }\n}",
+    "UI example — no console output; Apple SDK required.",
+    b(
+      "Calling a ViewModel method that starts its own Task does not make that task a structured child of .task.",
+      "Öz Task-ını yaradan ViewModel metodunu çağırmaq həmin task-ı .task-ın structured child-ı etmir.",
+    ),
+    b(
+      "Specify whether navigating to details stops or preserves an incremental search.",
+      "Details-ə keçid incremental search-i dayandırır, yoxsa saxlayır? Qaydanı qur.",
+    ),
+    b(
+      "Choose product semantics, then place cancellation at the responsible owner. View disappearance and model deallocation are different events.",
+      "Məhsul semantikasını seç və cancellation-u məsul owner-ə ver. View görünməməsi ilə model silinməsi fərqli event-dir.",
+    ),
+    b(
+      "Task identity and model identity are different lifetimes.",
+      "Task identity və model identity ayrı lifetime-lardır.",
+    ),
+    b(
+      "Weak capture automatically cancels every child operation.",
+      "Weak capture bütün child əməliyyatı avtomatik ləğv edir.",
+    ),
+    apple + "swiftui/view/task(priority:_:)",
+    b(
+      "Who retains the hosting controller’s ViewModel?",
+      "Hosting controller-in ViewModel-ini kim saxlayır?",
+    ),
+  ),
+  g(
+    "topic-36",
+    b(
+      "NavigationStack models navigation using data. A typed path can represent destinations and be restored, while sheets express a different presentation relationship.",
+      "NavigationStack naviqasiyanı məlumatla modelləşdirir. Typed path destination-u ifadə və bərpa edir; sheet fərqli presentation əlaqəsidir.",
+    ),
+    b(
+      "Match path element types to destination builders. Keep identity stable when state should survive. Layout containers propose sizes; GeometryReader reports geometry but can alter layout expectations.",
+      "Path element tipini destination builder ilə uyğunlaşdır. State qalmalıdırsa identity-ni sabit saxla. Layout container ölçü təklif edir; GeometryReader geometry verir, amma layout gözləntisini dəyişə bilər.",
+    ),
+    b(
+      "Treat deep links as validated input and gate protected screens by session state. Preserve navigation data compatibly across app versions or deliberately discard stale routes. Test restoration and modal dismissal separately.",
+      "Deep link-i yoxlanmalı giriş say və qorunan ekranı sessiyaya bağla. Versiyalar arasında navigation data-nı uyğun saxla və ya köhnə route-u məqsədli at. Restoration və modal dismissal-u ayrı test et.",
+    ),
+    'enum Destination: Hashable { case account(String) }\nvar path: [Destination] = []\npath.append(.account("A1"))\nprint(path.count)',
+    "1",
+    b(
+      "Restoring a route does not authorize access to the referenced account.",
+      "Route bərpası həmin hesaba giriş icazəsi vermir.",
+    ),
+    b(
+      "A logged-out app receives an account deep link. Preserve intent without exposing protected data.",
+      "Logout olmuş app hesab deep link-i alır. Qorunan data açmadan niyyəti saxla.",
+    ),
+    b(
+      "Validate destination, store non-secret intent, authenticate, re-check authorization, then navigate. Do not trust raw URL parameters.",
+      "Destination-u yoxla, qeyri-məxfi niyyəti saxla, autentifikasiya et, icazəni yenidən yoxla və naviqasiya et. Raw URL parametrinə güvənmə.",
+    ),
+    b(
+      "The path is data representing one destination.",
+      "Path bir destination-u ifadə edən məlumatdır.",
+    ),
+    b(
+      "Adding a path item proves account access is allowed.",
+      "Path elementi əlavə etmək hesab icazəsini sübut edir.",
+    ),
+    apple + "swiftui/navigationstack",
+    b(
+      "How should invalid restored routes fail gracefully?",
+      "Səhv restored route necə təhlükəsiz dayandırılmalıdır?",
+    ),
+  ),
+  g(
+    "topic-37",
+    b(
+      "SwiftUI performance depends on the work caused by updates, not just how often body appears in logs. Stable identity, narrow dependencies and inexpensive rendering are useful starting points.",
+      "SwiftUI performansı tək body log sayından deyil, update-in yaratdığı işdən asılıdır. Sabit identity, dar asılılıq və ucuz rendering yaxşı başlanğıcdır.",
+    ),
+    b(
+      "Observation tracks dependencies; broad object changes can invalidate more observers. Lazy containers defer creation but still pay layout, image and state costs. AnyView erases type information; its real impact depends on context and measurement.",
+      "Observation asılılıqları izləyir; geniş object dəyişməsi çox observer-i invalidate edə bilər. Lazy container yaratmanı gecikdirir, layout, şəkil və state xərci qalır. AnyView tip məlumatını gizlədir; real təsir kontekst və ölçüdən asılıdır.",
+    ),
+    b(
+      "Profile representative scrolling and updates using Instruments. Batch stream events only when latency trade-offs are acceptable. Avoid optimization folklore such as moving code into computed properties and assuming it creates isolation.",
+      "Real scroll və update-i Instruments ilə ölç. Gecikmə trade-off-u uyğundursa stream event-ləri batch et. Kodu computed property-yə köçürüb izolyasiya yarandığını fərz etmə.",
+    ),
+    "let rows = Array(1...1000)\nlet visible = rows.prefix(10)\nprint(visible.count)",
+    "10",
+    b(
+      "A smaller visible slice is a conceptual workload example, not evidence of measured SwiftUI frame-rate improvement.",
+      "Kiçik görünən slice konseptual iş nümunəsidir, ölçülmüş SwiftUI FPS artımı sübutu deyil.",
+    ),
+    b(
+      "A streamed list stutters. Identify measurement points before proposing a rewrite.",
+      "Stream olunan list donur. Rewrite təklif etmədən ölçmə nöqtələrini tap.",
+    ),
+    b(
+      "Measure event rate, mapping, identity scans, insertion cost, main-actor time and render invalidations. Change the dominant measured cost first.",
+      "Event sürəti, mapping, identity axtarışı, insert xərci, main-actor vaxtı və render invalidation ölç. Əvvəl dominant ölçülmüş xərci dəyiş.",
+    ),
+    b("The slice contains ten values.", "Slice on dəyər saxlayır."),
+    b(
+      "This console example proves a 60 FPS UI.",
+      "Bu konsol nümunəsi 60 FPS UI sübut edir.",
+    ),
+    apple + "swiftui/understanding-and-improving-swiftui-performance",
+    b(
+      "When can batching hurt responsiveness?",
+      "Batching nə vaxt cavab sürətini pisləşdirə bilər?",
+    ),
+  ),
+  g(
+    "topic-39",
+    b(
+      "Application security protects assets under an explicit threat model. TLS, Keychain and biometrics solve different parts of the problem; none replaces server authorization.",
+      "Tətbiq təhlükəsizliyi açıq threat model altında aktivləri qoruyur. TLS, Keychain və biometrika fərqli problemi həll edir; heç biri server avtorizasiyasını əvəz etmir.",
+    ),
+    b(
+      "Validate deep links and imported data, restrict logging metadata, and choose secure storage/protection levels. Pinning narrows trust but introduces rotation and recovery obligations. Jailbreak detection is a signal, not proof of device integrity.",
+      "Deep link və import datanı yoxla, log metadata-sını məhdudlaşdır, secure storage/protection seç. Pinning trust-u daraldır, amma rotation və recovery öhdəliyi yaradır. Jailbreak detection siqnaldır, cihaz bütövlüyü sübutu deyil.",
+    ),
+    b(
+      "Design certificate rotation, incident response and telemetry minimization before deployment. Avoid collecting secrets in the first place. Enforce critical financial rules on the backend and test the complete logging pipeline.",
+      "Deployment-dən əvvəl certificate rotation, incident response və minimal telemetriya qur. Əvvəldən sirr toplama. Kritik maliyyə qaydasını backend-də təmin et və bütün log xəttini test et.",
+    ),
+    'struct SafeLog { let operation: String; let status: Int }\nlet log = SafeLog(operation: "refresh", status: 401)\nprint(log.operation, log.status)',
+    "refresh 401",
+    b(
+      "Redaction at a final sink is not a reason to pass tokens into logging calls. Remove secrets at the source.",
+      "Son sink redaction-u token-i log çağırışına verməyə əsas deyil. Sirri mənbədə çıxar.",
+    ),
+    b(
+      "Choose diagnostic fields for a failed transfer without customer payload or credentials.",
+      "Müştəri payload-u və credential olmadan uğursuz köçürmə üçün diagnostic sahə seç.",
+    ),
+    b(
+      "Use sanitized operation category, status, duration and narrowly scoped correlation identity. Review whether each field can identify a customer.",
+      "Sanitizasiya edilmiş operation category, status, müddət və dar correlation identity seç. Hər sahənin müştərini tanıdıb-tanımadığını yoxla.",
+    ),
+    b(
+      "The log structure excludes credentials.",
+      "Log strukturu credential saxlamır.",
+    ),
+    b(
+      "Debug builds make logging tokens safe.",
+      "Debug build token log etməyi təhlükəsiz edir.",
+    ),
+    apple + "security",
+    b(
+      "How would pin rotation fail and recover?",
+      "Pin rotation necə sıradan çıxa və bərpa oluna bilər?",
+    ),
+  ),
+  g(
+    "topic-41",
+    b(
+      "Debugging turns a symptom into a reproducible cause. Start with the failing behavior, environment and evidence, not a favorite fix.",
+      "Sazlama simptomu təkrarlanan səbəbə çevirir. Sevimli düzəlişdən deyil, uğursuz davranış, mühit və sübutdan başla.",
+    ),
+    b(
+      "Use symbolic and conditional breakpoints, inspect ownership with Memory Graph, profile allocations, and symbolicate crash logs with matching dSYMs. Thread Sanitizer finds some data races, not all logical ordering bugs.",
+      "Symbolic/conditional breakpoint, Memory Graph ownership, allocation profiling və uyğun dSYM ilə crash symbolication istifadə et. Thread Sanitizer bəzi data race-ləri tapır, bütün məntiqi sıra xətasını deyil.",
+    ),
+    b(
+      "Create the smallest controlled reproduction and test the hypothesis. Distinguish retained cache from leak and source-level risk from measured incident. Avoid changing many independent variables simultaneously.",
+      "Ən kiçik idarə olunan reproduksiya qur və fərziyyəni yoxla. Cache saxlanmasını leak-dən, mənbə riskini ölçülmüş hadisədən ayır. Bir neçə müstəqil dəyişəni eyni anda dəyişmə.",
+    ),
+    'let values = [10, 20]\nlet index = 2\nif values.indices.contains(index) { print(values[index]) }\nelse { print("Invalid index") }',
+    "Invalid index",
+    b(
+      "Adding weak everywhere is not an investigation of memory growth. Follow actual retention paths.",
+      "Hər yerə weak əlavə etmək yaddaş artımının araşdırması deyil. Real retention yollarını izlə.",
+    ),
+    b(
+      "A crash cannot reproduce locally. What evidence makes the next hypothesis testable?",
+      "Crash lokal təkrarlanmır. Növbəti fərziyyəni test etmək üçün hansı sübut lazımdır?",
+    ),
+    b(
+      "Match build and symbols, isolate device/OS and navigation context, inspect sanitized breadcrumbs, and create controlled input or timing reproductions.",
+      "Build və symbol-u uyğunlaşdır, cihaz/OS və naviqasiya kontekstini ayır, sanitizasiya edilmiş breadcrumb oxu və idarə olunan input/timing reproduksiyası qur.",
+    ),
+    b(
+      "The bounds guard prevents an invalid access.",
+      "Sərhəd guard-ı səhv girişi önləyir.",
+    ),
+    b(
+      "Array index 2 is valid for every two-element array.",
+      "İki elementli hər array üçün indeks 2 düzgündür.",
+    ),
+    apple + "xcode/debugging",
+    b(
+      "Which tool distinguishes allocation rate from retained lifetime?",
+      "Allocation sürətini retained lifetime-dan hansı alət ayırır?",
+    ),
+  ),
+  g(
+    "topic-42",
+    b(
+      "Performance is a user-visible constraint measured under a workload. Main-thread blocking, allocation churn and oversized images can each make an app feel slow for different reasons.",
+      "Performans iş yükü altında ölçülən istifadəçi məhdudiyyətidir. Main-thread bloklama, allocation çoxluğu və böyük şəkil ayrı səbəblərlə app-i yavaşladır.",
+    ),
+    b(
+      "Use Time Profiler for CPU and Allocations for memory behavior. Downsample images to display needs rather than decoding enormous originals unnecessarily. Expected O(1) dictionary lookup does not eliminate hashing, allocation or worst-case concerns.",
+      "CPU üçün Time Profiler, yaddaş üçün Allocations istifadə et. Lazımsız böyük orijinal decode əvəzinə görüntü ölçüsünə downsample et. Dictionary expected O(1) hashing, allocation və worst-case məsələsini silmir.",
+    ),
+    b(
+      "Set budgets and compare before/after on representative devices. Separate cold/warm launch, throughput and latency. Batching improves throughput at the possible cost of freshness; measure the product trade-off.",
+      "Büdcə qur və real cihazda əvvəl/sonra müqayisə et. Cold/warm launch, throughput və latency-ni ayır. Batching throughput-u yaxşılaşdırıb aktuallığı gecikdirə bilər; məhsul trade-off-unu ölç.",
+    ),
+    "let ids = Set(1...1000)\nprint(ids.contains(999))",
+    "true",
+    b(
+      "An illustrative operation count is not a benchmark. Do not claim a speedup without comparable measurements.",
+      "İllüstrativ əməliyyat sayı benchmark deyil. Müqayisəli ölçü olmadan sürət artımı iddia etmə.",
+    ),
+    b(
+      "A list stutters only after 2,000 streamed items. Identify a likely growth hypothesis and a measurement.",
+      "List yalnız 2000 stream item-dən sonra donur. Artım fərziyyəsi və ölçü seç.",
+    ),
+    b(
+      "Repeated linear scans and sorted insertion may accumulate quadratic work. Measure hot stacks and event rates, then compare an identity index or batching under the same workload.",
+      "Təkrar linear scan və sorted insert kvadratik iş yığa bilər. Hot stack və event sürətini ölç, eyni workload-da identity index və ya batching müqayisə et.",
+    ),
+    b(
+      "Set membership tests whether 999 is present.",
+      "Set membership 999-un mövcudluğunu yoxlayır.",
+    ),
+    b(
+      "This print measures the exact runtime complexity.",
+      "Bu print dəqiq runtime mürəkkəbliyini ölçür.",
+    ),
+    apple + "xcode/improving-your-app-s-performance",
+    b(
+      "What makes two benchmark runs comparable?",
+      "İki benchmark nəticəsini müqayisə edilən edən nədir?",
+    ),
+  ),
+  g(
+    "topic-43",
+    b(
+      "Reliability is how the app behaves when dependencies fail. Logs, metrics and crash reports are evidence; feature flags and rollback plans are operational controls.",
+      "Etibarlılıq asılılıq sıradan çıxanda app-in davranışıdır. Log, metric və crash report sübutdur; feature flag və rollback planı əməliyyat nəzarətidir.",
+    ),
+    b(
+      "Model partial success, retry, degraded mode and unknown outcomes explicitly. Correlation IDs connect sanitized events across a logical operation. Feature flags need safe defaults, compatibility and ownership.",
+      "Qismən uğur, retry, degraded mode və unknown nəticəni açıq modelləşdir. Correlation ID sanitizasiya edilmiş event-i məntiqi əməliyyatda birləşdirir. Feature flag təhlükəsiz default, compatibility və ownership istəyir.",
+    ),
+    b(
+      "Release incrementally with measurable guardrails and a bounded rollback unit. A mobile binary cannot always be instantly rolled back, so backend compatibility and kill switches matter. Do not collect secrets to improve diagnostics.",
+      "Ölçülən guardrail və məhdud rollback vahidi ilə mərhələli burax. Mobil binary həmişə dərhal geri dönmür; backend compatibility və kill switch vacibdir. Diagnostic üçün sirr toplama.",
+    ),
+    'enum Outcome { case complete, partial, failed, cancelled }\nlet outcome = Outcome.partial\nif case .partial = outcome { print("Keep useful results and offer retry") }',
+    "Keep useful results and offer retry",
+    b(
+      "A catch block that calls the normal finish path can make a failed stream appear successfully empty.",
+      "Adi finish yolunu çağıran catch uğursuz stream-i uğurlu boş nəticə kimi göstərə bilər.",
+    ),
+    b(
+      "Plan rollout for a new signing provider. What signals stop the rollout?",
+      "Yeni imza provider-i üçün rollout qur. Hansı siqnal rollout-u dayandırır?",
+    ),
+    b(
+      "Define signing completion/failure and unknown-outcome guardrails, sanitized telemetry, fallback compatibility and an owner for disabling the flag.",
+      "İmzalama completion/failure və unknown outcome guardrail, sanitizasiya edilmiş telemetriya, fallback uyğunluğu və flag söndürmə sahibi qur.",
+    ),
+    b(
+      "Partial results can remain useful while failure is explicit.",
+      "Xəta açıq qalsa da qismən nəticə faydalı qala bilər.",
+    ),
+    b(
+      "Reliability means hiding every error from users.",
+      "Etibarlılıq bütün xətanı istifadəçidən gizlətməkdir.",
+    ),
+    apple + "os/logging",
+    b(
+      "Which critical user journey would you monitor first?",
+      "Əvvəl hansı kritik user journey-ni izləyərsən?",
+    ),
+  ),
+  g(
+    "topic-44",
+    b(
+      "An iOS process moves through lifecycle states and can be suspended or terminated. Background execution is constrained, not a promise that arbitrary tasks will finish.",
+      "iOS process lifecycle vəziyyətlərindən keçir, suspend və ya terminate ola bilər. Background icra məhduddur; istənilən task-ın bitməsi vədi deyil.",
+    ),
+    b(
+      "Separate scene state from process-wide state. Persist recoverable non-secret operation identity before relying on future callbacks. Background URLSession has different ownership from a foreground async task; silent pushes are not guaranteed delivery.",
+      "Scene state-i process state-indən ayır. Gələcək callback-ə güvənməzdən əvvəl bərpa olunan qeyri-məxfi əməliyyat identity saxla. Background URLSession foreground task-dan fərqli ownership-dir; silent push çatdırılması zəmanətli deyil.",
+    ),
+    b(
+      "Design restoration and reconciliation rather than trying to keep the app permanently running. Test interruption at meaningful workflow boundaries, including during authentication and financial mutations.",
+      "App-i daim işlətmək əvəzinə restoration və reconciliation qur. Autentifikasiya və maliyyə mutasiyası daxil mənalı workflow sərhədində kəsilməni test et.",
+    ),
+    'enum PendingOperation { case transfer(id: String) }\nlet operation = PendingOperation.transfer(id: "op-42")\nif case .transfer(let id) = operation { print(id) }',
+    "op-42",
+    b(
+      "Termination is not guaranteed to run cleanup callbacks or deinit for every object.",
+      "Termination hər obyekt üçün cleanup callback və ya deinit zəmanəti vermir.",
+    ),
+    b(
+      "The app restarts after an unknown transfer outcome. What should it restore?",
+      "Naməlum köçürmə nəticəsindən sonra app başlayır. Nə bərpa olunmalıdır?",
+    ),
+    b(
+      "Restore stable non-secret operation identity, reauthenticate if needed, then ask the server for authoritative status before another submission.",
+      "Sabit qeyri-məxfi operation identity bərpa et, lazımdırsa autentifikasiya et, yenidən göndərmədən serverdən səlahiyyətli status al.",
+    ),
+    b(
+      "An operation ID can support reconciliation after restart.",
+      "Operation ID restart-dan sonra reconciliation-a kömək edir.",
+    ),
+    b(
+      "Backgrounding guarantees unlimited task execution.",
+      "Background limitsiz task icrasına zəmanətdir.",
+    ),
+    apple + "uikit/app_and_environment/managing_your_app_s_life_cycle",
+    b(
+      "How does multi-scene support change ownership?",
+      "Multi-scene ownership-i necə dəyişir?",
+    ),
+  ),
+  g(
+    "topic-45",
+    b(
+      "Signing establishes which team and capabilities an app uses. Certificates, provisioning profiles, entitlements and bundle identifiers must agree with the build and distribution channel.",
+      "İmzalama app-in komanda və capability-sini müəyyən edir. Certificate, provisioning profile, entitlement və bundle ID build/yayım kanalı ilə uyğun olmalıdır.",
+    ),
+    b(
+      "Build numbers identify uploads; versions identify releases. Development and distribution signing differ. CI needs controlled signing material and reproducible schemes; never commit private keys or certificates with secrets.",
+      "Build number upload-u, version release-i identifikasiya edir. Development və distribution signing fərqlidir. CI idarə olunan signing materialı və təkrarlanan scheme istəyir; private key və sirrli certificate commit etmə.",
+    ),
+    b(
+      "Plan staged rollout and backend compatibility because replacing a released binary takes time. TestFlight is useful validation, not proof of all production conditions. Keep signing access least-privileged and auditable.",
+      "Yayımlanmış binary-ni əvəz etmək vaxt aldığı üçün staged rollout və backend compatibility planla. TestFlight faydalı yoxlamadır, bütün production şəraitinin sübutu deyil. Signing girişini minimal və audit edilən saxla.",
+    ),
+    'struct Release { let version: String; let build: Int }\nlet release = Release(version: "1.2.0", build: 42)\nprint(release.version, release.build)',
+    "1.2.0 42",
+    b(
+      "A successful local debug build does not establish distribution signing or App Store acceptance.",
+      "Uğurlu lokal debug build distribution signing və App Store qəbulunu sübut etmir.",
+    ),
+    b(
+      "CI archives successfully but export fails. Which signing contracts do you inspect?",
+      "CI archive uğurludur, export uğursuzdur. Hansı signing müqaviləsinə baxırsan?",
+    ),
+    b(
+      "Check export method, distribution identity, matching profile, bundle ID, entitlements and certificate validity without exposing key material.",
+      "Export method, distribution identity, uyğun profile, bundle ID, entitlement və certificate etibarlılığını sirr açmadan yoxla.",
+    ),
+    b(
+      "Version and build are different identifiers.",
+      "Version və build ayrı identifikatorlardır.",
+    ),
+    b(
+      "Incrementing the version automatically fixes entitlements.",
+      "Version artırmaq entitlement-i avtomatik düzəldir.",
+    ),
+    apple + "xcode/distributing-your-app-for-beta-testing-and-releases",
+    b(
+      "What is a realistic rollback boundary for a mobile release?",
+      "Mobil release üçün real rollback sərhədi nədir?",
+    ),
+  ),
+  g(
+    "topic-46",
+    b(
+      "Localization adapts meaning, not just strings. Accessibility makes controls and content usable through different senses, input methods and text sizes.",
+      "Lokallaşdırma tək string deyil, mənanı uyğunlaşdırır. Accessibility control və məzmunu fərqli hiss, input və mətn ölçüsü ilə işlək edir.",
+    ),
+    b(
+      "Use pluralization rules, locale-aware formatting and semantic labels. Dynamic Type changes layout constraints; VoiceOver needs correct grouping and actions. Media permissions require clear purpose and denied-state recovery.",
+      "Pluralization qaydası, locale formatter və semantik label istifadə et. Dynamic Type layout-u dəyişir; VoiceOver düzgün grouping/action istəyir. Media icazəsi aydın məqsəd və denied-state bərpası tələb edir.",
+    ),
+    b(
+      "Validate with assistive technologies and real translated content, not just a scanner. Respect reduced motion. Choose minimal media access, and keep privacy manifests consistent with actual collection behavior.",
+      "Tək scanner deyil, assistive technology və real tərcümə ilə yoxla. Reduce Motion-a hörmət et. Minimal media girişi seç və privacy manifest-i real collection ilə uyğun saxla.",
+    ),
+    'import Foundation\nlet number = 1234.5\nprint(number.formatted(.number.locale(Locale(identifier: "en_US"))))',
+    "1,234.5",
+    b(
+      "Hard-coded concatenated review-count text can break grammar and pluralization across languages.",
+      "Hard-coded birləşdirilmiş review sayı dillərdə qrammatika və pluralization-u poza bilər.",
+    ),
+    b(
+      "A balance card masks the amount visually. What should VoiceOver announce?",
+      "Balans kartı məbləği vizual gizlədir. VoiceOver nə deməlidir?",
+    ),
+    b(
+      "Respect the same privacy state for accessibility output. Expose an intentional reveal action rather than reading the hidden amount.",
+      "Accessibility çıxışında eyni məxfilik state-ini qoru. Gizli məbləği oxumaq əvəzinə məqsədli reveal action ver.",
+    ),
+    b(
+      "Formatting is locale-sensitive rather than manual separator insertion.",
+      "Format locale-dən asılıdır, manual separator əlavə etmək deyil.",
+    ),
+    b(
+      "Translating button labels alone localizes every lesson.",
+      "Tək button label tərcüməsi bütün dərsi lokallaşdırır.",
+    ),
+    apple + "accessibility",
+    b(
+      "How do you test a layout at the largest accessibility text size?",
+      "Ən böyük accessibility mətn ölçüsündə layout-u necə test edirsən?",
+    ),
+  ),
+  g(
+    "topic-47",
+    b(
+      "Git records snapshots and ancestry. Merge combines histories; rebase replays commits onto another base; revert adds an inverse change without erasing shared history.",
+      "Git snapshot və ancestry saxlayır. Merge tarixçələri birləşdirir; rebase commit-i başqa baza üzərinə yenidən oynadır; revert paylaşılan tarixçəni silmədən əks dəyişiklik əlavə edir.",
+    ),
+    b(
+      "Reset changes local branch/index/worktree state depending on mode and can discard work. Cherry-pick applies selected commits. Resolve conflicts using intended behavior, then test the integration rather than merely removing markers.",
+      "Reset rejimdən asılı branch/index/worktree state-i dəyişir və işi itirə bilər. Cherry-pick seçilmiş commit-i tətbiq edir. Konflikti gözlənilən davranışla həll et, sonra tək marker silmək deyil, inteqrasiyanı test et.",
+    ),
+    b(
+      "Avoid rewriting shared history without coordination. Keep changes reviewable, preserve unrelated user work and distinguish a merge author from ownership of every merged change. Trace exact identity and diff evidence for interview narratives.",
+      "Razılaşdırmadan shared history-ni yenidən yazma. Dəyişikliyi review edilən saxla, əlaqəsiz işi qoru və merge author-u bütün merged işin sahibi sayma. Hekayə üçün dəqiq identity və diff sübutunu izlə.",
+    ),
+    'struct CommitEvidence { let sha: String; let authorEmail: String }\nlet item = CommitEvidence(sha: "example", authorEmail: "dev@example.com")\nprint(item.authorEmail == "other@example.com")',
+    "false",
+    b(
+      "A ticket mentioned in a merge message is not proof that you personally implemented the feature.",
+      "Merge mesajındakı ticket feature-i şəxsən sən yazdığını sübut etmir.",
+    ),
+    b(
+      "Undo a bad shared release commit while preserving audit history. Reset or revert?",
+      "Audit tarixçəsini saxlayaraq səhv shared release commit-i geri al. Reset, yoxsa revert?",
+    ),
+    b(
+      "Prefer a reviewed revert commit on shared history; inspect dependencies and verify the resulting behavior. A local reset has different semantics.",
+      "Shared history-də review olunan revert seç; asılılığı və nəticəni yoxla. Lokal reset fərqli semantikadır.",
+    ),
+    b(
+      "Exact author identity is evidence to inspect, not assumed ownership.",
+      "Dəqiq author identity araşdırılmalı sübutdur, fərz olunan ownership deyil.",
+    ),
+    b(
+      "A merge message proves every changed line belongs to the merger.",
+      "Merge mesajı bütün sətrin merge edənə aid olduğunu sübut edir.",
+    ),
+    "https://git-scm.com/docs",
+    b(
+      "What changes if teammates already based work on the commit?",
+      "Komanda artıq commit üzərində işləyibsə nə dəyişir?",
+    ),
+  ),
+  g(
+    "topic-48",
+    b(
+      "CI makes build and test steps repeatable outside one laptop. Schemes, configurations, resolved dependencies and signing inputs define what is actually being validated.",
+      "CI build və test-i bir laptop xaricində təkrarlanan edir. Scheme, configuration, resolved dependency və signing girişi konkret nə yoxlandığını müəyyən edir.",
+    ),
+    b(
+      "Use lockfiles and pinned tools where supported. Cache keys must include relevant toolchain and dependency inputs. A restored cache is not proof of correctness; the required command must execute and preserve its exit status.",
+      "Dəstəklənirsə lockfile və pinned tool istifadə et. Cache key uyğun toolchain və dependency input-u daxil etməlidir. Cache bərpası düzgünlük sübutu deyil; tələb olunan komanda işləməli və exit status qorunmalıdır.",
+    ),
+    b(
+      "Separate fast deterministic checks from costly integration builds. Protect signing secrets and release permissions. Report skipped and disabled suites separately instead of treating their presence as active protection.",
+      "Sürətli deterministik yoxlamanı bahalı integration build-dən ayır. Signing sirri və release icazəsini qoru. Skipped/disabled suite-i aktiv qoruma saymadan ayrıca bildir.",
+    ),
+    'struct BuildInput { let scheme: String; let configuration: String }\nlet input = BuildInput(scheme: "Bank", configuration: "Release")\nprint(input.configuration)',
+    "Release",
+    b(
+      "A pipeline that swallows a failing command’s exit status can report success without a valid build.",
+      "Uğursuz komandanın exit status-unu udan pipeline düzgün build olmadan uğur göstərə bilər.",
+    ),
+    b(
+      "A cache hit passes CI but a clean machine fails. Which inputs and commands do you compare?",
+      "Cache hit ilə CI keçir, clean maşın uğursuzdur. Hansı input və komandanı müqayisə edirsən?",
+    ),
+    b(
+      "Compare toolchain, lockfiles, generated code, environment setup, schemes and actual command outcomes. Rebuild only invalid cached outputs.",
+      "Toolchain, lockfile, generated code, environment setup, scheme və real command nəticəsini müqayisə et. Yalnız etibarsız cache output-u yenidən qur.",
+    ),
+    b(
+      "Release configuration is explicit build input.",
+      "Release configuration açıq build girişidir.",
+    ),
+    b(
+      "A cache hit guarantees every test ran.",
+      "Cache hit bütün testin işlədiyinə zəmanətdir.",
+    ),
+    apple + "xcode/continuous-integration",
+    b(
+      "Which cache key change invalidates an incompatible artifact?",
+      "Hansı cache key dəyişikliyi uyğun olmayan artifact-i etibarsız edir?",
+    ),
+  ),
+  g(
+    "topic-49",
+    b(
+      "Maintainability is the cost of understanding and safely changing a system. Technical debt is useful to discuss through concrete change friction, risk and ownership, not dislike of old code.",
+      "Dəstəklənmə sistemi anlamaq və təhlükəsiz dəyişməyin xərcidir. Technical debt köhnə kodu sevməmək deyil, konkret dəyişmə çətinliyi, risk və ownership ilə müzakirə olunur.",
+    ),
+    b(
+      "Use characterization tests before refactoring behavior-heavy legacy flows. An ADR records context, alternatives, decision and consequences. Deprecation needs a consumer migration path rather than only an annotation.",
+      "Davranışı ağır legacy axından əvvəl characterization test yaz. ADR kontekst, alternativ, qərar və nəticəni saxlayır. Deprecation tək annotation deyil, istehlakçı üçün migration yolu tələb edir.",
+    ),
+    b(
+      "Prioritize work that reduces real failure or delivery risk. Split a migration into independently reversible changes and align backend, QA and product acceptance. Track uncertainty honestly and avoid inventing impact metrics.",
+      "Real xəta və ya çatdırılma riskini azaldan işi prioritet et. Miqrasiyanı müstəqil geri dönən addıma böl, backend/QA/product qəbulunu uyğunlaşdır. Qeyri-müəyyənliyi dürüst izlə, təsir rəqəmi uydurma.",
+    ),
+    'struct ADR { let context: String; let decision: String; let tradeoff: String }\nlet adr = ADR(context: "Legacy screen", decision: "Extract mapping first", tradeoff: "Keep navigation stable")\nprint(adr.decision)',
+    "Extract mapping first",
+    b(
+      "Moving methods into extensions does not by itself reduce independent reasons to change.",
+      "Metodu extension-a köçürmək müstəqil dəyişmə səbəbini öz-özünə azaltmır.",
+    ),
+    b(
+      "Plan the first safe extraction from a ViewModel that maps UI and signs contracts.",
+      "UI mapping və contract signing edən ViewModel üçün ilk təhlükəsiz extraction planla.",
+    ),
+    b(
+      "Characterize state and routes, extract pure mapping with fixture tests, preserve the signing workflow, then evaluate a separate provider boundary.",
+      "State/route davranışını qur, fixture test ilə pure mapping ayır, signing workflow-u qoru, sonra ayrıca provider sərhədini qiymətləndir.",
+    ),
+    b(
+      "An ADR includes the cost of a decision.",
+      "ADR qərarın xərcini də saxlayır.",
+    ),
+    b(
+      "Every legacy screen needs an immediate full rewrite.",
+      "Hər legacy ekran dərhal tam rewrite tələb edir.",
+    ),
+    "https://www.swift.org/documentation/api-design-guidelines/",
+    b(
+      "How do you explain a trade-off to a product owner?",
+      "Trade-off-u product owner-ə necə izah edirsən?",
+    ),
+  ),
+  g(
+    "topic-51",
+    b(
+      "A feature design is a set of contracts under constraints. Transaction history, image feeds and secure transfers need different choices even if their screens all use MVVM.",
+      "Feature dizaynı məhdudiyyət altında müqavilələrdir. Tarixçə, şəkil lenti və təhlükəsiz köçürmə hamısı MVVM olsa da ayrı seçim istəyir.",
+    ),
+    b(
+      "For cursor pagination, scope the cursor to the active query, merge by stable identity, guard in-flight work and preserve partial results on recoverable failure. For image pipelines, ownership and cancellation must survive reuse.",
+      "Cursor pagination-da cursor-u aktiv sorğuya bağla, sabit identity ilə merge et, in-flight işi qoru və bərpa olunan xətada qismən nəticəni saxla. Şəkil pipeline-da ownership/cancellation reuse-a dözməlidir.",
+    ),
+    b(
+      "Compare source-of-truth, failure semantics and backend capabilities before reusing one generic architecture. Document rollout and reconciliation, especially for mutations with unknown outcome.",
+      "Bir generic arxitekturanı paylaşmazdan əvvəl source of truth, xəta semantikası və backend bacarığını müqayisə et. Xüsusən unknown outcome mutasiyası üçün rollout və reconciliation yaz.",
+    ),
+    "let old = [1, 2]\nlet page = [2, 3]\nvar seen = Set(old)\nlet merged = old + page.filter { seen.insert($0).inserted }\nprint(merged)",
+    "[1, 2, 3]",
+    b(
+      "Deduplication may discard legitimate updates. Decide whether events are inserts, replacements or patches before choosing merge policy.",
+      "Deduplication düzgün update-i ata bilər. Merge qaydasından əvvəl event-in insert, replacement və ya patch olduğunu seç.",
+    ),
+    b(
+      "A backend sends an updated transaction with the same ID. Is ignore-duplicates correct?",
+      "Backend eyni ID ilə yenilənmiş əməliyyat göndərir. Ignore-duplicates düzgündürmü?",
+    ),
+    b(
+      "Only if the contract guarantees immutable records. Otherwise update the matching record with ordering/version semantics and test stale updates.",
+      "Yalnız müqavilə immutable record zəmanəti verirsə. Əks halda uyğun record-u ordering/version semantikası ilə yenilə və köhnə update-i test et.",
+    ),
+    b(
+      "This policy preserves order and ignores repeated IDs.",
+      "Bu qayda sıranı saxlayır və təkrar ID-ni atır.",
+    ),
+    b(
+      "This policy handles every possible update contract.",
+      "Bu qayda bütün update müqaviləsini həll edir.",
+    ),
+    apple + "foundation/urlsession",
+    b(
+      "What changes if pagination is offset-based instead of cursor-based?",
+      "Pagination cursor deyil offset olsa nə dəyişir?",
+    ),
+  ),
+  g(
+    "topic-52",
+    b(
+      "A good architecture decision compares viable alternatives against requirements. There is no universal answer to structs versus classes, direct services versus use cases, or MVVM versus MVI.",
+      "Yaxşı arxitektura qərarı real alternativi tələblə müqayisə edir. Struct/class, birbaşa servis/use case və MVVM/MVI üçün universal cavab yoxdur.",
+    ),
+    b(
+      "State the invariant, expected change and ownership model, then choose the smallest design that protects them. Explain the rejected alternative fairly and name the requirement that would reverse your decision.",
+      "Invariant, gözlənilən dəyişmə və ownership modelini bildir, sonra onları qoruyan ən kiçik dizaynı seç. Rədd edilən alternativi dürüst izah et və qərarı dəyişən tələbi adlandır.",
+    ),
+    b(
+      "Evaluate reversibility, migration and team cost in addition to runtime behavior. Architecture quality is demonstrated through controlled change and observable outcomes, not a diagram’s complexity.",
+      "Runtime davranışdan əlavə geri dönüş, miqrasiya və komanda xərcini qiymətləndir. Arxitektura keyfiyyəti qraf mürəkkəbliyi deyil, idarə olunan dəyişmə və görünən nəticə ilə sübut olunur.",
+    ),
+    'struct Decision { let choice: String; let revisitWhen: String }\nlet decision = Decision(choice: "Direct injected service", revisitWhen: "Shared business policy emerges")\nprint(decision.choice)',
+    "Direct injected service",
+    b(
+      "Adding a repository and use case automatically does not make code cleaner or more testable. Each boundary needs a job.",
+      "Repository və use case əlavə etmək kodu avtomatik daha təmiz və testable etmir. Hər sərhədin işi olmalıdır.",
+    ),
+    b(
+      "Defend a direct service in a small feature, then explain the first requirement that justifies a use case.",
+      "Kiçik feature-də birbaşa servisi müdafiə et, sonra use case əsaslandıran ilk tələbi izah et.",
+    ),
+    b(
+      "Direct injection preserves test seams for simple orchestration. Shared validation, multi-operation policy or transport-independent business rules can justify extraction.",
+      "Birbaşa injection sadə koordinasiya üçün test sərhədi saxlayır. Paylaşılan validation, çoxəməliyyatlı qayda və transport-dan müstəqil biznes extraction-u əsaslandıra bilər.",
+    ),
+    b(
+      "The decision includes a condition for reconsideration.",
+      "Qərar yenidən baxılma şərti saxlayır.",
+    ),
+    b(
+      "A chosen pattern must never change as requirements evolve.",
+      "Tələb dəyişsə də pattern heç vaxt dəyişməməlidir.",
+    ),
+    "https://www.swift.org/documentation/api-design-guidelines/",
+    b(
+      "Which evidence would show your choice was wrong?",
+      "Seçiminin səhv olduğunu hansı sübut göstərər?",
+    ),
+  ),
 ];
 guides.push(
-g('topic-extra-01',b('Build transaction history as a production-style feature: initial load, pagination, filters, offline reading and explicit failure states. Start with the domain contract and stable transaction identity.','Əməliyyat tarixçəsini production tipli feature kimi qur: ilkin yükləmə, pagination, filter, oflayn oxuma və açıq xəta halları. Domen müqaviləsi və sabit transaction identity-dən başla.'),b('Separate cursor state by account and filter. A repository coordinates cached and remote records; the ViewModel owns presentation state and request generation. Merge repeated pages with documented insert/update semantics and cancel obsolete queries.','Cursor state-i hesab və filter üzrə ayır. Repository cache/remote record-u koordinasiya edir; ViewModel presentation state və request generation-a sahibdir. Təkrar səhifəni sənədləşmiş insert/update qaydası ilə birləşdir və köhnə sorğunu ləğv et.'),b('Demonstrate tests for empty first page, duplicate IDs, out-of-order filters, next-page failure and restart with stale cache. Profile a realistic large dataset before claiming performance. Completion means showing implementation and evidence, not checking off a reading list.','Boş ilk səhifə, təkrar ID, sırasız filter, növbəti səhifə xətası və köhnə cache ilə restart test et. Performans iddiasından əvvəl real böyük data ölç. Tamamlama oxu siyahısını işarələmək deyil, implementasiya və sübut göstərməkdir.'),'struct Transaction: Hashable { let id: String; let minorUnits: Int }\nstruct Page { let rows: [Transaction]; let nextCursor: String? }\nlet page = Page(rows: [], nextCursor: nil)\nprint(page.rows.isEmpty, page.nextCursor == nil)','true true',b('A failed next page should not erase already loaded rows.','Növbəti səhifə xətası artıq yüklənmiş sətiri silməməlidir.'),b('Implement a controllable fake history repository and prove B stays visible after an older A completes.','İdarə olunan fake history repository yaz və köhnə A bitəndən sonra B-nin görünməsini sübut et.'),b('Hold both completions; complete B then A. Assert active query, rows and cursor still belong to B. Add cancellation and empty-success tests separately.','Hər iki completion-u saxla; əvvəl B sonra A bitsin. Aktiv sorğu, sətir və cursor-un B-yə aid qaldığını yoxla. Cancellation və boş uğuru ayrı test et.'),b('An empty page can also be the final page.','Boş səhifə son səhifə də ola bilər.'),b('A missing cursor always means the request failed.','Cursor olmaması həmişə sorğu xətasıdır.'),apple+'foundation/urlsession',b('Which part would you change if caching became mandatory?','Cache məcburi olsa hansı hissəni dəyişərdin?')),
-g('topic-extra-02',b('Build authentication as a session state machine, not a login button and a stored string. Include token storage, expiration, coordinated refresh, logout and recovery.','Autentifikasiyanı login button və string deyil, session state machine kimi qur. Token storage, expiry, koordinasiyalı refresh, logout və recovery daxil et.'),b('Inject a mockable auth transport and secure-storage capability. Serialize session generation and share one refresh. Bound retries and keep old completions from restoring a logged-out session. Do not expose credential values in logs or tests.','Mock edilən auth transport və secure-storage bacarığı ötür. Session generation-u serial saxla və bir refresh paylaş. Retry-ni məhdudlaşdır, köhnə completion-un logout sessiyasını qaytarmasına mane ol. Log/test-də credential açma.'),b('Test concurrent 401s, refresh rejection, storage denial, cancellation of one waiter and logout mid-refresh. Separate ViewModel tests from Keychain integration and backend contract tests.','Paralel 401, refresh rəddi, storage girişi rəddi, bir gözləyənin cancellation-u və refresh zamanı logout test et. ViewModel testini Keychain integration və backend müqaviləsindən ayır.'),'enum Session { case signedOut, active(generation: Int) }\nlet currentGeneration = 2\nlet responseGeneration = 1\nprint(currentGeneration == responseGeneration)','false',b('Refreshing successfully does not authorize publishing a session after its generation was invalidated.','Refresh uğuru generation etibarsız olandan sonra sessiya paylaşmağa icazə vermir.'),b('Write a fake auth service that suspends refresh. Logout, then complete the refresh. Assert signedOut remains.','Refresh-i saxlayan fake auth servis yaz. Logout et, sonra refresh-i bitir. signedOut qalmasını yoxla.'),b('Invalidate the generation on logout and check the captured generation before credential/session publication. Ensure waiters receive a session-ended outcome.','Logout-da generation-u etibarsız et və credential/session paylaşmazdan əvvəl captured generation yoxla. Gözləyənlər session-ended nəticəsi almalıdır.'),b('The old response generation does not match.','Köhnə response generation uyğun gəlmir.'),b('Any successful refresh should always sign the user back in.','Hər uğurlu refresh istifadəçini həmişə yenidən daxil etməlidir.'),apple+'security/keychain-services',b('Should one waiter cancellation stop refresh for every caller?','Bir gözləyənin cancellation-u hamının refresh-ini dayandırmalıdırmı?')),
-g('topic-extra-03',b('Migrate a UIKit/XIB feature to SwiftUI while keeping domain behavior, routes and backend contracts stable. Separate visual replacement from infrastructure replacement.','Domen davranışı, route və backend müqaviləsini saxlayaraq UIKit/XIB feature-ni SwiftUI-a köçür. Vizual əvəzləməni infrastruktur əvəzləməsindən ayır.'),b('Characterize current state transitions and routes. Extract mapping and reusable policy, inject dependencies, then host SwiftUI with UIHostingController behind a feature flag. Preserve cancellation, notification and accessibility behavior deliberately.','Cari state keçidi və route-u testlə müəyyən et. Mapping və reuse policy ayır, asılılıq ötür, sonra feature flag arxasında UIHostingController ilə SwiftUI host et. Cancellation, notification və accessibility-ni məqsədli qoru.'),b('Define rollback at one screen boundary, compare snapshots and behavioral tests, and validate both flag paths. Do not attribute regression reduction without measurement or assume a framework change fixes workflow bugs.','Bir ekran sərhədində rollback qur, snapshot və davranış testini müqayisə et, hər iki flag yolunu yoxla. Ölçmədən regression azalması iddia etmə; framework dəyişikliyini workflow xəta həlli sayma.'),'enum ScreenImplementation { case legacy, swiftUI }\nfunc choose(enabled: Bool) -> ScreenImplementation { enabled ? .swiftUI : .legacy }\nif case .legacy = choose(enabled: false) { print("Rollback path available") }','Rollback path available',b('A feature flag is useful only if both implementations remain compatible with shared contracts and dependencies.','Feature flag hər iki implementasiya shared müqavilə/asılılıqla uyğun qalanda faydalıdır.'),b('List the tests that must pass unchanged across both implementations.','Hər iki implementasiyada dəyişmədən keçməli testi yaz.'),b('Loading/error/empty transitions, navigation inputs, signing callback behavior, cancellation and accessibility semantics should be preserved or explicitly changed by requirements.','Loading/error/empty keçidi, navigation input, signing callback, cancellation və accessibility semantikası qorunmalı və ya tələbə görə açıq dəyişməlidir.'),b('The disabled flag selects the legacy path.','Söndürülmüş flag legacy yolunu seçir.'),b('A UI rewrite automatically improves all business rules.','UI rewrite bütün biznes qaydasını avtomatik düzəldir.'),apple+'swiftui/uihostingcontroller',b('What is your smallest independently reversible migration?','Ən kiçik müstəqil geri dönən miqrasiya addımın nədir?')),
-g('topic-extra-04',b('Prepare a Swift answer by explaining semantics before naming compiler machinery. Value/reference, ARC, capture, protocols and concurrency connect through ownership and type contracts.','Swift cavabında compiler mexanizmini adlandırmazdan əvvəl semantikanı izah et. Value/reference, ARC, capture, protocol və concurrency ownership/tip müqaviləsi ilə bağlanır.'),b('Give one minimal example, predict it, and identify the guarantee versus implementation detail. A struct containing a class can expose shared mutation; an actor can be logically stale; a weak capture does not cancel work.','Bir minimal nümunə ver, proqnozlaşdır və zəmanətlə implementasiya detalını ayır. Class saxlayan struct shared mutasiya göstərə bilər; actor məntiqi köhnələ bilər; weak capture işi ləğv etmir.'),b('Defend trade-offs: type erasure, abstraction cost, strict concurrency migration and performance measurement. Admit version-dependent behavior and describe a test that would resolve uncertainty.','Type erasure, abstraksiya xərci, strict concurrency miqrasiyası və ölçü trade-off-unu müdafiə et. Versiyadan asılı davranışı bildir və qeyri-müəyyənliyi həll edən test de.'),'final class Box { var value = 1 }\nlet box = Box()\nlet other = box\nother.value = 2\nprint(box.value)','2',b('Do not equate let with deep immutability or Sendable with immutable object graphs.','let-i deep immutability, Sendable-ı immutable object graph ilə eyniləşdirmə.'),b('Explain this output at Junior, Middle and Senior depth without making an allocation claim.','Allocation iddiası etmədən nəticəni Junior, Middle və Senior dərinliyində izah et.'),b('Junior: two references share an object. Middle: constant binding allows object-property mutation. Senior: shared mutable ownership needs an isolation contract across tasks.','Junior: iki istinad eyni obyekti paylaşır. Middle: sabit binding obyekt property mutasiyasına mane olmur. Senior: shared mutable ownership task sərhədində izolyasiya müqaviləsi istəyir.'),b('Both constants refer to one mutable Box.','Hər iki sabit bir mutable Box-a istinad edir.'),b('let forces every property of a class to be immutable.','let class-ın bütün property-sini immutable edir.'),swift+'classesandstructures/',b('How would the answer change for a struct containing only Int?','Yalnız Int saxlayan struct üçün cavab necə dəyişir?')),
-g('topic-extra-05',b('UIKit and SwiftUI interviews test lifecycle and ownership, not a contest between frameworks. Explain what triggers loading, rendering, navigation and task cancellation.','UIKit və SwiftUI müsahibəsi framework yarışı deyil, lifecycle və ownership yoxlamasıdır. Loading, rendering, naviqasiya və cancellation-u nəyin başladığını izah et.'),b('UIKit appearance can repeat; cells reuse; SwiftUI identity preserves state; body evaluation is not full redraw. In mixed screens, the hosting controller and model owner define important lifetimes.','UIKit appearance təkrarlana bilər; cell reuse olunur; SwiftUI identity state-i saxlayır; body tam redraw deyil. Qarışıq ekranda hosting controller və model owner lifetime-ı müəyyən edir.'),b('Use profiling and behavioral tests to choose incremental migrations. Validate keyboard, text sizes, screen readers and navigation restoration. New framework adoption alone is not a measured performance improvement.','Mərhələli migration üçün profiling və davranış testi istifadə et. Klaviatura, mətn ölçüsü, screen reader və restoration yoxla. Yeni framework təkbaşına ölçülmüş performans artımı deyil.'),'let modelIDs = ["A", "B", "C"]\nprint(Set(modelIDs).count == modelIDs.count)','true',b('Index position is not stable identity when rows are inserted or reordered.','Sətir əlavə və ya sort ediləndə indeks sabit identity deyil.'),b('Explain why a reused cell displays the wrong image, then connect the issue to stale async state in SwiftUI.','Reuse cell-in səhv şəkil göstərməsini izah et, sonra SwiftUI-da stale async state ilə əlaqələndir.'),b('Both require checking the result still belongs to the current identity; cancellation can reduce work but is not sufficient alone.','Hər ikisində nəticənin cari identity-yə aidliyi yoxlanır; cancellation işi azaldır, amma tək kifayət deyil.'),b('The sample IDs are unique.','Nümunə ID-lər unikaldır.'),b('Unique IDs mean every navigation and task lifetime is correct.','Unikal ID bütün naviqasiya/task lifetime-ının düzgünlüyüdür.'),apple+'swiftui/managing-model-data-in-your-app',b('Why can viewDidLoad and onAppear have different responsibilities?','viewDidLoad və onAppear niyə fərqli məsuliyyət daşıya bilər?')),
-g('topic-extra-06',b('An architecture interview asks you to defend responsibilities and dependency direction. Start from a requirement, then explain the cost of your chosen boundaries.','Arxitektura müsahibəsi məsuliyyət və asılılıq istiqamətini əsaslandırmağı istəyir. Tələbdən başla, sonra seçilmiş sərhədin xərcini izah et.'),b('Draw View → ViewModel → capability, then identify policy, data mapping and routing owners. Add Repository or UseCase only when it isolates a real concern. A custom mutable store does not gain reducer guarantees from its name.','View → ViewModel → capability çək, sonra policy, mapping və routing sahibini tap. Real məsələ ayırırsa Repository və ya UseCase əlavə et. Custom mutable store adından reducer zəmanəti qazanmır.'),b('Discuss migration, team ownership, API stability and testing alongside runtime behavior. Current repository claims require exact source evidence; historical review is not a substitute for current validation.','Runtime ilə yanaşı migration, komanda ownership, API sabitliyi və test-i müzakirə et. Cari repository iddiası dəqiq mənbə istəyir; tarixi icmal cari yoxlamanın əvəzi deyil.'),'protocol HistoryLoading { func load() async throws -> [String] }\nstruct HistoryInput { let accountID: String }\nprint(HistoryInput(accountID: "A1").accountID)','A1',b('A protocol can still expose transport-shaped concepts and fail to create a domain boundary.','Protokol transport anlayışını aça və domen sərhədi yaratmaya bilər.'),b('Choose one direct service call and state the exact requirement that would justify a use case.','Bir birbaşa servis çağırışı seç və use case əsaslandıran dəqiq tələbi bildir.'),b('Reusable validation, coordinated multi-step rules or independent policy testing justify extraction more clearly than folder consistency.','Reuse validation, çoxaddımlı qayda və müstəqil policy testi qovluq uyğunluğundan daha aydın extraction səbəbidir.'),b('The input exposes a stable account identifier.','Input sabit hesab identifikatoru açır.'),b('Any protocol automatically implements Clean Architecture.','Hər protokol avtomatik Clean Architecture yaradır.'),'https://www.swift.org/documentation/api-design-guidelines/',b('Which existing boundary would you preserve during a redesign?','Redesign zamanı hansı mövcud sərhədi qoruyardın?')),
-g('topic-extra-07',b('Networking and security answers need explicit contracts: identity, authentication, authorization, idempotency, caching and cancellation are related but distinct.','Şəbəkə və təhlükəsizlik cavabı açıq müqavilə istəyir: identity, autentifikasiya, avtorizasiya, idempotency, caching və cancellation əlaqəli, amma fərqlidir.'),b('Validate status and payload separately. Coordinate token refresh, preserve cancellation across retries and avoid logging secrets. A client timeout can leave a server mutation in an unknown state.','Status və payload-u ayrı yoxla. Refresh-i koordinasiya et, retry boyunca cancellation-u qoru və sirr log etmə. Klient timeout-u server mutasiyasını unknown saxlaya bilər.'),b('Design backend reconciliation and certificate-rotation recovery before optimizing request wrappers. State which observations are measured and which are assumptions. Never claim local biometrics replace remote authorization.','Request wrapper optimallaşdırmadan əvvəl backend reconciliation və certificate rotation recovery qur. Ölçülmüş müşahidəni fərziyyədən ayır. Lokal biometrikanı remote avtorizasiya əvəzi sayma.'),'enum Submission { case pending(String), confirmed(String), unknown(String) }\nlet result = Submission.unknown("op-1")\nif case .unknown(let id) = result { print("Check", id) }','Check op-1',b('Retrying an unknown mutation without idempotency can duplicate business effects.','Idempotency olmadan unknown mutasiya retry-si biznes təsirini təkrarlaya bilər.'),b('Explain ten 401 responses, refresh failure and logout without losing the cancellation policy.','On 401, refresh xətası və logout-u cancellation qaydasını itirmədən izah et.'),b('One shared refresh per valid session generation, bounded retries, explicit waiter outcomes, and invalidation on logout. Keep replacement transport tasks owned by the logical request.','Etibarlı session generation başına bir refresh, məhdud retry, açıq waiter nəticəsi və logout-da invalidation. Əvəz transport task-ı məntiqi sorğuya bağlı saxla.'),b('Unknown is an explicit outcome requiring reconciliation.','Unknown reconciliation tələb edən açıq nəticədir.'),b('Every timeout means the server rejected the operation.','Hər timeout serverin əməliyyatı rədd etməsidir.'),apple+'foundation/urlsession',b('What sanitized metadata helps diagnose this incident?','Hadisəni araşdırmaq üçün hansı sanitizasiya edilmiş metadata faydalıdır?')),
-g('topic-extra-08',b('Production engineering connects tests, debugging, profiling and release decisions. A test’s existence, a passing build and a measured user outcome are different kinds of evidence.','Production engineering test, debugging, profiling və release qərarını bağlayır. Testin varlığı, keçən build və ölçülmüş user nəticəsi ayrı sübutdur.'),b('Use controlled doubles for state logic, integration checks for adapters and focused end-to-end checks for critical journeys. Track skipped suites. Symbolicate crashes and follow retention paths before changing ownership.','State üçün idarə olunan double, adapter üçün integration və kritik journey üçün fokuslu end-to-end istifadə et. Skipped suite-i izlə. Ownership dəyişmədən crash symbolicate et və retention yolunu izlə.'),b('Tie rollout to measurable guardrails, maintain rollback options and prioritize debt by actual risk. Report qualitative value when numbers are unavailable; do not invent performance or business impact.','Rollout-u ölçülən guardrail ilə bağla, rollback saxla və debt-i real risklə sırala. Rəqəm yoxdursa keyfiyyət dəyərini de; performans/biznes təsiri uydurma.'),'enum TestOutcome { case passed, failed, skipped }\nlet result = TestOutcome.skipped\nif case .skipped = result { print("No executed protection from this case") }','No executed protection from this case',b('A disabled test is not counted as a passed test.','Disabled test keçmiş test sayılmır.'),b('A snapshot suite is disabled during Xcode migration. How do you describe release confidence?','Xcode migration zamanı snapshot suite disabled-dır. Release confidence-i necə ifadə edirsən?'),b('State the unexecuted visual coverage, identify other verified behavior and track restoration. Do not claim unrelated passing tests replace the missing visual protection.','İcra olunmayan visual coverage-i de, yoxlanmış digər davranışı göstər və bərpanı izlə. Əlaqəsiz keçən testi itkin visual qorumanın əvəzi sayma.'),b('Skipped is distinct from passed.','Skipped passed-dan fərqlidir.'),b('A skipped test proves the same behavior as a passed test.','Skipped test passed ilə eyni davranışı sübut edir.'),apple+'testing',b('What evidence would change your release decision?','Release qərarını hansı sübut dəyişər?')),
-g('topic-extra-09',b('Ownership stories describe what you personally did, why you chose it and what evidence supports the result. A polished narrative must not replace reliable attribution.','Ownership hekayəsi şəxsən nə etdiyini, niyə seçdiyini və nəticənin sübutunu deyir. Gözəl hekayə etibarlı müəllifliyi əvəz etməməlidir.'),b('Use Situation, Task, Action and Result. Separate your commits from team changes, explain constraints and alternatives, and identify tests or review evidence. If impact was not measured, describe qualitative value explicitly.','Situation, Task, Action və Result istifadə et. Öz commit-ini komanda dəyişikliyindən ayır, məhdudiyyət/alternativi izah et, test və review sübutu göstər. Təsir ölçülməyibsə keyfiyyət dəyərini açıq de.'),b('Strong ownership includes mistakes, collaboration and how the design could improve. Do not disclose confidential customer data or source in an interview. Prepare for challenges about trade-offs, not only a success story.','Güclü ownership səhv, əməkdaşlıq və dizaynın necə yaxşılaşacağını da əhatə edir. Müsahibədə məxfi müştəri data və source açma. Tək uğur deyil, trade-off sualına hazırlaş.'),'struct Contribution { let exactAuthorMatch: Bool; let measuredImpact: Int? }\nlet work = Contribution(exactAuthorMatch: true, measuredImpact: nil)\nprint(work.measuredImpact == nil)','true',b('Missing quantitative impact is not permission to invent percentages or claim sole team ownership.','Kəmiyyət təsirinin olmaması faiz uydurmaq və ya bütün komanda işini özünə aid etmək icazəsi deyil.'),b('Write a STAR narrative for one confirmed commit and mark every statement that needs additional evidence.','Bir təsdiqlənmiş commit üçün STAR hekayəsi yaz və əlavə sübut istəyən hər iddianı işarələ.'),b('Anchor Action in exact diff and decisions. Anchor Result in measured outcomes if available, otherwise describe the verified behavior and the measurement you would add.','Action-u dəqiq diff və qərara bağla. Result-u varsa ölçüyə, yoxdursa yoxlanmış davranış və əlavə edəcəyin ölçüyə bağla.'),b('The example explicitly has no measured impact.','Nümunədə ölçülmüş təsir açıq olaraq yoxdur.'),b('An absent metric can be replaced by any plausible number.','Olmayan ölçünü istənilən inandırıcı rəqəmlə əvəz etmək olar.'),'https://git-scm.com/docs/git-log',b('What would a teammate say your actual responsibility was?','Komanda yoldaşın real məsuliyyətini necə təsvir edərdi?'))
+  g(
+    "topic-extra-01",
+    b(
+      "Build transaction history as a production-style feature: initial load, pagination, filters, offline reading and explicit failure states. Start with the domain contract and stable transaction identity.",
+      "Əməliyyat tarixçəsini production tipli feature kimi qur: ilkin yükləmə, pagination, filter, oflayn oxuma və açıq xəta halları. Domen müqaviləsi və sabit transaction identity-dən başla.",
+    ),
+    b(
+      "Separate cursor state by account and filter. A repository coordinates cached and remote records; the ViewModel owns presentation state and request generation. Merge repeated pages with documented insert/update semantics and cancel obsolete queries.",
+      "Cursor state-i hesab və filter üzrə ayır. Repository cache/remote record-u koordinasiya edir; ViewModel presentation state və request generation-a sahibdir. Təkrar səhifəni sənədləşmiş insert/update qaydası ilə birləşdir və köhnə sorğunu ləğv et.",
+    ),
+    b(
+      "Demonstrate tests for empty first page, duplicate IDs, out-of-order filters, next-page failure and restart with stale cache. Profile a realistic large dataset before claiming performance. Completion means showing implementation and evidence, not checking off a reading list.",
+      "Boş ilk səhifə, təkrar ID, sırasız filter, növbəti səhifə xətası və köhnə cache ilə restart test et. Performans iddiasından əvvəl real böyük data ölç. Tamamlama oxu siyahısını işarələmək deyil, implementasiya və sübut göstərməkdir.",
+    ),
+    "struct Transaction: Hashable { let id: String; let minorUnits: Int }\nstruct Page { let rows: [Transaction]; let nextCursor: String? }\nlet page = Page(rows: [], nextCursor: nil)\nprint(page.rows.isEmpty, page.nextCursor == nil)",
+    "true true",
+    b(
+      "A failed next page should not erase already loaded rows.",
+      "Növbəti səhifə xətası artıq yüklənmiş sətiri silməməlidir.",
+    ),
+    b(
+      "Implement a controllable fake history repository and prove B stays visible after an older A completes.",
+      "İdarə olunan fake history repository yaz və köhnə A bitəndən sonra B-nin görünməsini sübut et.",
+    ),
+    b(
+      "Hold both completions; complete B then A. Assert active query, rows and cursor still belong to B. Add cancellation and empty-success tests separately.",
+      "Hər iki completion-u saxla; əvvəl B sonra A bitsin. Aktiv sorğu, sətir və cursor-un B-yə aid qaldığını yoxla. Cancellation və boş uğuru ayrı test et.",
+    ),
+    b(
+      "An empty page can also be the final page.",
+      "Boş səhifə son səhifə də ola bilər.",
+    ),
+    b(
+      "A missing cursor always means the request failed.",
+      "Cursor olmaması həmişə sorğu xətasıdır.",
+    ),
+    apple + "foundation/urlsession",
+    b(
+      "Which part would you change if caching became mandatory?",
+      "Cache məcburi olsa hansı hissəni dəyişərdin?",
+    ),
+  ),
+  g(
+    "topic-extra-02",
+    b(
+      "Build authentication as a session state machine, not a login button and a stored string. Include token storage, expiration, coordinated refresh, logout and recovery.",
+      "Autentifikasiyanı login button və string deyil, session state machine kimi qur. Token storage, expiry, koordinasiyalı refresh, logout və recovery daxil et.",
+    ),
+    b(
+      "Inject a mockable auth transport and secure-storage capability. Serialize session generation and share one refresh. Bound retries and keep old completions from restoring a logged-out session. Do not expose credential values in logs or tests.",
+      "Mock edilən auth transport və secure-storage bacarığı ötür. Session generation-u serial saxla və bir refresh paylaş. Retry-ni məhdudlaşdır, köhnə completion-un logout sessiyasını qaytarmasına mane ol. Log/test-də credential açma.",
+    ),
+    b(
+      "Test concurrent 401s, refresh rejection, storage denial, cancellation of one waiter and logout mid-refresh. Separate ViewModel tests from Keychain integration and backend contract tests.",
+      "Paralel 401, refresh rəddi, storage girişi rəddi, bir gözləyənin cancellation-u və refresh zamanı logout test et. ViewModel testini Keychain integration və backend müqaviləsindən ayır.",
+    ),
+    "enum Session { case signedOut, active(generation: Int) }\nlet currentGeneration = 2\nlet responseGeneration = 1\nprint(currentGeneration == responseGeneration)",
+    "false",
+    b(
+      "Refreshing successfully does not authorize publishing a session after its generation was invalidated.",
+      "Refresh uğuru generation etibarsız olandan sonra sessiya paylaşmağa icazə vermir.",
+    ),
+    b(
+      "Write a fake auth service that suspends refresh. Logout, then complete the refresh. Assert signedOut remains.",
+      "Refresh-i saxlayan fake auth servis yaz. Logout et, sonra refresh-i bitir. signedOut qalmasını yoxla.",
+    ),
+    b(
+      "Invalidate the generation on logout and check the captured generation before credential/session publication. Ensure waiters receive a session-ended outcome.",
+      "Logout-da generation-u etibarsız et və credential/session paylaşmazdan əvvəl captured generation yoxla. Gözləyənlər session-ended nəticəsi almalıdır.",
+    ),
+    b(
+      "The old response generation does not match.",
+      "Köhnə response generation uyğun gəlmir.",
+    ),
+    b(
+      "Any successful refresh should always sign the user back in.",
+      "Hər uğurlu refresh istifadəçini həmişə yenidən daxil etməlidir.",
+    ),
+    apple + "security/keychain-services",
+    b(
+      "Should one waiter cancellation stop refresh for every caller?",
+      "Bir gözləyənin cancellation-u hamının refresh-ini dayandırmalıdırmı?",
+    ),
+  ),
+  g(
+    "topic-extra-03",
+    b(
+      "Migrate a UIKit/XIB feature to SwiftUI while keeping domain behavior, routes and backend contracts stable. Separate visual replacement from infrastructure replacement.",
+      "Domen davranışı, route və backend müqaviləsini saxlayaraq UIKit/XIB feature-ni SwiftUI-a köçür. Vizual əvəzləməni infrastruktur əvəzləməsindən ayır.",
+    ),
+    b(
+      "Characterize current state transitions and routes. Extract mapping and reusable policy, inject dependencies, then host SwiftUI with UIHostingController behind a feature flag. Preserve cancellation, notification and accessibility behavior deliberately.",
+      "Cari state keçidi və route-u testlə müəyyən et. Mapping və reuse policy ayır, asılılıq ötür, sonra feature flag arxasında UIHostingController ilə SwiftUI host et. Cancellation, notification və accessibility-ni məqsədli qoru.",
+    ),
+    b(
+      "Define rollback at one screen boundary, compare snapshots and behavioral tests, and validate both flag paths. Do not attribute regression reduction without measurement or assume a framework change fixes workflow bugs.",
+      "Bir ekran sərhədində rollback qur, snapshot və davranış testini müqayisə et, hər iki flag yolunu yoxla. Ölçmədən regression azalması iddia etmə; framework dəyişikliyini workflow xəta həlli sayma.",
+    ),
+    'enum ScreenImplementation { case legacy, swiftUI }\nfunc choose(enabled: Bool) -> ScreenImplementation { enabled ? .swiftUI : .legacy }\nif case .legacy = choose(enabled: false) { print("Rollback path available") }',
+    "Rollback path available",
+    b(
+      "A feature flag is useful only if both implementations remain compatible with shared contracts and dependencies.",
+      "Feature flag hər iki implementasiya shared müqavilə/asılılıqla uyğun qalanda faydalıdır.",
+    ),
+    b(
+      "List the tests that must pass unchanged across both implementations.",
+      "Hər iki implementasiyada dəyişmədən keçməli testi yaz.",
+    ),
+    b(
+      "Loading/error/empty transitions, navigation inputs, signing callback behavior, cancellation and accessibility semantics should be preserved or explicitly changed by requirements.",
+      "Loading/error/empty keçidi, navigation input, signing callback, cancellation və accessibility semantikası qorunmalı və ya tələbə görə açıq dəyişməlidir.",
+    ),
+    b(
+      "The disabled flag selects the legacy path.",
+      "Söndürülmüş flag legacy yolunu seçir.",
+    ),
+    b(
+      "A UI rewrite automatically improves all business rules.",
+      "UI rewrite bütün biznes qaydasını avtomatik düzəldir.",
+    ),
+    apple + "swiftui/uihostingcontroller",
+    b(
+      "What is your smallest independently reversible migration?",
+      "Ən kiçik müstəqil geri dönən miqrasiya addımın nədir?",
+    ),
+  ),
+  g(
+    "topic-extra-04",
+    b(
+      "Prepare a Swift answer by explaining semantics before naming compiler machinery. Value/reference, ARC, capture, protocols and concurrency connect through ownership and type contracts.",
+      "Swift cavabında compiler mexanizmini adlandırmazdan əvvəl semantikanı izah et. Value/reference, ARC, capture, protocol və concurrency ownership/tip müqaviləsi ilə bağlanır.",
+    ),
+    b(
+      "Give one minimal example, predict it, and identify the guarantee versus implementation detail. A struct containing a class can expose shared mutation; an actor can be logically stale; a weak capture does not cancel work.",
+      "Bir minimal nümunə ver, proqnozlaşdır və zəmanətlə implementasiya detalını ayır. Class saxlayan struct shared mutasiya göstərə bilər; actor məntiqi köhnələ bilər; weak capture işi ləğv etmir.",
+    ),
+    b(
+      "Defend trade-offs: type erasure, abstraction cost, strict concurrency migration and performance measurement. Admit version-dependent behavior and describe a test that would resolve uncertainty.",
+      "Type erasure, abstraksiya xərci, strict concurrency miqrasiyası və ölçü trade-off-unu müdafiə et. Versiyadan asılı davranışı bildir və qeyri-müəyyənliyi həll edən test de.",
+    ),
+    "final class Box { var value = 1 }\nlet box = Box()\nlet other = box\nother.value = 2\nprint(box.value)",
+    "2",
+    b(
+      "Do not equate let with deep immutability or Sendable with immutable object graphs.",
+      "let-i deep immutability, Sendable-ı immutable object graph ilə eyniləşdirmə.",
+    ),
+    b(
+      "Explain this output at Junior, Middle and Senior depth without making an allocation claim.",
+      "Allocation iddiası etmədən nəticəni Junior, Middle və Senior dərinliyində izah et.",
+    ),
+    b(
+      "Junior: two references share an object. Middle: constant binding allows object-property mutation. Senior: shared mutable ownership needs an isolation contract across tasks.",
+      "Junior: iki istinad eyni obyekti paylaşır. Middle: sabit binding obyekt property mutasiyasına mane olmur. Senior: shared mutable ownership task sərhədində izolyasiya müqaviləsi istəyir.",
+    ),
+    b(
+      "Both constants refer to one mutable Box.",
+      "Hər iki sabit bir mutable Box-a istinad edir.",
+    ),
+    b(
+      "let forces every property of a class to be immutable.",
+      "let class-ın bütün property-sini immutable edir.",
+    ),
+    swift + "classesandstructures/",
+    b(
+      "How would the answer change for a struct containing only Int?",
+      "Yalnız Int saxlayan struct üçün cavab necə dəyişir?",
+    ),
+  ),
+  g(
+    "topic-extra-05",
+    b(
+      "UIKit and SwiftUI interviews test lifecycle and ownership, not a contest between frameworks. Explain what triggers loading, rendering, navigation and task cancellation.",
+      "UIKit və SwiftUI müsahibəsi framework yarışı deyil, lifecycle və ownership yoxlamasıdır. Loading, rendering, naviqasiya və cancellation-u nəyin başladığını izah et.",
+    ),
+    b(
+      "UIKit appearance can repeat; cells reuse; SwiftUI identity preserves state; body evaluation is not full redraw. In mixed screens, the hosting controller and model owner define important lifetimes.",
+      "UIKit appearance təkrarlana bilər; cell reuse olunur; SwiftUI identity state-i saxlayır; body tam redraw deyil. Qarışıq ekranda hosting controller və model owner lifetime-ı müəyyən edir.",
+    ),
+    b(
+      "Use profiling and behavioral tests to choose incremental migrations. Validate keyboard, text sizes, screen readers and navigation restoration. New framework adoption alone is not a measured performance improvement.",
+      "Mərhələli migration üçün profiling və davranış testi istifadə et. Klaviatura, mətn ölçüsü, screen reader və restoration yoxla. Yeni framework təkbaşına ölçülmüş performans artımı deyil.",
+    ),
+    'let modelIDs = ["A", "B", "C"]\nprint(Set(modelIDs).count == modelIDs.count)',
+    "true",
+    b(
+      "Index position is not stable identity when rows are inserted or reordered.",
+      "Sətir əlavə və ya sort ediləndə indeks sabit identity deyil.",
+    ),
+    b(
+      "Explain why a reused cell displays the wrong image, then connect the issue to stale async state in SwiftUI.",
+      "Reuse cell-in səhv şəkil göstərməsini izah et, sonra SwiftUI-da stale async state ilə əlaqələndir.",
+    ),
+    b(
+      "Both require checking the result still belongs to the current identity; cancellation can reduce work but is not sufficient alone.",
+      "Hər ikisində nəticənin cari identity-yə aidliyi yoxlanır; cancellation işi azaldır, amma tək kifayət deyil.",
+    ),
+    b("The sample IDs are unique.", "Nümunə ID-lər unikaldır."),
+    b(
+      "Unique IDs mean every navigation and task lifetime is correct.",
+      "Unikal ID bütün naviqasiya/task lifetime-ının düzgünlüyüdür.",
+    ),
+    apple + "swiftui/managing-model-data-in-your-app",
+    b(
+      "Why can viewDidLoad and onAppear have different responsibilities?",
+      "viewDidLoad və onAppear niyə fərqli məsuliyyət daşıya bilər?",
+    ),
+  ),
+  g(
+    "topic-extra-06",
+    b(
+      "An architecture interview asks you to defend responsibilities and dependency direction. Start from a requirement, then explain the cost of your chosen boundaries.",
+      "Arxitektura müsahibəsi məsuliyyət və asılılıq istiqamətini əsaslandırmağı istəyir. Tələbdən başla, sonra seçilmiş sərhədin xərcini izah et.",
+    ),
+    b(
+      "Draw View → ViewModel → capability, then identify policy, data mapping and routing owners. Add Repository or UseCase only when it isolates a real concern. A custom mutable store does not gain reducer guarantees from its name.",
+      "View → ViewModel → capability çək, sonra policy, mapping və routing sahibini tap. Real məsələ ayırırsa Repository və ya UseCase əlavə et. Custom mutable store adından reducer zəmanəti qazanmır.",
+    ),
+    b(
+      "Discuss migration, team ownership, API stability and testing alongside runtime behavior. Current repository claims require exact source evidence; historical review is not a substitute for current validation.",
+      "Runtime ilə yanaşı migration, komanda ownership, API sabitliyi və test-i müzakirə et. Cari repository iddiası dəqiq mənbə istəyir; tarixi icmal cari yoxlamanın əvəzi deyil.",
+    ),
+    'protocol HistoryLoading { func load() async throws -> [String] }\nstruct HistoryInput { let accountID: String }\nprint(HistoryInput(accountID: "A1").accountID)',
+    "A1",
+    b(
+      "A protocol can still expose transport-shaped concepts and fail to create a domain boundary.",
+      "Protokol transport anlayışını aça və domen sərhədi yaratmaya bilər.",
+    ),
+    b(
+      "Choose one direct service call and state the exact requirement that would justify a use case.",
+      "Bir birbaşa servis çağırışı seç və use case əsaslandıran dəqiq tələbi bildir.",
+    ),
+    b(
+      "Reusable validation, coordinated multi-step rules or independent policy testing justify extraction more clearly than folder consistency.",
+      "Reuse validation, çoxaddımlı qayda və müstəqil policy testi qovluq uyğunluğundan daha aydın extraction səbəbidir.",
+    ),
+    b(
+      "The input exposes a stable account identifier.",
+      "Input sabit hesab identifikatoru açır.",
+    ),
+    b(
+      "Any protocol automatically implements Clean Architecture.",
+      "Hər protokol avtomatik Clean Architecture yaradır.",
+    ),
+    "https://www.swift.org/documentation/api-design-guidelines/",
+    b(
+      "Which existing boundary would you preserve during a redesign?",
+      "Redesign zamanı hansı mövcud sərhədi qoruyardın?",
+    ),
+  ),
+  g(
+    "topic-extra-07",
+    b(
+      "Networking and security answers need explicit contracts: identity, authentication, authorization, idempotency, caching and cancellation are related but distinct.",
+      "Şəbəkə və təhlükəsizlik cavabı açıq müqavilə istəyir: identity, autentifikasiya, avtorizasiya, idempotency, caching və cancellation əlaqəli, amma fərqlidir.",
+    ),
+    b(
+      "Validate status and payload separately. Coordinate token refresh, preserve cancellation across retries and avoid logging secrets. A client timeout can leave a server mutation in an unknown state.",
+      "Status və payload-u ayrı yoxla. Refresh-i koordinasiya et, retry boyunca cancellation-u qoru və sirr log etmə. Klient timeout-u server mutasiyasını unknown saxlaya bilər.",
+    ),
+    b(
+      "Design backend reconciliation and certificate-rotation recovery before optimizing request wrappers. State which observations are measured and which are assumptions. Never claim local biometrics replace remote authorization.",
+      "Request wrapper optimallaşdırmadan əvvəl backend reconciliation və certificate rotation recovery qur. Ölçülmüş müşahidəni fərziyyədən ayır. Lokal biometrikanı remote avtorizasiya əvəzi sayma.",
+    ),
+    'enum Submission { case pending(String), confirmed(String), unknown(String) }\nlet result = Submission.unknown("op-1")\nif case .unknown(let id) = result { print("Check", id) }',
+    "Check op-1",
+    b(
+      "Retrying an unknown mutation without idempotency can duplicate business effects.",
+      "Idempotency olmadan unknown mutasiya retry-si biznes təsirini təkrarlaya bilər.",
+    ),
+    b(
+      "Explain ten 401 responses, refresh failure and logout without losing the cancellation policy.",
+      "On 401, refresh xətası və logout-u cancellation qaydasını itirmədən izah et.",
+    ),
+    b(
+      "One shared refresh per valid session generation, bounded retries, explicit waiter outcomes, and invalidation on logout. Keep replacement transport tasks owned by the logical request.",
+      "Etibarlı session generation başına bir refresh, məhdud retry, açıq waiter nəticəsi və logout-da invalidation. Əvəz transport task-ı məntiqi sorğuya bağlı saxla.",
+    ),
+    b(
+      "Unknown is an explicit outcome requiring reconciliation.",
+      "Unknown reconciliation tələb edən açıq nəticədir.",
+    ),
+    b(
+      "Every timeout means the server rejected the operation.",
+      "Hər timeout serverin əməliyyatı rədd etməsidir.",
+    ),
+    apple + "foundation/urlsession",
+    b(
+      "What sanitized metadata helps diagnose this incident?",
+      "Hadisəni araşdırmaq üçün hansı sanitizasiya edilmiş metadata faydalıdır?",
+    ),
+  ),
+  g(
+    "topic-extra-08",
+    b(
+      "Production engineering connects tests, debugging, profiling and release decisions. A test’s existence, a passing build and a measured user outcome are different kinds of evidence.",
+      "Production engineering test, debugging, profiling və release qərarını bağlayır. Testin varlığı, keçən build və ölçülmüş user nəticəsi ayrı sübutdur.",
+    ),
+    b(
+      "Use controlled doubles for state logic, integration checks for adapters and focused end-to-end checks for critical journeys. Track skipped suites. Symbolicate crashes and follow retention paths before changing ownership.",
+      "State üçün idarə olunan double, adapter üçün integration və kritik journey üçün fokuslu end-to-end istifadə et. Skipped suite-i izlə. Ownership dəyişmədən crash symbolicate et və retention yolunu izlə.",
+    ),
+    b(
+      "Tie rollout to measurable guardrails, maintain rollback options and prioritize debt by actual risk. Report qualitative value when numbers are unavailable; do not invent performance or business impact.",
+      "Rollout-u ölçülən guardrail ilə bağla, rollback saxla və debt-i real risklə sırala. Rəqəm yoxdursa keyfiyyət dəyərini de; performans/biznes təsiri uydurma.",
+    ),
+    'enum TestOutcome { case passed, failed, skipped }\nlet result = TestOutcome.skipped\nif case .skipped = result { print("No executed protection from this case") }',
+    "No executed protection from this case",
+    b(
+      "A disabled test is not counted as a passed test.",
+      "Disabled test keçmiş test sayılmır.",
+    ),
+    b(
+      "A snapshot suite is disabled during Xcode migration. How do you describe release confidence?",
+      "Xcode migration zamanı snapshot suite disabled-dır. Release confidence-i necə ifadə edirsən?",
+    ),
+    b(
+      "State the unexecuted visual coverage, identify other verified behavior and track restoration. Do not claim unrelated passing tests replace the missing visual protection.",
+      "İcra olunmayan visual coverage-i de, yoxlanmış digər davranışı göstər və bərpanı izlə. Əlaqəsiz keçən testi itkin visual qorumanın əvəzi sayma.",
+    ),
+    b("Skipped is distinct from passed.", "Skipped passed-dan fərqlidir."),
+    b(
+      "A skipped test proves the same behavior as a passed test.",
+      "Skipped test passed ilə eyni davranışı sübut edir.",
+    ),
+    apple + "testing",
+    b(
+      "What evidence would change your release decision?",
+      "Release qərarını hansı sübut dəyişər?",
+    ),
+  ),
+  g(
+    "topic-extra-09",
+    b(
+      "Ownership stories describe what you personally did, why you chose it and what evidence supports the result. A polished narrative must not replace reliable attribution.",
+      "Ownership hekayəsi şəxsən nə etdiyini, niyə seçdiyini və nəticənin sübutunu deyir. Gözəl hekayə etibarlı müəllifliyi əvəz etməməlidir.",
+    ),
+    b(
+      "Use Situation, Task, Action and Result. Separate your commits from team changes, explain constraints and alternatives, and identify tests or review evidence. If impact was not measured, describe qualitative value explicitly.",
+      "Situation, Task, Action və Result istifadə et. Öz commit-ini komanda dəyişikliyindən ayır, məhdudiyyət/alternativi izah et, test və review sübutu göstər. Təsir ölçülməyibsə keyfiyyət dəyərini açıq de.",
+    ),
+    b(
+      "Strong ownership includes mistakes, collaboration and how the design could improve. Do not disclose confidential customer data or source in an interview. Prepare for challenges about trade-offs, not only a success story.",
+      "Güclü ownership səhv, əməkdaşlıq və dizaynın necə yaxşılaşacağını da əhatə edir. Müsahibədə məxfi müştəri data və source açma. Tək uğur deyil, trade-off sualına hazırlaş.",
+    ),
+    "struct Contribution { let exactAuthorMatch: Bool; let measuredImpact: Int? }\nlet work = Contribution(exactAuthorMatch: true, measuredImpact: nil)\nprint(work.measuredImpact == nil)",
+    "true",
+    b(
+      "Missing quantitative impact is not permission to invent percentages or claim sole team ownership.",
+      "Kəmiyyət təsirinin olmaması faiz uydurmaq və ya bütün komanda işini özünə aid etmək icazəsi deyil.",
+    ),
+    b(
+      "Write a STAR narrative for one confirmed commit and mark every statement that needs additional evidence.",
+      "Bir təsdiqlənmiş commit üçün STAR hekayəsi yaz və əlavə sübut istəyən hər iddianı işarələ.",
+    ),
+    b(
+      "Anchor Action in exact diff and decisions. Anchor Result in measured outcomes if available, otherwise describe the verified behavior and the measurement you would add.",
+      "Action-u dəqiq diff və qərara bağla. Result-u varsa ölçüyə, yoxdursa yoxlanmış davranış və əlavə edəcəyin ölçüyə bağla.",
+    ),
+    b(
+      "The example explicitly has no measured impact.",
+      "Nümunədə ölçülmüş təsir açıq olaraq yoxdur.",
+    ),
+    b(
+      "An absent metric can be replaced by any plausible number.",
+      "Olmayan ölçünü istənilən inandırıcı rəqəmlə əvəz etmək olar.",
+    ),
+    "https://git-scm.com/docs/git-log",
+    b(
+      "What would a teammate say your actual responsibility was?",
+      "Komanda yoldaşın real məsuliyyətini necə təsvir edərdi?",
+    ),
+  ),
 );

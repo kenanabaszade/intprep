@@ -1,2 +1,4 @@
-import {ArchitectureLab} from '@/components/labs';
-export default function Page(){return <ArchitectureLab/>}
+import { ArchitectureLab } from "@/components/labs";
+export default function Page() {
+  return <ArchitectureLab />;
+}

@@ -1,13 +1,221 @@
-'use client';
-import Link from 'next/link';
-import {usePathname} from 'next/navigation';
-import {useState,type ReactNode} from 'react';
-import {BookOpen,LayoutDashboard,Code2,Workflow,Network,GitBranch,Mic,Library,Target,ChartNoAxesCombined,Languages,Settings,Menu,X,Sun,Moon,ArrowUpRight,ShieldCheck,Search,Command} from 'lucide-react';
-import {useAcademy} from './provider';
-import {labels} from '@/lib/i18n';
-import {bi as b} from '@/lib/types';
-const nav=[['dashboard',LayoutDashboard],['curriculum',BookOpen],['playground',Code2],['visualizations',Workflow],['architecture',Network],['ibam',GitBranch],['my-work',Command],['interview',Mic],['questions',Library],['quizzes',Target],['analytics',ChartNoAxesCombined],['glossary',Languages],['settings',Settings]] as const;
-export function Shell({children}:{children:ReactNode}){
- const {state,setState,t,error,ready}=useAcademy(); const path=usePathname();const [open,setOpen]=useState(false);
- return <div className="app-shell"><a className="skip-link" href="#main">{t(b('Skip to content','Məzmuna keç'))}</a><aside className={`sidebar ${open?'is-open':''}`}><Link href="/dashboard" className="brand" onClick={()=>setOpen(false)}><span className="brand-mark">a<span>.</span></span><span>iOS Academy<small>ENGINEERING, UNDERSTOOD.</small></span></Link><button className="mobile-close icon-button" onClick={()=>setOpen(false)} aria-label="Close navigation"><X size={20}/></button><div className="workspace-label"><span className="avatar">K</span><span>{t(b('Personal workspace','Şəxsi iş sahəsi'))}<small>{t(b('Local learning, lasting knowledge','Lokal öyrənmə, qalıcı bilik'))}</small></span><span className="local-dot"/></div><p className="nav-caption">{t(b('YOUR WORKSPACE','İŞ SAHƏN'))}</p><nav aria-label={t(b('Main navigation','Əsas naviqasiya'))}>{nav.map(([id,Icon],i)=><div key={id}>{(i===5||i===7||i===12)&&<div className="nav-separator"/>}<Link className={`nav-item ${path.startsWith('/'+id)?'active':''}`} href={'/'+id} onClick={()=>setOpen(false)} aria-current={path.startsWith('/'+id)?'page':undefined}><Icon size={17}/><span>{t(labels[id])}</span>{id==='interview'&&<span className="new-label">LIVE</span>}</Link></div>)}</nav><div className="sidebar-bottom"><ShieldCheck size={17}/><span>{t(b('Your progress stays yours','Nəticələrin sənə məxsusdur'))}<small>{t(b('Stored on this device','Bu cihazda saxlanılır'))}</small></span></div></aside>{open&&<button className="sidebar-backdrop" onClick={()=>setOpen(false)} aria-label="Close navigation"/>}<div className="page-wrap"><header className="topbar"><div className="breadcrumb"><button className="icon-button mobile-menu" onClick={()=>setOpen(true)} aria-label="Open navigation"><Menu size={20}/></button><span>Workspace</span><span className="slash">/</span><span>{t(labels[(path.split('/')[1] in labels?path.split('/')[1]:'dashboard') as keyof typeof labels])}</span></div><div className="header-actions"><Link href="/curriculum" className="search-shortcut" aria-label={t(b('Search curriculum','Tədris planında axtar'))}><Search size={15}/><span>{t(b('Find a topic','Mövzu tap'))}</span></Link><span className="privacy-pill"><span className="local-dot"/>{t(b('Local only','Yalnız lokal'))}</span><button className="language-button" aria-label={t(b('Switch language','Dili dəyiş'))} onClick={()=>setState(s=>({...s,locale:s.locale==='en'?'az':'en'}))}><Languages size={15}/>{state.locale.toUpperCase()}</button><button className="icon-button" aria-label={t(b('Toggle color theme','Rəng rejimini dəyiş'))} onClick={()=>setState(s=>({...s,theme:s.theme==='dark'?'light':'dark'}))}>{state.theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button><span className="header-avatar">K</span></div></header><main id="main" className="main-content">{!ready&&<div className="loading-strip" role="status">{t(b('Loading your learning space…','Öyrənmə sahən yüklənir…'))}</div>}{error&&<div className="notice danger" role="alert">{error}</div>}{children}</main><footer className="footer"><span>iOS Engineering Academy</span><span>{t(b('Build understanding. Defend decisions.','Anla. Qərarlarını əsaslandır.'))} <ArrowUpRight size={12}/></span></footer></div></div>
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState, type ReactNode } from "react";
+import {
+  BookOpen,
+  LayoutDashboard,
+  Code2,
+  Workflow,
+  Network,
+  GitBranch,
+  Mic,
+  Library,
+  Target,
+  ChartNoAxesCombined,
+  Languages,
+  Settings,
+  Menu,
+  X,
+  Sun,
+  Moon,
+  ArrowUpRight,
+  ShieldCheck,
+  Search,
+  Command,
+} from "lucide-react";
+import { useAcademy } from "./provider";
+import { labels } from "@/lib/i18n";
+import { bi as b } from "@/lib/types";
+const nav = [
+  ["dashboard", LayoutDashboard],
+  ["curriculum", BookOpen],
+  ["playground", Code2],
+  ["visualizations", Workflow],
+  ["architecture", Network],
+  ["ibam", GitBranch],
+  ["my-work", Command],
+  ["interview", Mic],
+  ["questions", Library],
+  ["quizzes", Target],
+  ["analytics", ChartNoAxesCombined],
+  ["glossary", Languages],
+  ["settings", Settings],
+] as const;
+export function Shell({ children }: { children: ReactNode }) {
+  const { state, setState, t, error, ready } = useAcademy();
+  const path = usePathname();
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="app-shell">
+      <a className="skip-link" href="#main">
+        {t(b("Skip to content", "Məzmuna keç"))}
+      </a>
+      <aside className={`sidebar ${open ? "is-open" : ""}`}>
+        <Link
+          href="/dashboard"
+          className="brand"
+          onClick={() => setOpen(false)}
+        >
+          <span className="brand-mark">
+            a<span>.</span>
+          </span>
+          <span>
+            iOS Academy<small>ENGINEERING, UNDERSTOOD.</small>
+          </span>
+        </Link>
+        <button
+          className="mobile-close icon-button"
+          onClick={() => setOpen(false)}
+          aria-label="Close navigation"
+        >
+          <X size={20} />
+        </button>
+        <div className="workspace-label">
+          <span className="avatar">K</span>
+          <span>
+            {t(b("Personal workspace", "Şəxsi iş sahəsi"))}
+            <small>
+              {t(
+                b(
+                  "Local learning, lasting knowledge",
+                  "Lokal öyrənmə, qalıcı bilik",
+                ),
+              )}
+            </small>
+          </span>
+          <span className="local-dot" />
+        </div>
+        <p className="nav-caption">{t(b("YOUR WORKSPACE", "İŞ SAHƏN"))}</p>
+        <nav aria-label={t(b("Main navigation", "Əsas naviqasiya"))}>
+          {nav.map(([id, Icon], i) => (
+            <div key={id}>
+              {(i === 5 || i === 7 || i === 12) && (
+                <div className="nav-separator" />
+              )}
+              <Link
+                className={`nav-item ${path.startsWith("/" + id) ? "active" : ""}`}
+                href={"/" + id}
+                onClick={() => setOpen(false)}
+                aria-current={path.startsWith("/" + id) ? "page" : undefined}
+              >
+                <Icon size={17} />
+                <span>{t(labels[id])}</span>
+                {id === "interview" && <span className="new-label">LIVE</span>}
+              </Link>
+            </div>
+          ))}
+        </nav>
+        <div className="sidebar-bottom">
+          <ShieldCheck size={17} />
+          <span>
+            {t(b("Your progress stays yours", "Nəticələrin sənə məxsusdur"))}
+            <small>
+              {t(b("Stored on this device", "Bu cihazda saxlanılır"))}
+            </small>
+          </span>
+        </div>
+      </aside>
+      {open && (
+        <button
+          className="sidebar-backdrop"
+          onClick={() => setOpen(false)}
+          aria-label="Close navigation"
+        />
+      )}
+      <div className="page-wrap">
+        <header className="topbar">
+          <div className="breadcrumb">
+            <button
+              className="icon-button mobile-menu"
+              onClick={() => setOpen(true)}
+              aria-label="Open navigation"
+            >
+              <Menu size={20} />
+            </button>
+            <span>{t(b("Workspace", "İş sahəsi"))}</span>
+            <span className="slash">/</span>
+            <span>
+              {t(
+                labels[
+                  (path.split("/")[1] in labels
+                    ? path.split("/")[1]
+                    : "dashboard") as keyof typeof labels
+                ],
+              )}
+            </span>
+          </div>
+          <div className="header-actions">
+            <Link
+              href="/curriculum"
+              className="search-shortcut"
+              aria-label={t(b("Search curriculum", "Tədris planında axtar"))}
+            >
+              <Search size={15} />
+              <span>{t(b("Find a topic", "Mövzu tap"))}</span>
+            </Link>
+            <span className="privacy-pill">
+              <span className="local-dot" />
+              {t(
+                state.ai
+                  ? b("AI is opt-in", "AI razılıqla")
+                  : b("Local only", "Yalnız lokal"),
+              )}
+            </span>
+            <button
+              className="language-button"
+              aria-label={t(b("Switch language", "Dili dəyiş"))}
+              onClick={() =>
+                setState((s) => ({
+                  ...s,
+                  locale: s.locale === "en" ? "az" : "en",
+                }))
+              }
+            >
+              <Languages size={15} />
+              {state.locale.toUpperCase()}
+            </button>
+            <button
+              className="icon-button"
+              aria-label={t(b("Toggle color theme", "Rəng rejimini dəyiş"))}
+              onClick={() =>
+                setState((s) => ({
+                  ...s,
+                  theme: s.theme === "dark" ? "light" : "dark",
+                }))
+              }
+            >
+              {state.theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
+            </button>
+            <span className="header-avatar">K</span>
+          </div>
+        </header>
+        <main id="main" className="main-content">
+          {!ready && (
+            <div className="loading-strip" role="status">
+              {t(b("Loading your learning space…", "Öyrənmə sahən yüklənir…"))}
+            </div>
+          )}
+          {error && (
+            <div className="notice danger" role="alert">
+              {error}
+            </div>
+          )}
+          {children}
+        </main>
+        <footer className="footer">
+          <span>iOS Engineering Academy</span>
+          <span>
+            {t(
+              b(
+                "Build understanding. Defend decisions.",
+                "Anla. Qərarlarını əsaslandır.",
+              ),
+            )}{" "}
+            <ArrowUpRight size={12} />
+          </span>
+        </footer>
+      </div>
+    </div>
+  );
 }

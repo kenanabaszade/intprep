@@ -1,2 +1,4 @@
-import {Glossary} from '@/components/glossary';
-export default function Page(){return <Glossary/>}
+import { Glossary } from "@/components/glossary";
+export default function Page() {
+  return <Glossary />;
+}

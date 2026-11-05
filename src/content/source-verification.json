@@ -1,0 +1,112 @@
+[
+  {
+    "url": "https://docs.swift.org/swift-book/documentation/the-swift-programming-language/thebasics/",
+    "kind": "official-documentation-source",
+    "repository": "https://github.com/swiftlang/swift-book",
+    "commit": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "path": "TSPL.docc/LanguageGuide/TheBasics.md",
+    "sourceURL": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/TheBasics.md",
+    "checkedAt": "2026-11-05T09:28:32.006986+00:00",
+    "scope": "Official chapter source accessed; focused passages reviewed for key language claims. Authored questions are generated practice, not company-reported questions. Public documentation URL not live-verified."
+  },
+  {
+    "url": "https://docs.swift.org/swift-book/documentation/the-swift-programming-language/classesandstructures/",
+    "kind": "official-documentation-source",
+    "repository": "https://github.com/swiftlang/swift-book",
+    "commit": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "path": "TSPL.docc/LanguageGuide/ClassesAndStructures.md",
+    "sourceURL": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/ClassesAndStructures.md",
+    "checkedAt": "2026-11-05T09:28:32.007043+00:00",
+    "scope": "Official chapter source accessed; focused passages reviewed for key language claims. Authored questions are generated practice, not company-reported questions. Public documentation URL not live-verified."
+  },
+  {
+    "url": "https://docs.swift.org/swift-book/documentation/the-swift-programming-language/closures/",
+    "kind": "official-documentation-source",
+    "repository": "https://github.com/swiftlang/swift-book",
+    "commit": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "path": "TSPL.docc/LanguageGuide/Closures.md",
+    "sourceURL": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/Closures.md",
+    "checkedAt": "2026-11-05T09:28:32.007086+00:00",
+    "scope": "Official chapter source accessed; focused passages reviewed for key language claims. Authored questions are generated practice, not company-reported questions. Public documentation URL not live-verified."
+  },
+  {
+    "url": "https://docs.swift.org/swift-book/documentation/the-swift-programming-language/automaticreferencecounting/",
+    "kind": "official-documentation-source",
+    "repository": "https://github.com/swiftlang/swift-book",
+    "commit": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "path": "TSPL.docc/LanguageGuide/AutomaticReferenceCounting.md",
+    "sourceURL": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/AutomaticReferenceCounting.md",
+    "checkedAt": "2026-11-05T09:28:32.007125+00:00",
+    "scope": "Official chapter source accessed; focused passages reviewed for key language claims. Authored questions are generated practice, not company-reported questions. Public documentation URL not live-verified."
+  },
+  {
+    "url": "https://docs.swift.org/swift-book/documentation/the-swift-programming-language/protocols/",
+    "kind": "official-documentation-source",
+    "repository": "https://github.com/swiftlang/swift-book",
+    "commit": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "path": "TSPL.docc/LanguageGuide/Protocols.md",
+    "sourceURL": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/Protocols.md",
+    "checkedAt": "2026-11-05T09:28:32.007185+00:00",
+    "scope": "Official chapter source accessed; focused passages reviewed for key language claims. Authored questions are generated practice, not company-reported questions. Public documentation URL not live-verified."
+  },
+  {
+    "url": "https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/",
+    "kind": "official-documentation-source",
+    "repository": "https://github.com/swiftlang/swift-book",
+    "commit": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "path": "TSPL.docc/LanguageGuide/Concurrency.md",
+    "sourceURL": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/Concurrency.md",
+    "checkedAt": "2026-11-05T09:28:32.007207+00:00",
+    "scope": "Official chapter source accessed; focused passages reviewed for key language claims. Authored questions are generated practice, not company-reported questions. Public documentation URL not live-verified."
+  },
+  {
+    "url": "https://docs.swift.org/swift-book/documentation/the-swift-programming-language/generics/",
+    "kind": "official-documentation-source",
+    "repository": "https://github.com/swiftlang/swift-book",
+    "commit": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "path": "TSPL.docc/LanguageGuide/Generics.md",
+    "sourceURL": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/Generics.md",
+    "checkedAt": "2026-11-05T09:28:32.007346+00:00",
+    "scope": "Official chapter source accessed; focused passages reviewed for key language claims. Authored questions are generated practice, not company-reported questions. Public documentation URL not live-verified."
+  },
+  {
+    "url": "https://docs.swift.org/swift-book/documentation/the-swift-programming-language/errorhandling/",
+    "kind": "official-documentation-source",
+    "repository": "https://github.com/swiftlang/swift-book",
+    "commit": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "path": "TSPL.docc/LanguageGuide/ErrorHandling.md",
+    "sourceURL": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/ErrorHandling.md",
+    "checkedAt": "2026-11-05T09:28:32.007408+00:00",
+    "scope": "Official chapter source accessed; focused passages reviewed for key language claims. Authored questions are generated practice, not company-reported questions. Public documentation URL not live-verified."
+  },
+  {
+    "url": "https://docs.swift.org/swift-book/documentation/the-swift-programming-language/controlflow/",
+    "kind": "official-documentation-source",
+    "repository": "https://github.com/swiftlang/swift-book",
+    "commit": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "path": "TSPL.docc/LanguageGuide/ControlFlow.md",
+    "sourceURL": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/ControlFlow.md",
+    "checkedAt": "2026-11-05T09:28:32.007479+00:00",
+    "scope": "Official chapter source accessed; focused passages reviewed for key language claims. Authored questions are generated practice, not company-reported questions. Public documentation URL not live-verified."
+  },
+  {
+    "url": "https://docs.swift.org/swift-book/documentation/the-swift-programming-language/enumerations/",
+    "kind": "official-documentation-source",
+    "repository": "https://github.com/swiftlang/swift-book",
+    "commit": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "path": "TSPL.docc/LanguageGuide/Enumerations.md",
+    "sourceURL": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/Enumerations.md",
+    "checkedAt": "2026-11-05T09:28:32.007534+00:00",
+    "scope": "Official chapter source accessed; focused passages reviewed for key language claims. Authored questions are generated practice, not company-reported questions. Public documentation URL not live-verified."
+  },
+  {
+    "url": "https://docs.swift.org/swift-book/documentation/the-swift-programming-language/inheritance/",
+    "kind": "official-documentation-source",
+    "repository": "https://github.com/swiftlang/swift-book",
+    "commit": "16a2a4caa408c86fc85bde1e1dfff4745b6e454c",
+    "path": "TSPL.docc/LanguageGuide/Inheritance.md",
+    "sourceURL": "https://github.com/swiftlang/swift-book/blob/16a2a4caa408c86fc85bde1e1dfff4745b6e454c/TSPL.docc/LanguageGuide/Inheritance.md",
+    "checkedAt": "2026-11-05T09:28:32.007580+00:00",
+    "scope": "Official chapter source accessed; focused passages reviewed for key language claims. Authored questions are generated practice, not company-reported questions. Public documentation URL not live-verified."
+  }
+]

@@ -1,17 +1,212 @@
-'use client';
-import {useState,useEffect} from 'react';
-import dynamic from 'next/dynamic';
-import {useSearchParams} from 'next/navigation';
-import {Code2,Download,RotateCcw} from 'lucide-react';
-import {useAcademy} from './provider';
-import {PageHeading,Card,CodeBlock} from './ui';
-import {lessons,lessonById} from '@/content/lessons';
-import {topicById} from '@/lib/curriculum';
-import {bi as b} from '@/lib/types';
-const Editor=dynamic(()=>import('./monaco'),{ssr:false,loading:()=> <p className="notice">Loading editor…</p>});
-export function Playground(){const {state,setState,t}=useAcademy();const params=useSearchParams();const [selected,setSelected]=useState(lessonById[params.get('topic')||'']?params.get('topic')!:'topic-02');const [code,setCode]=useState(state.playground||lessonById[selected].code);const [advanced,setAdvanced]=useState(false);const [reference,setReference]=useState(false);const [predicted,setPredicted]=useState('');const [feedback,setFeedback]=useState('');const lesson=lessonById[selected];
- useEffect(()=>{if(state.playground)setCode(state.playground)},[state.playground]);
- function update(value:string){setCode(value);setState(s=>({...s,playground:value}));setFeedback('');}
- function download(){const url=URL.createObjectURL(new Blob([code],{type:'text/plain'}));const a=document.createElement('a');a.href=url;a.download='AcademyExercise.swift';a.click();URL.revokeObjectURL(url);}
- return <><PageHeading eyebrow={t(b('REASON BEFORE YOU RUN','İCRADAN ƏVVƏL DÜŞÜN'))} title={t(b('The Swift workbench','Swift iş masası'))} description={t(b('Edit real examples, predict behavior, and compare your reasoning. No code executes on this website.','Həqiqi nümunələri dəyiş, davranışı proqnozlaşdır və düşüncəni müqayisə et. Bu saytda kod icra olunmur.'))}/><div className="toolbar"><label style={{flex:1}}>{t(b('Example','Nümunə'))}<select value={selected} onChange={e=>{setSelected(e.target.value);update(lessonById[e.target.value].code);setReference(false);setPredicted('')}}>{lessons.map(l=><option key={l.id} value={l.id}>{t(l.title||topicById[l.id].title)}</option>)}</select></label><button className="button secondary" onClick={download}><Download size={14}/>{t(b('Export .swift',' .swift çıxar'))}</button><button className="button secondary" onClick={()=>update(lesson.code)}><RotateCcw size={14}/>{t(b('Reset example','Nümunəni sıfırla'))}</button></div><div className="notice">{t(b('Static practice mode. The editor does not compile, run, or send snippets to an external service. Predicted output applies only to the unmodified reference example. Run exported code in your own trusted Swift toolchain if desired.','Statik praktika rejimi. Editor kodu compile, icra və ya xarici servisə göndərmir. Proqnoz yalnız dəyişdirilməmiş nümunəyə aiddir. İstəsən çıxarılan kodu etibarlı lokal Swift toolchain-də işə sal.'))}</div><div className="two-column"><div><div className="editor-shell"><div className="code-header"><span><Code2 size={14}/>Exercise.swift</span><button className="button secondary" onClick={()=>setAdvanced(!advanced)}>{t(advanced?b('Simple editor','Sadə editor'):b('Load Monaco editor','Monaco editor-i yüklə'))}</button></div>{advanced?<Editor value={code} onChange={update} theme={state.theme}/>:<textarea className="editor-fallback" spellCheck={false} aria-label={t(b('Editable Swift code','Redaktə edilən Swift kodu'))} value={code} onChange={e=>update(e.target.value)}/>}</div><p className="small faint mt">{t(b('Draft saved on this browser. The advanced editor assets are served locally and loaded only on request.','Qaralama bu browser-də saxlanılır. Qabaqcıl editor lokal asset-lərdən yalnız istəyə görə yüklənir.'))}</p></div><Card className="padded"><h2>{t(b('What happens next?','Sonra nə baş verir?'))}</h2><p>{t(lesson.exercise)}</p><label>{t(b('Your predicted output','Proqnozlaşdırdığın nəticə'))}<textarea rows={4} value={predicted} onChange={e=>setPredicted(e.target.value)} aria-label={t(b('Your predicted output','Proqnozlaşdırdığın nəticə'))}/></label><button className="button primary mt" onClick={()=>{if(code!==lesson.code)setFeedback(t(b('The code changed. Reference output cannot grade this edit; reason through it or run it locally.','Kod dəyişib. Nümunə nəticəsi bu dəyişikliyi qiymətləndirə bilməz; addımları izlə və ya lokal icra et.')));else setFeedback(predicted.trim()===lesson.predicted.trim()?t(b('Your prediction matches the authored reference. This is a comparison, not compiler execution.','Proqnozun müəllifli nümunəyə uyğundur. Bu müqayisədir, compiler icrası deyil.')):t(b('Your prediction differs. Compare the reference and trace each operation.','Proqnozun fərqlidir. Nümunə ilə müqayisə et və hər əməliyyatı izlə.')));setReference(true)}} disabled={!predicted.trim()}>{t(b('Compare prediction','Proqnozu müqayisə et'))}</button>{feedback&&<p role="status" className="notice mt">{feedback}</p>}<details open={reference}><summary>{t(b('Reference output and reasoning','Nümunə nəticəsi və düşüncə'))}</summary><CodeBlock code={lesson.predicted} label={t(b('Predicted · original only','Proqnoz · yalnız orijinal'))}/><p>{t(lesson.solution)}</p></details></Card></div></>
+"use client";
+import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import { useSearchParams } from "next/navigation";
+import { Code2, Download, RotateCcw } from "lucide-react";
+import { useAcademy } from "./provider";
+import { PageHeading, Card, CodeBlock } from "./ui";
+import { lessons, lessonById } from "@/content/lessons";
+import { topicById } from "@/lib/curriculum";
+import { bi as b } from "@/lib/types";
+const Editor = dynamic(() => import("./monaco"), {
+  ssr: false,
+  loading: () => <p className="notice">Loading editor…</p>,
+});
+export function Playground() {
+  const { state, setState, t } = useAcademy();
+  const params = useSearchParams();
+  const [selected, setSelected] = useState(
+    lessonById[params.get("topic") || ""] ? params.get("topic")! : "topic-02",
+  );
+  const [code, setCode] = useState(
+    state.playground || lessonById[selected].code,
+  );
+  const [advanced, setAdvanced] = useState(false);
+  const [reference, setReference] = useState(false);
+  const [predicted, setPredicted] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const lesson = lessonById[selected];
+  useEffect(() => {
+    if (state.playground) setCode(state.playground);
+  }, [state.playground]);
+  function update(value: string) {
+    setCode(value);
+    setState((s) => ({ ...s, playground: value }));
+    setFeedback("");
+  }
+  function download() {
+    const url = URL.createObjectURL(new Blob([code], { type: "text/plain" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "AcademyExercise.swift";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+  return (
+    <>
+      <PageHeading
+        eyebrow={t(b("REASON BEFORE YOU RUN", "İCRADAN ƏVVƏL DÜŞÜN"))}
+        title={t(b("The Swift workbench", "Swift iş masası"))}
+        description={t(
+          b(
+            "Edit real examples, predict behavior, and compare your reasoning. No code executes on this website.",
+            "Həqiqi nümunələri dəyiş, davranışı proqnozlaşdır və düşüncəni müqayisə et. Bu saytda kod icra olunmur.",
+          ),
+        )}
+      />
+      <div className="toolbar">
+        <label style={{ flex: 1 }}>
+          {t(b("Example", "Nümunə"))}
+          <select
+            value={selected}
+            onChange={(e) => {
+              setSelected(e.target.value);
+              update(lessonById[e.target.value].code);
+              setReference(false);
+              setPredicted("");
+            }}
+          >
+            {lessons.map((l) => (
+              <option key={l.id} value={l.id}>
+                {t(l.title || topicById[l.id].title)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <button className="button secondary" onClick={download}>
+          <Download size={14} />
+          {t(b("Export .swift", " .swift çıxar"))}
+        </button>
+        <button
+          className="button secondary"
+          onClick={() => update(lesson.code)}
+        >
+          <RotateCcw size={14} />
+          {t(b("Reset example", "Nümunəni sıfırla"))}
+        </button>
+      </div>
+      <div className="notice">
+        {t(
+          b(
+            "Static practice mode. The editor does not compile, run, or send snippets to an external service. Predicted output applies only to the unmodified reference example. Run exported code in your own trusted Swift toolchain if desired.",
+            "Statik praktika rejimi. Editor kodu compile, icra və ya xarici servisə göndərmir. Proqnoz yalnız dəyişdirilməmiş nümunəyə aiddir. İstəsən çıxarılan kodu etibarlı lokal Swift toolchain-də işə sal.",
+          ),
+        )}
+      </div>
+      <div className="two-column">
+        <div>
+          <div className="editor-shell">
+            <div className="code-header">
+              <span>
+                <Code2 size={14} />
+                Exercise.swift
+              </span>
+              <button
+                className="button secondary"
+                onClick={() => setAdvanced(!advanced)}
+              >
+                {t(
+                  advanced
+                    ? b("Simple editor", "Sadə editor")
+                    : b("Load Monaco editor", "Monaco editor-i yüklə"),
+                )}
+              </button>
+            </div>
+            {advanced ? (
+              <Editor value={code} onChange={update} theme={state.theme} />
+            ) : (
+              <textarea
+                className="editor-fallback"
+                spellCheck={false}
+                aria-label={t(
+                  b("Editable Swift code", "Redaktə edilən Swift kodu"),
+                )}
+                value={code}
+                onChange={(e) => update(e.target.value)}
+              />
+            )}
+          </div>
+          <p className="small faint mt">
+            {t(
+              b(
+                "Draft saved on this browser. The advanced editor assets are served locally and loaded only on request.",
+                "Qaralama bu browser-də saxlanılır. Qabaqcıl editor lokal asset-lərdən yalnız istəyə görə yüklənir.",
+              ),
+            )}
+          </p>
+        </div>
+        <Card className="padded">
+          <h2>{t(b("What happens next?", "Sonra nə baş verir?"))}</h2>
+          <p>{t(lesson.exercise)}</p>
+          <label>
+            {t(b("Your predicted output", "Proqnozlaşdırdığın nəticə"))}
+            <textarea
+              rows={4}
+              value={predicted}
+              onChange={(e) => setPredicted(e.target.value)}
+              aria-label={t(
+                b("Your predicted output", "Proqnozlaşdırdığın nəticə"),
+              )}
+            />
+          </label>
+          <button
+            className="button primary mt"
+            onClick={() => {
+              if (code !== lesson.code)
+                setFeedback(
+                  t(
+                    b(
+                      "The code changed. Reference output cannot grade this edit; reason through it or run it locally.",
+                      "Kod dəyişib. Nümunə nəticəsi bu dəyişikliyi qiymətləndirə bilməz; addımları izlə və ya lokal icra et.",
+                    ),
+                  ),
+                );
+              else
+                setFeedback(
+                  predicted.trim() === lesson.predicted.trim()
+                    ? t(
+                        b(
+                          "Your prediction matches the authored reference. This is a comparison, not compiler execution.",
+                          "Proqnozun müəllifli nümunəyə uyğundur. Bu müqayisədir, compiler icrası deyil.",
+                        ),
+                      )
+                    : t(
+                        b(
+                          "Your prediction differs. Compare the reference and trace each operation.",
+                          "Proqnozun fərqlidir. Nümunə ilə müqayisə et və hər əməliyyatı izlə.",
+                        ),
+                      ),
+                );
+              setReference(true);
+            }}
+            disabled={!predicted.trim()}
+          >
+            {t(b("Compare prediction", "Proqnozu müqayisə et"))}
+          </button>
+          {feedback && (
+            <p role="status" className="notice mt">
+              {feedback}
+            </p>
+          )}
+          <details open={reference}>
+            <summary>
+              {t(
+                b(
+                  "Reference output and reasoning",
+                  "Nümunə nəticəsi və düşüncə",
+                ),
+              )}
+            </summary>
+            <CodeBlock
+              code={lesson.predicted}
+              label={t(
+                b("Predicted · original only", "Proqnoz · yalnız orijinal"),
+              )}
+            />
+            <p>{t(lesson.solution)}</p>
+          </details>
+        </Card>
+      </div>
+    </>
+  );
 }

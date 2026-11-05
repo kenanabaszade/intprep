@@ -1,0 +1,8 @@
+node_modules
+.next
+out
+public/monaco
+playwright-report
+test-results
+package-lock.json
+src/content/curriculum.json
